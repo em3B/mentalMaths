@@ -1,12 +1,224 @@
-// Graphical variables
-@import "config/fonts";
-@import "config/colors";
-@import "config/bootstrap_variables";
-
-// External libraries
 @import "bootstrap";
-@import "font-awesome";
 
 // Your CSS partials
-@import "components/index";
-@import "pages/index";
+@import "components/_navbar";
+// @import "components/alert";
+// @import "components/footer";
+// @import "components/subjects_index";
+// @import "components/checkbox";
+
+// colors
+$dyslexia_background: #FFFBF7;
+$orange: #F59435;
+$light_green: #CDE17B;
+$turquoise: #7AC4BD;
+$purple: #A81375;
+$pink: #F0688C;
+
+a {
+  text-decoration: none;
+}
+
+.wrapper {
+  background-color: $light_green;
+  margin-bottom: -100px;
+  min-height: 100%;
+}
+
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
+}
+
+a {
+  cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
+}
+
+.btn:not(:disabled):not(.disabled) {
+  cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
+}
+
+// links
+.fancy-link a {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  color: $purple;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.fancy-link a::before,
+.fancy-link a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+
+.fancy-link a::before {
+  background-color: $purple;
+  height: 2px;
+  bottom: 0;
+  transform-origin: 100% 50%;
+  transform: scaleX(0);
+  transition: transform .3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.fancy-link a::after {
+  content: attr(data-replace);
+  height: 100%;
+  top: 0;
+  transform-origin: 100% 50%;
+  transform: translate3d(200%, 0, 0);
+  transition: transform .3s cubic-bezier(0.76, 0, 0.24, 1);
+  color: $purple;
+}
+
+.fancy-link a:hover::before {
+  transform-origin: 0% 50%;
+  transform: scaleX(1);
+}
+
+.fancy-link a:hover::after {
+  transform: translate3d(0, 0, 0);
+}
+
+.fancy-link a span {
+  display: inline-block;
+  transition: transform .3s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.fancy-link a:hover span {
+  transform: translate3d(-200%, 0, 0);
+}
+
+// title font
+h1#nav-title {
+  font-family: 'Kranky', cursive;
+}
+
+// video
+.home_video {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 140%;
+  width: 140%;
+  object-fit: cover;
+  overflow-y: scroll;
+  z-index: -1;
+}
+
+// main buttons
+.main-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: center;
+  padding-bottom: 200px;
+}
+
+.main-btn {
+  border-radius: 7px;
+  padding: 40px;
+  margin: 50px;
+  height: 300px;
+  width: 300px;
+  background-color: $purple;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+  rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+
+  &:hover {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+    transform: translateY(3px);
+    background-color: #F0688C;
+    cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
+  }
+}
+
+.main-btn a,
+h3,
+h4,
+a:hover,
+h3:hover,
+h4:hover {
+  color: $white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.main-img img {
+  width: 150px;
+  height: 100%;
+  border-radius: 50%;
+}
+
+#free-trial {
+  padding: 20px;
+  width: 210px;
+  height: 210px
+}
+
+#free-trial img {
+  width: 120px;
+}
+
+.push {
+  height: 100px;
+}
+
+// text animation
+.ml16 {
+  color: #402d2d;
+  padding: 40px 0;
+  font-weight: 800;
+  font-size: 2em;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  overflow: hidden;
+}
+
+.ml16 .letter {
+  display: inline-block;
+  line-height: 1em;
+}
+
+// scrollbar
+
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px $light_green;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $purple;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $pink;
+}
