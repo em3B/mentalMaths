@@ -5,25 +5,25 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+    # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+    # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+    # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+    # Defines the root path route ("/")
+    # root "posts#index"
 
     # Root path (Landing page)
-    root 'home#index' 
+    root "home#index"
 
     # Routes for topics
-    resources :topics, only: [:index, :show] do
+    resources :topics, only: [ :index, :show ] do
       # Route to show questions for a specific topic (will handle the intro and question display)
-      resources :questions, only: [:show] do
+      resources :questions, only: [ :show ] do
         # You can add a route for answers here if you want to track answers directly
-        post 'answer', on: :member  # this will handle submitting answers to questions
+        post "answer", on: :member  # this will handle submitting answers to questions
       end
     end
-  
+
     # Score route (this could be shown after completing a session or at the end)
-    get 'score', to: 'topics#score', as: 'score'
+    get "score", to: "topics#score", as: "score"
 end
