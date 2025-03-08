@@ -9,7 +9,7 @@ class TopicsController < ApplicationController
 
   def play
     @topic = Topic.find(params[:id])
-    
+
     # Default question limit to 20 if no limit is provided
     limit = params[:limit].present? ? params[:limit].to_i : 20
 
