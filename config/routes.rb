@@ -11,4 +11,19 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+    # Root path (Landing page)
+    root 'home#index' 
+
+    # Routes for topics
+    resources :topics, only: [:index, :show] do
+      # Route to show questions for a specific topic (will handle the intro and question display)
+      resources :questions, only: [:show] do
+        # You can add a route for answers here if you want to track answers directly
+        post 'answer', on: :member  # this will handle submitting answers to questions
+      end
+    end
+  
+    # Score route (this could be shown after completing a session or at the end)
+    get 'score', to: 'topics#score', as: 'score'
 end
