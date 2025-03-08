@@ -33,6 +33,5 @@ module MentalMaths
 
     # Cloudinary
     Dotenv::Railtie.load
-
   end
 end
