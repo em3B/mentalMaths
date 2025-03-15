@@ -1,0 +1,14 @@
+{
+  "entrypoints": {
+    "main": {
+      "js": [
+        "/packs/bundle.js"
+      ],
+      "js.map": [
+        "/packs/bundle.js.map"
+      ]
+    }
+  },
+  "main.js": "/packs/bundle.js",
+  "main.js.map": "/packs/bundle.js.map"
+}
