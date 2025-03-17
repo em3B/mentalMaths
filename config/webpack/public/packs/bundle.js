@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./app/javascript/application.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./app/javascript/main.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./app/javascript/application.js":
-/*!***************************************!*\
-  !*** ./app/javascript/application.js ***!
-  \***************************************/
+/***/ "./app/javascript/main.js":
+/*!********************************!*\
+  !*** ./app/javascript/main.js ***!
+  \********************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -97,7 +97,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-// app/javascript/packs/application.js
+// app/javascript/packs/main.js
 
 
 /***/ }),

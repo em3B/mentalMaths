@@ -1,3 +1,3 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-// app/javascript/packs/application.js
+// app/javascript/packs/main.js
 import 'bootstrap';

@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
   mode: "production",
   entry: {
-    main: "./app/javascript/application.js"  // Define entry as an object with a named entry point
+    main: "./app/javascript/main.js"  // Define entry as an object with a named entry point
   },
   output: {
     filename: "[name].js",  // Use the entry point name in the output file
