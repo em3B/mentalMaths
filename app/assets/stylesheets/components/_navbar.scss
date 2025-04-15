@@ -1,41 +1,59 @@
-$dyslexia_background: #FFFBF7;
-$orange: #F59435;
-$light_green: #CDE17B;
-$turquoise: #7AC4BD;
-$purple: #A81375;
-$pink: #F0688C;
-
 #logo img {
   width: 50px;
-  height: 100%;
+  height: auto;
 }
 
 .navbar-lewagon {
-  justify-content: space-between;
-  overflow: hidden;
   background: $turquoise;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  top: 0px;
+  z-index: 1030;
+  display: flex;
+  align-items: center;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-  rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-}
-
-.navbar-lewagon .navbar-collapse {
-  // flex-grow: 0;
-  float: right;
-  margin-top: 8px;
+              rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+              rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .navbar-lewagon .navbar-brand img {
   width: 40px;
-  vertical-align: -48%;
 }
 
 h1#nav-title {
   color: $purple;
-  a {
-    text-decoration: none;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.head-tagline {
+  font-size: 0.9rem;
+  color: #444;
+  margin: 0;
+}
+
+body {
+  padding-top: 80px; // Adjust based on your navbar height
+}
+
+.fancy-link a {
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: $purple;
+    transition: width 0.3s ease-in-out;
+  }
+
+  &:hover::after {
+    width: 100%;
   }
 }

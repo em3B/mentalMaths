@@ -1,25 +1,27 @@
-<div class="navbar navbar-expand-sm navbar-light navbar-lewagon" style="display: table;">
-  <%= link_to :root, class: "navbar-brand" do %>
-
-    <div id="logo" class="p-2" style="display: table-cell;">
+<div class="navbar navbar-expand-sm navbar-light navbar-lewagon fixed-top">
+  <%= link_to :root, class: "navbar-brand d-flex align-items-center" do %>
+    <div id="logo" class="p-2">
       <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1651265304/Depositphotos_386432104_S_lbpstp.jpg") %>
     </div>
-    <div class="head-title px-5" style="display: table-cell;">
-      <h1 class="pt-2" id="nav-title">MathSprint</h1>
+    <div class="px-3">
+      <h1 class="mb-0" id="nav-title">MathSprint</h1>
+      <p class="mb-0 head-tagline">Add, Subtract, Smile!</p>
     </div>
-    <div class="head-tagline" style="display: table-cell;">
-      <p>Add, Subtract, Smile!</p>
-    </div>
-
   <% end %>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent" style="display: table-cell;">
-    <ul class="navbar-nav mr-auto">
+  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item m-2 fancy-link">
+        <%= link_to "Topics", topics_path, class: "nav-link" %>
+      </li>
+      <li class="nav-item m-2 fancy-link">
+        <%= link_to "Home", :root, class: "nav-link" %>
+      </li>
     </ul>
   </div>
 </div>
