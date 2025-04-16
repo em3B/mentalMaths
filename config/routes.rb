@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     # Root path (Landing page)
     root "home#index"
 
+    devise_for :users
+
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
       # Route to show questions for a specific topic (will handle the intro and question display)

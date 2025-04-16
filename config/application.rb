@@ -32,6 +32,6 @@ module MentalMaths
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Cloudinary
-    Dotenv::Railtie.load
+    Dotenv::Rails.load
   end
 end
