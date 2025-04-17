@@ -1,7 +1,7 @@
 <div class="navbar navbar-expand-sm navbar-light navbar-lewagon fixed-top">
   <%= link_to :root, class: "navbar-brand d-flex align-items-center" do %>
     <div id="logo" class="p-2">
-      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744731396/MentalMaths/Untitled_design_v7znkg.png") %>
+      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744891031/MentalMaths/Untitled_design_1_oh5xiz.png") %>
     </div>
     <div class="px-3">
       <h1 class="mb-0" id="nav-title">MathSprint</h1>
@@ -15,28 +15,26 @@
   </button>
 
   <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav nav-item">
       <% if user_signed_in? %>
 
-        <li class="nav-item active fancy-link m-3">
+        <li class="active fancy-link m-3">
           <%= link_to "Topics", topics_path%>
         </li>
-        <li class="nav-item active fancy-link m-3">
+        <li class="active fancy-link m-3">
           <%= link_to "Home", :root %>
         </li>
-        <li class="nav-item fancy-link m-3">
+        <li class="fancy-link m-3">
           <%= link_to "Logout", destroy_user_session_path, method: :delete %>
         </li>
 
       <% else %>
-        <h1 class="fancy-link" id="nav-title">
-          <li>
+          <li class="active fancy-link m-3">
             <%= link_to "Login", user_session_path %>
           </li>
-          <li>
-            <%= link_to "SignUp", new_user_session_path%>
+          <li class="active fancy-link m-3">
+            <%= link_to "SignUp", new_user_session_path %>
           </li>
-        </h1>
       <% end %>
     </ul>
   </div>
