@@ -1,0 +1,20 @@
+<div class="topics-home">
+    <% @topics.each do |topic| %>
+        <% if topic.public? || user_signted_in? %>
+            <%= link_to topic_path(topic) do %>
+                <button class="main-btn">
+                    <h1><%= topic.title %></h1>
+                </button>
+            <% end %>
+        <% else %>
+            <%= link_to new_user_registration_path do %>
+                <button class="main-btn locked">
+                    <div class="main-img">
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744969400/franck-DoWZMPZ-M9s-unsplash_utayvh.jpg", alt: "Locked") %>
+                    </div>
+                    <span><%= topic.name %> 🔒</span>
+                </button>
+            <% end %>
+        <% end %>
+    <% end %>
+</div>

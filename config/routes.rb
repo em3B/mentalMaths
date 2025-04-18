@@ -5,6 +5,13 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  controller :pages do
+    get :about
+    get :privacy
+    get :disclosure
+    get :disclaimer
+  end
+
     # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
     # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
     # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -25,6 +32,8 @@ Rails.application.routes.draw do
         post "answer", on: :member  # this will handle submitting answers to questions
       end
     end
+
+    resources :scores, only: [ :index ]
 
     # Score route (this could be shown after completing a session or at the end)
     get "score", to: "topics#score", as: "score"
