@@ -1,0 +1,14 @@
+<h1>Your Scores</h1>
+
+<% if @scores.present? %>
+  <ul>
+    <% @scores.each do |score| %>
+      <li>
+        <strong><%= score.topic.title %>:</strong>
+        <%= score.value %> points – <%= score.created_at.strftime("%d %b %Y") %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You don’t have any scores yet. Try a topic!</p>
+<% end %>

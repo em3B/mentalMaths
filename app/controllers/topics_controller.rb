@@ -1,6 +1,10 @@
 class TopicsController < ApplicationController
   def index
-    @topics = Topic.all
+    @topics = if user_signed_in?
+      Topic.all
+    else
+      Topic.where(public: true)
+    end
   end
 
   def show

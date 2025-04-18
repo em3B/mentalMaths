@@ -17,7 +17,9 @@
   <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
     <ul class="navbar-nav nav-item">
       <% if user_signed_in? %>
-
+        <li class="active fancy-link m-3">
+          <%= link_to "Scores", scores_path %>
+        </li>
         <li class="active fancy-link m-3">
           <%= link_to "Topics", topics_path%>
         </li>
