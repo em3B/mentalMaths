@@ -147,6 +147,14 @@ h1#nav-title {
 .main-btn h1 {
   color: white;
   font-weight: bolder;
+  font-size: clamp(1rem, 2vw, 2rem);
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  flex-shrink: 1; // allow shrinking inside the button
 }
 
 .main-btn a,
@@ -160,6 +168,7 @@ h4:hover {
   text-decoration: none;
 }
 
+// image for the main button
 .main-img img {
   width: 150px;
   height: 100%;

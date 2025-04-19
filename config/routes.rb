@@ -24,6 +24,10 @@ Rails.application.routes.draw do
 
     devise_for :users
 
+    # Custom topic routes (intro and play)
+    get "topics/:id/intro", to: "topics#intro", as: "topic_intro"
+    get "topics/:id/play", to: "questions#play", as: "play_topic"
+
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
       # Route to show questions for a specific topic (will handle the intro and question display)
