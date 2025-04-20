@@ -1,20 +1,26 @@
 const path = require("path");
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
   mode: "production",
   entry: {
-    main: "./app/javascript/main.js"  // Define entry as an object with a named entry point
+    main: "./app/javascript/packs/main.js", // Define entry as an object with a named entry point
   },
   output: {
-    filename: "[name].js",  // Use the entry point name in the output file
-    path: path.resolve(__dirname, "public/packs"),
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
   },
-  node: {
-    fs: 'empty',  // Empty mock for fs
-    net: 'empty', // Empty mock for net
-    tls: 'empty', // Empty mock for tls
-    dgram: 'empty', // Empty mock for dgram
-    child_process: 'empty', // Empty mock for child_process
+  module: {
+    rules: [
+      {
+        test: /\.js$/, // transpile .js files with Babel
+        use: 'babel-loader',
+        exclude: /node_modules/,
+      },
+      // other rules can go here for handling CSS, images, etc.
+    ],
   },
-  plugins: [],
+  plugins: [
+    new NodePolyfillPlugin(), // Use the polyfill plugin to handle Node modules like fs, net, etc.
+  ],
 };

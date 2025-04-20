@@ -8,7 +8,6 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'main', 'data-turbolinks-track': 'reload' %>
 
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
@@ -29,6 +28,9 @@
     <%# jQuery %>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <%# <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %> 
+    <%= javascript_pack_tag 'packs/main', 'data-turbolinks-track': 'reload' %>
+    <%= csrf_meta_tags %>
+
 
   </head>
 
