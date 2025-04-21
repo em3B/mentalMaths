@@ -26,4 +26,16 @@ class TopicsController < ApplicationController
 
     redirect_to question_path(session[:questions].first) # Start quiz
   end
+
+  def intro
+    @topic = Topic.find(params[:id])
+  end
+
+  def score
+    @topic = Topic.find(params[:id])
+  end
+
+  def play
+    @topic = Topic.find(params[:id])
+  end
 end
