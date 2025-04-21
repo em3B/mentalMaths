@@ -2,17 +2,28 @@
     <% @topics.each do |topic| %>
         <% if topic.public? || user_signed_in? %>
             <%= link_to topic_path(topic) do %>
+            <div class="main-btn-group">
                 <button class="main-btn">
+                    <% if topic.title.downcase.include?("rainbow") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", class: "main-btn-icon") %>
+                    <% elsif topic.title.downcase.include?("number bond") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253609/MentalMaths/Screenshot_2025-04-21_at_17.39.05_kaqu1y.png", class: "main-btn-icon") %>
+                    <% elsif topic.title.downcase.include?("multiplication") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253579/MentalMaths/frogses-production-FlvBhEwEOng-unsplash_uiybkh.jpg", class: "main-btn-icon") %>
+                    <% elsif topic.title.downcase.include?("ten frame") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253598/MentalMaths/Screenshot_2025-04-21_at_17.36.02_z8dbr4.png", class: "main-btn-icon") %>
+                    <% else %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
+                    <% end %>
                     <h1><%= topic.title %></h1>
                 </button>
+            </div>
             <% end %>
         <% else %>
             <%= link_to new_user_registration_path do %>
                 <button class="main-btn locked">
-                    <div class="main-img">
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744969400/franck-DoWZMPZ-M9s-unsplash_utayvh.jpg", alt: "Locked") %>
-                    </div>
-                    <span style="color: white;"><%= topic.title %> 🔒</span>
+                    <h1>🔒</h1>
+                    <h1><%= topic.title %></h1>
                 </button>
             <% end %>
         <% end %>
