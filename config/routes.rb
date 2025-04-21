@@ -26,11 +26,16 @@ Rails.application.routes.draw do
 
     # Custom topic routes (intro and play)
     get "topics/:id/intro", to: "topics#intro", as: "topic_intro"
-    get "topics/:id/play", to: "questions#play", as: "play_topic"
 
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
       # Route to show questions for a specific topic (will handle the intro and question display)
+      #   member do
+      member do
+        get "score"  # adds /topics/:id/score
+        get "intro"
+        get "play"
+      end
       resources :questions, only: [ :show ] do
         # You can add a route for answers here if you want to track answers directly
         post "answer", on: :member  # this will handle submitting answers to questions
