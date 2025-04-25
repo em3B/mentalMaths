@@ -15,7 +15,7 @@
                     <% else %>
                         <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
                     <% end %>
-                    <h1><%= topic.title %></h1>
+                    <h4><%= topic.title %></h4>
                 </button>
             </div>
             <% end %>
@@ -23,7 +23,7 @@
             <%= link_to new_user_registration_path do %>
                 <button class="main-btn locked">
                     <h1>🔒</h1>
-                    <h1><%= topic.title %></h1>
+                    <h4><%= topic.title %></h4>
                 </button>
             <% end %>
         <% end %>
