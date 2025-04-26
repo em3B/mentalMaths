@@ -15,7 +15,6 @@
   const gameContent = document.createElement('div');
   gameContent.innerHTML = `
     <div class="devise-form">
-      <p>Set your game:</p>
       <div class="form-table" id="game-content">
         <label id="start-input">Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br>
         <label id="step-input">Count By: <input type="number" id="step-amount" min="1" max="200" required></label><br><br>
