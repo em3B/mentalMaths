@@ -1,5 +1,8 @@
 (function runGame() {
   const gameContainer = document.getElementById('game-container');
+  const userSignedIn = gameContainer.dataset.userSignedIn == "true";
+  let totalQuestions = 0; 
+  let correctAnswers = 0;
 
   if (!gameContainer) {
     console.error("Game container not found");
@@ -16,8 +19,8 @@
     <div class="devise-form">
       <p>Set your game:</p>
       <div class="form-table" id="game-content">
-        <label>Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br>
-        <label>Count By: <input type="number" id="step-amount" min="1" max="200" required></label><br><br>
+        <label id="start-input">Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br>
+        <label id="step-input">Count By: <input type="number" id="step-amount" min="1" max="200" required></label><br><br>
         <button class="devise-btn" id="start-game-btn">Start Game</button>
         <div id="question-section" style="display: none;">
           <p>You have <span id="timer">60</span> seconds.</p>
@@ -33,6 +36,7 @@
 
   let currentValue, step, timeLeft = 60, timerInterval;
 
+  // Possible Inputs from innerHtml
   const questionSection = document.getElementById("question-section");
   const startGameBtn = document.getElementById("start-game-btn");
   const questionText = document.getElementById("question-text");
@@ -40,7 +44,10 @@
   const submitAnswerBtn = document.getElementById("submit-answer-btn");
   const feedback = document.getElementById("feedback");
   const timerDisplay = document.getElementById("timer");
+  const startInput = document.getElementById("start-input");
+  const stepInput = document.getElementById("step-input");
 
+  // Listen to the start number and step amount set by the user, make sure valid
   startGameBtn.addEventListener("click", () => {
     const startNumber = parseInt(document.getElementById("start-number").value, 10);
     const stepAmount = parseInt(document.getElementById("step-amount").value, 10);
@@ -50,6 +57,7 @@
       return;
     }
 
+    // Initial setup from the user input
     currentValue = startNumber;
     step = stepAmount;
 
@@ -57,6 +65,8 @@
     startGameBtn.style.display = "none";
     document.getElementById("start-number").style.display = "none";
     document.getElementById("step-amount").style.display = "none";
+    startInput.textContent = '';
+    stepInput.textContent = '';
     questionSection.style.display = "block";
     generateQuestion();
     startTimer();
@@ -93,9 +103,12 @@
       const userAnswer = parseInt(answerInput.value, 10);
       if (userAnswer === nextValue) {
         feedback.textContent = "Correct!";
+        correctAnswers += 1;
+        totalQuestions += 1;
         currentValue = nextValue;
         generateQuestion();
       } else {
+        totalQuestions += 1;
         feedback.textContent = "Try again!";
       }
     };
@@ -105,6 +118,41 @@
     questionText.textContent = '';
     answerInput.style.display = 'none';
     submitAnswerBtn.style.display = 'none';
+    startInput.textContent = '';
+    stepInput.textContent = '';
     feedback.innerHTML = `<strong>Time's up!</strong>`;
+    feedback.textContent = `Game over! You scored ${correctAnswers}/${totalQuestions}`;
+
+    if (userSignedIn) {
+      updateScore(correctAnswers, totalQuestions);
+    }
+  }
+
+  function updateScore(correct, totalQuestions) {
+    fetch('/scores', {  
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        score: {
+          correct: correct,
+          total_questions: totalQuestions
+        }
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Score successfully saved:', data);
+    })
+    .catch(error => {
+      console.error('Error saving score:', error);
+    });
   }
 })();
