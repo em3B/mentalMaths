@@ -42,7 +42,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :scores, only: [ :index ]
+    resources :scores, only: [ :index, :create ]
 
     # Score route (this could be shown after completing a session or at the end)
     get "score", to: "topics#score", as: "score"

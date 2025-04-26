@@ -12,7 +12,8 @@
 </div>
 
 <%# this is where the game will go %>
-<div id="game-container" style="display: none;"></div>
+<div id="game-container" style="display: none;" data-user-signed-in="<%= user_signed_in? %>"></div>
+></div>
 
 <script>
   window.WEBPACK_MANIFEST = <%= raw File.read(Rails.root.join("public/packs/manifest.json")) %>;
