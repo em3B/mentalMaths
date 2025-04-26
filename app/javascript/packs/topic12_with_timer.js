@@ -26,8 +26,9 @@
           <p>You have <span id="timer">60</span> seconds.</p>
           <p id="question-text"></p>
           <input type="number" id="answer-input" />
-          <button class="devise-btn" id="submit-answer-btn">Submit</button>
-          <p id="feedback"></p>
+          <button class="devise-btn" id="submit-answer-btn">Answer</button>
+          <h4 id="feedback"></h4>
+          <button class="devise-btn" id="go-to-topic-index">Return to Topic</button>
         </div>
       </div>
     </div>
@@ -46,6 +47,7 @@
   const timerDisplay = document.getElementById("timer");
   const startInput = document.getElementById("start-input");
   const stepInput = document.getElementById("step-input");
+  const returnToTopicIndexBtn = document.getElementById("go-to-topic-index");
 
   // Listen to the start number and step amount set by the user, make sure valid
   startGameBtn.addEventListener("click", () => {
@@ -65,6 +67,7 @@
     startGameBtn.style.display = "none";
     document.getElementById("start-number").style.display = "none";
     document.getElementById("step-amount").style.display = "none";
+    returnToTopicIndexBtn.style.display = "none";
     startInput.textContent = '';
     stepInput.textContent = '';
     questionSection.style.display = "block";
@@ -95,7 +98,7 @@
       nextValue = currentValue + (step * -direction); // flip direction
     }
 
-    questionText.textContent = `What is ${currentValue} ${nextValue > currentValue ? "+" : "-"} ${step}?`;
+    questionText.innerHTML = `<h2>${currentValue} ${nextValue > currentValue ? "+" : "-"} ${step} = </h2>`;
     answerInput.value = '';
     answerInput.focus();
 
@@ -122,9 +125,14 @@
     stepInput.textContent = '';
     feedback.innerHTML = `<strong>Time's up!</strong>`;
     feedback.textContent = `Game over! You scored ${correctAnswers}/${totalQuestions}`;
+    returnToTopicIndexBtn.style.display = "inline-block";
 
     if (userSignedIn) {
       updateScore(correctAnswers, totalQuestions);
+    }
+
+    returnToTopicIndexBtn.onclick = () => {
+      window.location.href = '/topics/12'
     }
   }
 
