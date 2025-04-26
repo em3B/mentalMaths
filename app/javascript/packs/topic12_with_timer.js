@@ -13,16 +13,20 @@
   // Create form for inputs
   const gameContent = document.createElement('div');
   gameContent.innerHTML = `
-    <p>Set your game:</p>
-    <label>Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br>
-    <label>Count By: <input type="number" id="step-amount" min="1" max="200" required></label><br><br>
-    <button id="start-game-btn">Start Game</button>
-    <div id="question-section" style="display: none;">
-      <p>You have <span id="timer">60</span> seconds.</p>
-      <p id="question-text"></p>
-      <input type="number" id="answer-input" />
-      <button id="submit-answer-btn">Submit</button>
-      <p id="feedback"></p>
+    <div class="devise-form">
+      <p>Set your game:</p>
+      <div class="form-table" id="game-content">
+        <label>Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br>
+        <label>Count By: <input type="number" id="step-amount" min="1" max="200" required></label><br><br>
+        <button class="devise-btn" id="start-game-btn">Start Game</button>
+        <div id="question-section" style="display: none;">
+          <p>You have <span id="timer">60</span> seconds.</p>
+          <p id="question-text"></p>
+          <input type="number" id="answer-input" />
+          <button class="devise-btn" id="submit-answer-btn">Submit</button>
+          <p id="feedback"></p>
+        </div>
+      </div>
     </div>
   `;
   gameContainer.appendChild(gameContent);
