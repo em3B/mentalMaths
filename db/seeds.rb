@@ -84,13 +84,13 @@ topics = [
     requires_auth: false
   },
   {
-    title: "Add and Subtract 10 Until 100",
+    title: "Add and Subtract by 10 Until 200",
     intro: "Pay special attention to the tens place when you add or subtract 10 each time.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Add and Subtract 100 Until 1000",
+    title: "Add and Subtract by 100 Until 1000",
     intro: "Pay special attention to the hundreds place when you add or subtract 100 each time.",
     public: false,
     requires_auth: true
