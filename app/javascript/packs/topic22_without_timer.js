@@ -37,7 +37,7 @@
   
     // Listen to the start number and step amount set by the user, make sure valid
     const startNumber = parseInt(0, 10);
-    step = parseInt(8, 10);
+    step = parseInt(9, 10);
 
     if (isNaN(startNumber) || startNumber < 0) {
     alert("Please enter valid numbers.");
@@ -58,7 +58,7 @@
       let nextValue = currentValue + (step * direction);
   
       // Clamp to 0–200
-      if (nextValue < 0 || nextValue > 96) {
+      if (nextValue < 0 || nextValue > 108) {
         nextValue = currentValue + (step * -direction); // flip direction
       }
   
@@ -79,7 +79,7 @@
     }
   
     endGameBtn.onclick = () => {
-      window.location.href = '/topics/21';
+      window.location.href = '/topics/22';
     }
   
   })();
