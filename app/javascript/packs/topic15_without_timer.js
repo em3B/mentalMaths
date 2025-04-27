@@ -15,8 +15,6 @@
     gameContent.innerHTML = `
       <div class="devise-form">
         <div class="form-table" id="game-content">
-          <label id="start-input">Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br><br><br>
-          <button class="devise-btn" id="start-game-btn">Start Game</button>
           <div id="question-section" style="display: none;">
             <p id="question-text"></p>
             <input type="number" id="answer-input" />
@@ -31,34 +29,27 @@
   
     // Possible Inputs from innerHtml
     const questionSection = document.getElementById("question-section");
-    const startGameBtn = document.getElementById("start-game-btn");
     const questionText = document.getElementById("question-text");
     const answerInput = document.getElementById("answer-input");
     const submitAnswerBtn = document.getElementById("submit-answer-btn");
     const feedback = document.getElementById("feedback");
-    const startInput = document.getElementById("start-input");
     const endGameBtn = document.getElementById("go-to-topic-index");
   
     // Listen to the start number and step amount set by the user, make sure valid
-    startGameBtn.addEventListener("click", () => {
-      const startNumber = parseInt(document.getElementById("start-number").value, 10);
-      step = parseInt(100, 10);
-  
-      if (isNaN(startNumber) || startNumber < 0) {
-        alert("Please enter valid numbers.");
-        return;
-      }
-  
-      // Initial setup from the user input
-      currentValue = startNumber;
-  
-      // Hide setup, show game
-      startGameBtn.style.display = "none";
-      document.getElementById("start-number").style.display = "none";
-      startInput.textContent = '';
-      questionSection.style.display = "block";
-      generateQuestion();
-    });
+    const startNumber = parseInt(0, 10);
+    step = parseInt(2, 10);
+
+    if (isNaN(startNumber) || startNumber < 0) {
+    alert("Please enter valid numbers.");
+    return;
+    }
+
+    // Initial setup from the user input
+    currentValue = startNumber;
+
+    // Hide setup, show game
+    questionSection.style.display = "block";
+    generateQuestion();
   
   
     function generateQuestion() {
@@ -67,7 +58,7 @@
       let nextValue = currentValue + (step * direction);
   
       // Clamp to 0–200
-      if (nextValue < 0 || nextValue > 1000) {
+      if (nextValue < 0 || nextValue > 24) {
         nextValue = currentValue + (step * -direction); // flip direction
       }
   
@@ -88,7 +79,7 @@
     }
   
     endGameBtn.onclick = () => {
-      window.location.href = '/topics/14';
+      window.location.href = '/topics/15';
     }
   
   })();

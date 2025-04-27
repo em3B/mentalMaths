@@ -18,8 +18,6 @@
     gameContent.innerHTML = `
       <div class="devise-form">
         <div class="form-table" id="game-content">
-          <label id="start-input">Start Number: <input type="number" id="start-number" min="0" max="200" required></label><br><br><br>
-          <button class="devise-btn" id="start-game-btn">Start Game</button>
           <div id="question-section" style="display: none;">
             <p>You have <span id="timer">60</span> seconds.</p>
             <p id="question-text"></p>
@@ -37,7 +35,6 @@
   
     // Possible Inputs from innerHtml
     const questionSection = document.getElementById("question-section");
-    const startGameBtn = document.getElementById("start-game-btn");
     const questionText = document.getElementById("question-text");
     const answerInput = document.getElementById("answer-input");
     const submitAnswerBtn = document.getElementById("submit-answer-btn");
@@ -47,27 +44,22 @@
     const returnToTopicIndexBtn = document.getElementById("go-to-topic-index");
   
     // Listen to the start number and step amount set by the user, make sure valid
-    startGameBtn.addEventListener("click", () => {
-      const startNumber = parseInt(document.getElementById("start-number").value, 10);
-      step = parseInt(100, 10);
-  
-      if (isNaN(startNumber) || startNumber < 0) {
-        alert("Please enter valid numbers.");
-        return;
-      }
-  
-      // Initial setup from the user input
-      currentValue = startNumber;
-  
-      // Hide setup, show game
-      startGameBtn.style.display = "none";
-      document.getElementById("start-number").style.display = "none";
-      returnToTopicIndexBtn.style.display = "none";
-      startInput.textContent = '';
-      questionSection.style.display = "block";
-      generateQuestion();
-      startTimer();
-    });
+    const startNumber = parseInt(0, 10);
+    step = parseInt(2, 10);
+
+    if (isNaN(startNumber) || startNumber < 0) {
+    alert("Please enter valid numbers.");
+    return;
+    }
+
+    // Initial setup from the user input
+    currentValue = startNumber;
+
+    // Hide setup, show game
+    returnToTopicIndexBtn.style.display = "none";
+    questionSection.style.display = "block";
+    generateQuestion();
+    startTimer();
   
     function startTimer() {
       timeLeft = 60;
@@ -88,7 +80,7 @@
       let nextValue = currentValue + (step * direction);
   
       // Clamp to 0–200
-      if (nextValue < 0 || nextValue > 1000) {
+      if (nextValue < 0 || nextValue > 24) {
         nextValue = currentValue + (step * -direction); // flip direction
       }
   
@@ -115,7 +107,6 @@
       questionText.textContent = '';
       answerInput.style.display = 'none';
       submitAnswerBtn.style.display = 'none';
-      startInput.textContent = '';
       feedback.innerHTML = `
         <strong>Time's up!</strong><br><br>
         Game over! You scored ${correctAnswers}/${totalQuestions}.
@@ -127,7 +118,7 @@
       }
     
       returnToTopicIndexBtn.onclick = () => {
-        window.location.href = '/topics/14';
+        window.location.href = '/topics/15';
       }
     }    
   
