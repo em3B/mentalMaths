@@ -22,7 +22,7 @@
         <div id="question-section" style="display: none;">
           <p id="question-text"></p>
           <input type="number" id="answer-input" />
-          <button class="devise-btn" id="submit-answer-btn">Answer</button>
+          <button class="devise-btn" id="submit-answer-btn">Next</button>
           <button class="devise-btn" id="go-to-topic-index">End Game</button>
           <p id="feedback"></p>
         </div>
