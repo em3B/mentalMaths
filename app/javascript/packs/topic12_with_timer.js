@@ -25,7 +25,7 @@
           <p>You have <span id="timer">60</span> seconds.</p>
           <p id="question-text"></p>
           <input type="number" id="answer-input" />
-          <button class="devise-btn" id="submit-answer-btn">Answer</button>
+          <button class="devise-btn" id="submit-answer-btn">Next</button>
           <h4 id="feedback"></h4>
           <button class="devise-btn" id="go-to-topic-index">Return to Topic</button>
         </div>
