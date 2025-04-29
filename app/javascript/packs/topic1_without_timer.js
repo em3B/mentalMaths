@@ -52,6 +52,13 @@
             const userAnswer = parseInt(answerInput.value, 10);
             if (userAnswer == answer) {
             feedback.textContent = "Correct!";
+
+            confetti({
+              particleCount: 150,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+            
             generateQuestion();
             } else {
             feedback.textContent = "Try again!";
