@@ -102,6 +102,13 @@
           feedback.textContent = "Correct!";
           correctAnswers += 1;
           totalQuestions += 1;
+
+          confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+          
           currentValue = nextValue;
           generateQuestion();
         } else {
