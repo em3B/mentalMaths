@@ -10,7 +10,6 @@ $pink: #F0688C;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
   
     min-height: 100vh;
     padding: 2rem;
@@ -50,11 +49,34 @@ $pink: #F0688C;
     
       input[type="email"],
       input[type="password"],
-      input[type="text"] {
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+      input[type="text"],
+      input[type="number"] {
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem; 
+        -moz-appearance: textfield; // Firefox
+        appearance: textfield; // Standard
+        border: 2px solid #ccc;
+        border-radius: 12px;
         width: 100%;
+        font-size: 1.1rem;
+        background-color: white;
+        transition: all 0.3s ease;
+        outline: none;
+
+        &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+
+        &:focus {
+          border-color: $purple;
+          box-shadow: 0 0 0 4px rgba($purple, 0.2); // soft purple glow
+        }
+
+        &:hover {
+          border-color: $turquoise;
+          background-color: lighten($dyslexia_background, 5%);
+        }
       }
 
       a {
