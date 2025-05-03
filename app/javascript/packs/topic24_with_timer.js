@@ -17,7 +17,7 @@
     const gameContent = document.createElement('div');
     gameContent.innerHTML = `
       <div class="devise-form">
-        <div class="form-table" id="game-content">
+        <div class="form-table">
           <div id="question-section" style="display: none;">
             <p>You have <span id="timer">60</span> seconds.</p>
             <p id="question-text"></p>

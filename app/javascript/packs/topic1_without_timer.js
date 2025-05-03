@@ -13,7 +13,7 @@
     // Create form for inputs
     const gameContent = document.createElement('div');
     gameContent.innerHTML = `
-      <div class="devise-form">
+      <div class="devise-form form-table">
         <div class="form-table" id="game-content">
           <div id="question-section" style="display: none;">
             <p id="question-text"></p>
