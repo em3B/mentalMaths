@@ -13,51 +13,45 @@
 
 <%# this is where the game will go %>
 <div id="game-container" style="display: none;" data-user-signed-in="<%= user_signed_in? %>"></div>
-></div>
 
 <script>
-  const formWrapper = document.querySelector(".devise-form");
-  const playButton = document.getElementById("play-button");
-  const useTimerCheckbox = document.getElementById("use-timer");
-  const gameContainer = document.getElementById("game-container");
-  const gameIndex = <%= @topic.id %>;
-  window.WEBPACK_MANIFEST = <%= raw File.read(Rails.root.join("public/packs/manifest.json")) %>;
+  document.addEventListener("turbo:load", function () {
+    window.WEBPACK_MANIFEST = <%= raw File.read(Rails.root.join("public/packs/manifest.json")) %>;
 
-  playButton.addEventListener("click", function (e) {
-    e.preventDefault();
+    const formWrapper = document.querySelector(".devise-form");
+    const playButton = document.getElementById("play-button");
+    const useTimerCheckbox = document.getElementById("use-timer");
+    const gameContainer = document.getElementById("game-container");
+    const gameIndex = <%= @topic.id %>;
 
-    // Hide the form
-    formWrapper.style.display = "none";
+    if (!playButton) return; // Prevents error if element doesn't exist
 
-    // Clear and show the game container
-    gameContainer.innerHTML = '';
-    gameContainer.style.display = "block";
+    playButton.addEventListener("click", function (e) {
+      e.preventDefault();
 
-    // Remove existing game script
-    const existingScript = document.getElementById("dynamic-game-script");
-    if (existingScript) {
-      existingScript.remove();
-    }
+      formWrapper.style.display = "none";
+      gameContainer.innerHTML = '';
+      gameContainer.style.display = "block";
 
-    // Load correct game script
-    const script = document.createElement("script");
-    script.id = "dynamic-game-script";
-    script.type = "text/javascript";
+      const existingScript = document.getElementById("dynamic-game-script");
+      if (existingScript) existingScript.remove();
 
-    const mode = useTimerCheckbox.checked ? 'with_timer' : 'without_timer';
-    const logicalName = `packs/topic${gameIndex}_${mode}.js`;
-    const manifest = window.WEBPACK_MANIFEST;
+      const mode = useTimerCheckbox.checked ? 'with_timer' : 'without_timer';
+      const logicalName = `packs/topic${gameIndex}_${mode}.js`;
+      const manifest = window.WEBPACK_MANIFEST;
+      const hashedPath = manifest[logicalName];
 
-    const hashedPath = manifest[logicalName];
-
-    if (hashedPath) {
-      const script = document.createElement("script");
-      script.src = hashedPath; // This will be like "/packs/js/packs/topic12_with_timer-[hash].js"
-      document.body.appendChild(script);
-    } else {
-      console.error(`Topic script not found in manifest: ${logicalName}`);
-    }
-
+      if (hashedPath) {
+        const script = document.createElement("script");
+        script.id = "dynamic-game-script";
+        script.type = "text/javascript";
+        script.src = hashedPath;
+        document.body.appendChild(script);
+      } else {
+        console.error(`Topic script not found in manifest: ${logicalName}`);
+      }
+    });
   });
 </script>
+
 
