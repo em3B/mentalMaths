@@ -14,7 +14,7 @@
     const gameContent = document.createElement('div');
     gameContent.innerHTML = `
       <div class="devise-form">
-        <div class="form-table" id="game-content">
+        <div class="form-table">
           <div id="question-section" style="display: none;">
             <p id="question-text"></p>
             <input type="number" id="answer-input" />

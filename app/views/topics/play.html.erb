@@ -12,7 +12,7 @@
 </div>
 
 <%# this is where the game will go %>
-<div id="game-container" style="display: none;" data-user-signed-in="<%= user_signed_in? %>"></div>
+<div id="game-container" style="display: none !important;" data-user-signed-in="<%= user_signed_in? %>"></div>
 
 <script>
   document.addEventListener("turbo:load", function () {
@@ -23,6 +23,8 @@
     const useTimerCheckbox = document.getElementById("use-timer");
     const gameContainer = document.getElementById("game-container");
     const gameIndex = <%= @topic.id %>;
+
+    gameContainer.style.display = "none";
 
     if (!playButton) return; // Prevents error if element doesn't exist
 
