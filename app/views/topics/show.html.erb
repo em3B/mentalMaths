@@ -35,3 +35,15 @@
     <% end %>
 
 </div>
+
+<script>
+    document.querySelectorAll('.main-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const boing = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746369903/toy-button-105724_arxpps.mp3');
+        boing.play().catch((e) => console.warn("Playback failed:", e));
+
+        btn.classList.add('bounce');
+        setTimeout(() => btn.classList.remove('bounce'), 300);
+    });
+    });
+</script>
