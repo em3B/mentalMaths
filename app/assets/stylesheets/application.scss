@@ -33,7 +33,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Baloo 2', cursive;
 }
 
 html,
@@ -126,28 +126,51 @@ h1#nav-title {
   padding-bottom: 200px;
 }
 
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  50% { transform: rotate(-1.5deg); }
+  75% { transform: rotate(1deg); }
+}
+
 .main-btn {
-  border-radius: 20px;
-  border-color: $purple;
+  border-radius: 25px;
+  border: 3px solid $purple;
   padding: 40px;
   margin: 50px;
   height: 300px;
   width: 300px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
-  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-  rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.4),
+    0 6px 6px rgba(0, 0, 0, 0.25),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+  
+  transition: all 0.2s ease-in-out;
 
   &:hover {
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
-    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
-    transform: translateY(3px);
+    animation: wiggle 0.3s ease-in-out;
+    transform: scale(1.03);
+    box-shadow:
+      0 6px 14px rgba(0, 0, 0, 0.3),
+      0 3px 5px rgba(0, 0, 0, 0.2),
+      inset 0 1px 3px rgba(255, 255, 255, 0.6),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.15);
     cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
+  }
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      inset 0 3px 6px rgba(0, 0, 0, 0.2);
   }
 }
 
-.main-btn h1 {
+
+.main-btn h4 {
+  font-family: 'Baloo 2', cursive;
   font-weight: bolder;
-  font-size: clamp(1rem, 2vw, 2rem);
   text-align: center;
   margin: 0;
   line-height: 1.2;
