@@ -18,13 +18,13 @@ topics = [
     requires_auth: false
   },
   {
-    title: "Rainbow Pairs by Tens (1-100)",
+    title: "Rainbow Pairs (1-100)",
     intro: "Building upon Rainbow Pairs (0-10). This time we use the same idea, except with tens adding up to 100. See the rainbow below!",
     public: false,
     requires_auth: true
   },
   {
-    title: "Rainbow Pairs by Hundreds (0-1000)",
+    title: "Rainbow Pairs (0-1000)",
     intro: "Building upon Rainbow Pairs (0-10) and Rainbow Pairs (0-100). This time we use the same idea, except with hundreds adding up to 1000. See the rainbow below!",
     public: false,
     requires_auth: true
@@ -42,14 +42,14 @@ topics = [
     requires_auth: true
   },
   {
-    title: "Addition: Number Bonds with Rainbow Pairs (Two-Digit Plus One-Digit Numbers)",
-    intro: "Make Number Bonds that would help us solve the problem using our knowledge of rainbow pairs. See the examples below",
+    title: "Number Bonds: Two-Digit Plus One-Digit",
+    intro: "Use the number bonds and your knowledge of rainbow pairs to solve. See example below.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Subtraction: Number Bonds with Rainbow Pairs (Two-Digit Minus One-Digit Numbers)",
-    intro: "Make Number Bonds that would help us solve the problem using our knowledge of rainbow pairs. See the examples below",
+    title: "Number Bonds: Two-Digit Minus One-Digit",
+    intro: "Use the number bonds and your knowledge of rainbow pairs to solve. See example below.",
     public: false,
     requires_auth: true
   },
@@ -66,14 +66,14 @@ topics = [
     requires_auth: true
   },
   {
-    title: "Adding Two-Digit and One-Digit Numbers Using Number Bonds",
-    intro: "Use the number bonds and your knowledge of rainbow pairs to solve. See example below.",
+    title: "Number Bonds: Two-Digit Plus Two-Digit",
+    intro: "Break the two-digit number apart to solve. See example below.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Subtracting Two-Digit and One-Digit Numbers Using Number Bonds",
-    intro: "Use the number bonds and your knowledge of rainbow pairs to solve. See example below.",
+    title: "Number Bonds: Two-Digit Minus Two-Digit",
+    intro: "Break the two-digit number apart to solve. See example below.",
     public: false,
     requires_auth: true
   },
@@ -84,80 +84,80 @@ topics = [
     requires_auth: false
   },
   {
-    title: "Add and Subtract by 10 Until 200",
+    title: "Add and Subtract by 10",
     intro: "Pay special attention to the tens place when you add or subtract 10 each time.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Add and Subtract by 100 Until 1000",
+    title: "Add and Subtract by 100",
     intro: "Pay special attention to the hundreds place when you add or subtract 100 each time.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 2 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 2",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 2 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 3 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 3",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 3 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 4 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 4",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 4 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 5 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 5",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 5 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 6 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 6",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 6 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 7 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 7",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 7 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 8 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 8",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 8 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 9 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 9",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 0 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 10 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 10",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 10 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 11 Starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 11",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 11 starting from 0.",
     public: false,
     requires_auth: true
   },
   {
-    title: "Multiplication as Repeated Addition: Add and Subtract 12 starting from 0",
-    intro: "Practice multiplication as groups of a certain number added together. Add or subtract.",
+    title: "Multiplication as Repeated Addition: 12",
+    intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 12 starting from 0.",
     public: false,
     requires_auth: true
   }

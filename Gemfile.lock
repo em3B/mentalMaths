@@ -431,6 +431,9 @@ DEPENDENCIES
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 8.0.2)
+  rubocop
+  rubocop-performance
+  rubocop-rails
   rubocop-rails-omakase
   sassc-rails
   selenium-webdriver
