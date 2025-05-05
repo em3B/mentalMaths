@@ -3,6 +3,7 @@
     const userSignedIn = gameContainer.dataset.userSignedIn == "true";
     let totalQuestions = 0; 
     let correctAnswers = 0;
+    let answer = 0;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -68,27 +69,27 @@
         questionText.innerHTML = `<h2>${firstAddend} + __ = 1000</h2>`;
         answerInput.value = '';
         answerInput.focus();
-  
-        submitAnswerBtn.onclick = () => {
-            const userAnswer = parseInt(answerInput.value, 10);
-            if (userAnswer === answer) {
-            feedback.textContent = "Correct!";
-            correctAnswers += 1;
-            totalQuestions += 1;
-            
-            confetti({
-              particleCount: 150,
-              spread: 70,
-              origin: { y: 0.6 }
-            });
-            
-            generateQuestion();
-            } else {
-            totalQuestions += 1;
-            feedback.textContent = "Try again!";
-            }
-        };
     }
+
+    submitAnswerBtn.onclick = () => {
+      const userAnswer = parseInt(answerInput.value, 10);
+      if (userAnswer === answer) {
+      feedback.textContent = "Correct!";
+      correctAnswers += 1;
+      totalQuestions += 1;
+      
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
+      generateQuestion();
+      } else {
+      totalQuestions += 1;
+      feedback.textContent = "Try again!";
+      }
+  };
   
     function endGame() {
       questionText.textContent = '';

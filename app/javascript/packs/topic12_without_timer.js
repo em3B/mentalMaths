@@ -1,6 +1,7 @@
 (function runGame() {
   const gameContainer = document.getElementById('game-container');
   const userSignedIn = gameContainer.dataset.userSignedIn == "true";
+  let nextValue = 0;
 
   if (!gameContainer) {
     console.error("Game container not found");
@@ -70,7 +71,7 @@
   function generateQuestion() {
     // Decide randomly to add or subtract
     const direction = Math.random() < 0.5 ? -1 : 1;
-    let nextValue = currentValue + (step * direction);
+    nextValue = currentValue + (step * direction);
 
     // Clamp to 0–200
     if (nextValue < 0 || nextValue > 200) {
@@ -80,25 +81,25 @@
     questionText.innerHTML = `<h2>${currentValue} ${nextValue > currentValue ? "+" : "-"} ${step} = </h2>`;
     answerInput.value = '';
     answerInput.focus();
-
-    submitAnswerBtn.onclick = () => {
-      const userAnswer = parseInt(answerInput.value, 10);
-      if (userAnswer === nextValue) {
-        feedback.textContent = "Correct!";
-
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-        
-        currentValue = nextValue;
-        generateQuestion();
-      } else {
-        feedback.textContent = "Try again!";
-      }
-    };
   }
+
+  submitAnswerBtn.onclick = () => {
+    const userAnswer = parseInt(answerInput.value, 10);
+    if (userAnswer === nextValue) {
+      feedback.textContent = "Correct!";
+
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
+      currentValue = nextValue;
+      generateQuestion();
+    } else {
+      feedback.textContent = "Try again!";
+    }
+  };
 
   endGameBtn.onclick = () => {
     window.location.href = '/topics/12';

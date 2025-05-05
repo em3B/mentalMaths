@@ -1,5 +1,6 @@
 (function runGame() {
     const gameContainer = document.getElementById('game-container');
+    let answer = 0;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -47,24 +48,24 @@
         questionText.innerHTML = `<h2>${firstAddend} + __ = 10</h2>`;
         answerInput.value = '';
         answerInput.focus();
-  
-        submitAnswerBtn.onclick = () => {
-            const userAnswer = parseInt(answerInput.value, 10);
-            if (userAnswer == answer) {
-            feedback.textContent = "Correct!";
-
-            confetti({
-              particleCount: 150,
-              spread: 70,
-              origin: { y: 0.6 }
-            });
-            
-            generateQuestion();
-            } else {
-            feedback.textContent = "Try again!";
-            }
-        };
     }
+
+    submitAnswerBtn.onclick = () => {
+      const userAnswer = parseInt(answerInput.value, 10);
+      if (userAnswer == answer) {
+      feedback.textContent = "Correct!";
+
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      
+      generateQuestion();
+      } else {
+      feedback.textContent = "Try again!";
+      }
+  };
   
     endGameBtn.onclick = () => {
       window.location.href = '/topics/1';
