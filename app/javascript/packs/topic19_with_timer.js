@@ -100,6 +100,9 @@
             spread: 70,
             origin: { y: 0.6 }
           });
+
+          const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+          tada.play();
           
           currentValue = nextValue;
           generateQuestion();
