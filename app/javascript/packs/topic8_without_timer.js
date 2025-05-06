@@ -77,6 +77,12 @@
         }
     };
 
+    answerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitAnswerBtn.click();
+      }
+    });
+
     function displayTenFrameAndReturnValue(index) {
         // images to use
         const images = [

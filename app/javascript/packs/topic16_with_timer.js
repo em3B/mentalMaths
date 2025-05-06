@@ -113,6 +113,12 @@
         feedback.textContent = "Try again!";
       }
     };
+
+    answerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitAnswerBtn.click();
+      }
+    });
   
     function endGame() {
       questionText.textContent = '';

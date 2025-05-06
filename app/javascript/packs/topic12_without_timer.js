@@ -104,6 +104,12 @@
     }
   };
 
+  answerInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      submitAnswerBtn.click();
+    }
+  });
+
   endGameBtn.onclick = () => {
     window.location.href = '/topics/12';
   }
