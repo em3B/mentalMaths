@@ -127,6 +127,12 @@
     }
   };
 
+  answerInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      submitAnswerBtn.click();
+    }
+  });
+
   function endGame() {
     questionText.textContent = '';
     answerInput.style.display = 'none';

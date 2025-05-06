@@ -1,0 +1,11 @@
+2025-05-06 19:53:17.225 BST [39997] FATAL:  lock file "postmaster.pid" already exists
+2025-05-06 19:53:17.225 BST [39997] HINT:  Is another postmaster (PID 550) running in data directory "/usr/local/var/postgresql@14"?
+2025-05-06 19:55:10.144 BST [41225] FATAL:  lock file "postmaster.pid" already exists
+2025-05-06 19:55:10.144 BST [41225] HINT:  Is another postmaster (PID 41102) running in data directory "/usr/local/var/postgresql@14"?
+2025-05-06 19:59:11.770 BST [43845] FATAL:  pre-existing shared memory block (key 18903018, ID 131072) is still in use
+2025-05-06 19:59:11.770 BST [43845] HINT:  Terminate any old server processes associated with data directory "/usr/local/var/postgresql@14".
+2025-05-06 19:59:11.771 BST [43845] LOG:  database system is shut down
+2025-05-06 20:01:14.355 BST [45146] FATAL:  lock file "postmaster.pid" already exists
+2025-05-06 20:01:14.355 BST [45146] HINT:  Is another postmaster (PID 44930) running in data directory "/usr/local/var/postgresql@14"?
+2025-05-06 20:06:43.988 BST [1435] FATAL:  lock file "postmaster.pid" already exists
+2025-05-06 20:06:43.988 BST [1435] HINT:  Is another postmaster (PID 637) running in data directory "/usr/local/var/postgresql@14"?
