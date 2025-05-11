@@ -15,6 +15,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     let leftCircleNumber = 0;
     let rightCircleNumber = 0;
     let sumLessThanNextMultipleOfTen = true;
+    let submitClickHandler;
+    let submitKeyHandler;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -78,11 +80,10 @@ import { drawNumberBond } from './number_bond_builder.js';
     function generateQuestion() {
         twoDigitNumber = Math.floor(Math.random() * 90) + 10;
         oneDigitNumber = Math.floor(Math.random() * 8) + 1;
-        console.log(oneDigitNumber + "one digit");
         nextMultipleOfTen = Math.ceil(twoDigitNumber / 10) * 10; 
         sumLessThanNextMultipleOfTen = (twoDigitNumber + oneDigitNumber) < nextMultipleOfTen;
         if (sumLessThanNextMultipleOfTen) {
-          generateQuestionB(twoDigitNumber, nextMultipleOfTen, oneDigitNumber);
+          generateQuestionB(twoDigitNumber, oneDigitNumber);
         } else {
         leftCircleNumber = nextMultipleOfTen - twoDigitNumber;
         rightCircleNumber = oneDigitNumber - leftCircleNumber;
@@ -99,7 +100,7 @@ import { drawNumberBond } from './number_bond_builder.js';
             </canvas>
             </div>
             <h2>${twoDigitNumber} + ${oneDigitNumber}</h2>
-            <h2 id="questionParts">PART 1: ${oneDigitNumber} - ${leftCircleNumber} = </h2>
+            <h2 id="questionParts">PART 1 :   ${oneDigitNumber} - ${leftCircleNumber} = </h2>
         `;
     
         // ✅ Then draw the number bond
@@ -116,7 +117,15 @@ import { drawNumberBond } from './number_bond_builder.js';
         answerInput.value = '';
         answerInput.focus();
 
-        submitAnswerBtn.onclick = () => {
+         // Remove previous handlers, if they exist
+        if (submitClickHandler) {
+          submitAnswerBtn.removeEventListener('click', submitClickHandler);
+        }
+        if (submitKeyHandler) {
+          answerInput.removeEventListener('keydown', submitKeyHandler);
+        }
+
+        submitClickHandler = () => {
           const userAnswer = parseInt(answerInput.value, 10);
           if (userAnswer === answerPart1) {
           feedback.textContent = "Correct!";
@@ -139,12 +148,16 @@ import { drawNumberBond } from './number_bond_builder.js';
           }
         }
 
-      answerInput.addEventListener('keydown', (event) => {
+      submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
         submitAnswerBtn.click();
       }
-    });  
+    };  
         }
+
+        // Attach new handlers
+    submitAnswerBtn.addEventListener('click', submitClickHandler);
+    answerInput.addEventListener('keydown', submitKeyHandler);
   };  
 
   // question path when no carrying involved 
@@ -166,7 +179,7 @@ import { drawNumberBond } from './number_bond_builder.js';
             </canvas>
             </div>
             <h2>${twoDigitNumber} + ${oneDigitNumber}</h2>
-            <h2 id="questionParts">PART 1: ${twoDigitNumber} - ${leftCircleNumber} = </h2>
+            <h2 id="questionParts">PART 1 :   ${twoDigitNumber} - ${leftCircleNumber} = </h2>
         `;
 
     
@@ -184,7 +197,15 @@ import { drawNumberBond } from './number_bond_builder.js';
         answerInput.value = '';
         answerInput.focus();
 
-        submitAnswerBtn.onclick = () => {
+                 // Remove previous handlers, if they exist
+        if (submitClickHandler) {
+          submitAnswerBtn.removeEventListener('click', submitClickHandler);
+        }
+        if (submitKeyHandler) {
+          answerInput.removeEventListener('keydown', submitKeyHandler);
+        }
+
+        submitClickHandler = () => {
           const userAnswer = parseInt(answerInput.value, 10);
           if (userAnswer === answerPart1) {
           feedback.textContent = "Correct!";
@@ -207,11 +228,15 @@ import { drawNumberBond } from './number_bond_builder.js';
           }
         }
 
-      answerInput.addEventListener('keydown', (event) => {
+      submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
         submitAnswerBtn.click();
       }
-    });  
+    };  
+
+      // Attach new handlers
+      submitAnswerBtn.addEventListener('click', submitClickHandler);
+      answerInput.addEventListener('keydown', submitKeyHandler);
   }
 
   //  question path when carrying over involved
@@ -220,13 +245,21 @@ import { drawNumberBond } from './number_bond_builder.js';
   document.getElementById('right').textContent = rightCircleNumber;
     const questionPartsHeading = document.getElementById('questionParts');
     if (questionPartsHeading) {
-      questionPartsHeading.textContent = `PART 2: ${twoDigitNumber} + ${leftCircleNumber}`;
+      questionPartsHeading.textContent = `PART 2 :   ${twoDigitNumber} + ${leftCircleNumber}`;
     }
     answerPart2 = twoDigitNumber + leftCircleNumber;
     answerInput.value = '';
     answerInput.focus();
 
-        submitAnswerBtn.onclick = () => {
+      // Remove previous handlers, if they exist
+    if (submitClickHandler) {
+      submitAnswerBtn.removeEventListener('click', submitClickHandler);
+    }
+    if (submitKeyHandler) {
+      answerInput.removeEventListener('keydown', submitKeyHandler);
+    }
+
+        submitClickHandler = () => {
           const userAnswer = parseInt(answerInput.value, 10);
           if (userAnswer === answerPart2) {
           feedback.textContent = "Correct!";
@@ -249,11 +282,15 @@ import { drawNumberBond } from './number_bond_builder.js';
           }
         }
 
-      answerInput.addEventListener('keydown', (event) => {
+      submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
         submitAnswerBtn.click();
       }
-    }); 
+    }; 
+
+      // Attach new handlers
+      submitAnswerBtn.addEventListener('click', submitClickHandler);
+      answerInput.addEventListener('keydown', submitKeyHandler);
  }
 
 //  question path when no carrying over involved
@@ -262,14 +299,22 @@ import { drawNumberBond } from './number_bond_builder.js';
   document.getElementById('right').textContent = rightCircleNumber;
     const questionPartsHeading = document.getElementById('questionParts');
     if (questionPartsHeading) {
-      questionPartsHeading.textContent = `PART 2: ${rightCircleNumber} + ${oneDigitNumber}`;
+      questionPartsHeading.textContent = `PART 2 :   ${rightCircleNumber} + ${oneDigitNumber}`;
     }
 
     answerPart2 = rightCircleNumber + oneDigitNumber;
     answerInput.value = '';
     answerInput.focus();
 
-        submitAnswerBtn.onclick = () => {
+      // Remove previous handlers, if they exist
+    if (submitClickHandler) {
+      submitAnswerBtn.removeEventListener('click', submitClickHandler);
+    }
+    if (submitKeyHandler) {
+      answerInput.removeEventListener('keydown', submitKeyHandler);
+    }
+
+        submitClickHandler = () => {
           const userAnswer = parseInt(answerInput.value, 10);
           if (userAnswer === answerPart2) {
           feedback.textContent = "Correct!";
@@ -292,11 +337,15 @@ import { drawNumberBond } from './number_bond_builder.js';
           }
         }
 
-      answerInput.addEventListener('keydown', (event) => {
+      submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
         submitAnswerBtn.click();
       }
-    }); 
+    }; 
+
+      // Attach new handlers
+    submitAnswerBtn.addEventListener('click', submitClickHandler);
+    answerInput.addEventListener('keydown', submitKeyHandler);
  }
 
 // question path when carrying involved
@@ -310,7 +359,15 @@ import { drawNumberBond } from './number_bond_builder.js';
   answerInput.value = '';
   answerInput.focus();
 
-      submitAnswerBtn.onclick = () => {
+    // Remove previous handlers, if they exist
+  if (submitClickHandler) {
+    submitAnswerBtn.removeEventListener('click', submitClickHandler);
+  }
+  if (submitKeyHandler) {
+    answerInput.removeEventListener('keydown', submitKeyHandler);
+  }
+
+      submitClickHandler = () => {
         const userAnswer = parseInt(answerInput.value, 10);
         if (userAnswer === answerPart3) {
         feedback.textContent = "Correct!";
@@ -332,24 +389,37 @@ import { drawNumberBond } from './number_bond_builder.js';
         feedback.textContent = "Try again!";
         }
 
-    answerInput.addEventListener('keydown', (event) => {
+    submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
       submitAnswerBtn.click();
     }
-  }); 
+  }; 
  }
+
+
+  // Attach new handlers
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 // for question path with carrying 
 function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
     const questionPartsHeading = document.getElementById('questionParts');
     if (questionPartsHeading) {
-      questionPartsHeading.textContent = `SO..... ${twoDigitNumber} + ${oneDigitNumber} = `;
+      questionPartsHeading.textContent = `SO...  ${twoDigitNumber} + ${oneDigitNumber} = `;
     }
   answerInput.value = '';
   answerInput.focus();
 
-      submitAnswerBtn.onclick = () => {
+    // Remove previous handlers, if they exist
+  if (submitClickHandler) {
+    submitAnswerBtn.removeEventListener('click', submitClickHandler);
+  }
+  if (submitKeyHandler) {
+    answerInput.removeEventListener('keydown', submitKeyHandler);
+  }
+
+      submitClickHandler = () => {
         const userAnswer = parseInt(answerInput.value, 10);
         if (userAnswer === answerPart3) {
         feedback.textContent = "Correct!";
@@ -371,12 +441,16 @@ function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
         feedback.textContent = "Try again!";
         }
 
-    answerInput.addEventListener('keydown', (event) => {
+    submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
       submitAnswerBtn.click();
     }
-  }); 
+  }; 
  }
+
+    // Attach new handlers
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 //  question path when no carrying involved
@@ -389,7 +463,15 @@ function generateQuestionPart3b(answerPart2, previousMultipleOfTen) {
   answerInput.value = '';
   answerInput.focus();
 
-      submitAnswerBtn.onclick = () => {
+    // Remove previous handlers, if they exist
+  if (submitClickHandler) {
+    submitAnswerBtn.removeEventListener('click', submitClickHandler);
+  }
+  if (submitKeyHandler) {
+    answerInput.removeEventListener('keydown', submitKeyHandler);
+  }
+
+      submitClickHandler = () => {
         const userAnswer = parseInt(answerInput.value, 10);
         if (userAnswer === answerPart3) {
         feedback.textContent = "Correct!";
@@ -411,12 +493,15 @@ function generateQuestionPart3b(answerPart2, previousMultipleOfTen) {
         feedback.textContent = "Try again!";
         }
 
-    answerInput.addEventListener('keydown', (event) => {
+    submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
       submitAnswerBtn.click();
     }
-  }); 
+  }; 
 }
+    // Attach new handlers
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
  }
 
  // for question path without carrying 
@@ -428,7 +513,15 @@ function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
   answerInput.value = '';
   answerInput.focus();
 
-      submitAnswerBtn.onclick = () => {
+    // Remove previous handlers, if they exist
+  if (submitClickHandler) {
+    submitAnswerBtn.removeEventListener('click', submitClickHandler);
+  }
+  if (submitKeyHandler) {
+    answerInput.removeEventListener('keydown', submitKeyHandler);
+  }
+
+      submitClickHandler = () => {
         const userAnswer = parseInt(answerInput.value, 10);
         if (userAnswer === answerPart3) {
         feedback.textContent = "Correct!";
@@ -450,12 +543,17 @@ function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
         feedback.textContent = "Try again!";
         }
 
-    answerInput.addEventListener('keydown', (event) => {
+    submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
       submitAnswerBtn.click();
     }
-  }); 
+  }; 
  }
+
+    // Attach new handlers
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
+
 }
   
     function endGame() {
