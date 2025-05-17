@@ -17,6 +17,7 @@ import { drawNumberBond } from './number_bond_builder.js';
     let sumLessThanNextMultipleOfTen = true;
     let submitClickHandler;
     let submitKeyHandler;
+    let currentQuestionCounted = false;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -90,6 +91,7 @@ import { drawNumberBond } from './number_bond_builder.js';
     
         // ✅ Set innerHTML first
         questionText.innerHTML = `
+            <h2>${twoDigitNumber} + ${oneDigitNumber} = ${twoDigitNumber} + ${leftCircleNumber} + ${rightCircleNumber}</h2>
             <div class="number-bond">
             <div class="circle" id="total">?</div>
             <div class="circle" id="left">?</div>
@@ -99,7 +101,6 @@ import { drawNumberBond } from './number_bond_builder.js';
                 <line id="line2" stroke="black" stroke-width="2" />
             </canvas>
             </div>
-            <h2>${twoDigitNumber} + ${oneDigitNumber}</h2>
             <h2 id="questionParts">PART 1 :   ${oneDigitNumber} - ${leftCircleNumber} = </h2>
         `;
     
@@ -143,10 +144,15 @@ import { drawNumberBond } from './number_bond_builder.js';
           
           generateQuestionPart2(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber);
           } else {
-          totalQuestions += 1;
+          if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
           feedback.textContent = "Try again!";
           }
         }
+
+        currentQuestionCounted = false;
 
       submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
@@ -156,8 +162,8 @@ import { drawNumberBond } from './number_bond_builder.js';
         }
 
         // Attach new handlers
-    submitAnswerBtn.addEventListener('click', submitClickHandler);
-    answerInput.addEventListener('keydown', submitKeyHandler);
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
   };  
 
   // question path when no carrying involved 
@@ -169,6 +175,7 @@ import { drawNumberBond } from './number_bond_builder.js';
 
             // ✅ Set innerHTML first
         questionText.innerHTML = `
+            <h2>${twoDigitNumber} + ${oneDigitNumber} = ${previousMultipleOfTen} + ${rightCircleNumber} + ${oneDigitNumber}</h2>
             <div class="number-bond">
             <div class="circle" id="total">?</div>
             <div class="circle" id="left">?</div>
@@ -178,7 +185,6 @@ import { drawNumberBond } from './number_bond_builder.js';
                 <line id="line2" stroke="black" stroke-width="2" />
             </canvas>
             </div>
-            <h2>${twoDigitNumber} + ${oneDigitNumber}</h2>
             <h2 id="questionParts">PART 1 :   ${twoDigitNumber} - ${leftCircleNumber} = </h2>
         `;
 
@@ -223,10 +229,16 @@ import { drawNumberBond } from './number_bond_builder.js';
           
           generateQuestionPart2b(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber, previousMultipleOfTen);
           } else {
-          totalQuestions += 1;
+          if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
+
           feedback.textContent = "Try again!";
           }
         }
+
+        currentQuestionCounted = false;
 
       submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
@@ -235,8 +247,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     };  
 
       // Attach new handlers
-      submitAnswerBtn.addEventListener('click', submitClickHandler);
-      answerInput.addEventListener('keydown', submitKeyHandler);
+      submitAnswerBtn.onclick = submitClickHandler;
+      answerInput.onkeydown = submitKeyHandler;
   }
 
   //  question path when carrying over involved
@@ -277,10 +289,15 @@ import { drawNumberBond } from './number_bond_builder.js';
           
           generateQuestionPart3(answerPart2, rightCircleNumber);
           } else {
-          totalQuestions += 1;
+          if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
           feedback.textContent = "Try again!";
           }
         }
+
+        currentQuestionCounted = false;
 
       submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
@@ -289,8 +306,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     }; 
 
       // Attach new handlers
-      submitAnswerBtn.addEventListener('click', submitClickHandler);
-      answerInput.addEventListener('keydown', submitKeyHandler);
+      submitAnswerBtn.onclick = submitClickHandler;
+      answerInput.onkeydown = submitKeyHandler;
  }
 
 //  question path when no carrying over involved
@@ -332,10 +349,16 @@ import { drawNumberBond } from './number_bond_builder.js';
           
           generateQuestionPart3b(answerPart2, previousMultipleOfTen);
           } else {
-          totalQuestions += 1;
+          if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
+
           feedback.textContent = "Try again!";
           }
         }
+
+        currentQuestionCounted = false;
 
       submitKeyHandler = (event) => {
       if (event.key === 'Enter') {
@@ -344,8 +367,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     }; 
 
       // Attach new handlers
-    submitAnswerBtn.addEventListener('click', submitClickHandler);
-    answerInput.addEventListener('keydown', submitKeyHandler);
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
  }
 
 // question path when carrying involved
@@ -385,21 +408,31 @@ import { drawNumberBond } from './number_bond_builder.js';
         
         generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3);
         } else {
-        totalQuestions += 1;
+        if (!currentQuestionCounted) {
+          totalQuestions += 1;
+          currentQuestionCounted = true;
+        }
+
         feedback.textContent = "Try again!";
         }
+
+        currentQuestionCounted = false;
 
     submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
       submitAnswerBtn.click();
     }
   }; 
+
+  // Attach new handlers
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
  }
 
 
   // Attach new handlers
-  submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
 }
 
 // for question path with carrying 
@@ -437,9 +470,15 @@ function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
         
         generateQuestion();
         } else {
-        totalQuestions += 1;
+        if (!currentQuestionCounted) {
+          totalQuestions += 1;
+          currentQuestionCounted = true;
+        }
+
         feedback.textContent = "Try again!";
         }
+
+        currentQuestionCounted = false;
 
     submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
@@ -449,8 +488,8 @@ function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
  }
 
     // Attach new handlers
-  submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
 }
 
 //  question path when no carrying involved
@@ -489,9 +528,15 @@ function generateQuestionPart3b(answerPart2, previousMultipleOfTen) {
         
         generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3)
         } else {
-        totalQuestions += 1;
+        if (!currentQuestionCounted) {
+          totalQuestions += 1;
+          currentQuestionCounted = true;
+        }
+
         feedback.textContent = "Try again!";
         }
+
+        currentQuestionCounted = false;
 
     submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
@@ -500,8 +545,8 @@ function generateQuestionPart3b(answerPart2, previousMultipleOfTen) {
   }; 
 }
     // Attach new handlers
-  submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
  }
 
  // for question path without carrying 
@@ -539,20 +584,30 @@ function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
         
         generateQuestion();
         } else {
-        totalQuestions += 1;
+        if (!currentQuestionCounted) {
+          totalQuestions += 1;
+          currentQuestionCounted = true;
+        }
+
         feedback.textContent = "Try again!";
         }
+
+        currentQuestionCounted = false;
 
     submitKeyHandler = (event) => {
     if (event.key === 'Enter') {
       submitAnswerBtn.click();
     }
   }; 
+
+  // Attach new handlers
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
  }
 
     // Attach new handlers
-  submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
+    submitAnswerBtn.onclick = submitClickHandler;
+    answerInput.onkeydown = submitKeyHandler;
 
 }
   
