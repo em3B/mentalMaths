@@ -4,6 +4,7 @@
   let totalQuestions = 0; 
   let correctAnswers = 0;
   let nextValue = 0;
+  let currentQuestionCounted = false;
 
   if (!gameContainer) {
     console.error("Game container not found");
@@ -122,9 +123,14 @@
       currentValue = nextValue;
       generateQuestion();
     } else {
-      totalQuestions += 1;
+      if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
       feedback.textContent = "Try again!";
     }
+
+    currentQuestionCounted = false;
   };
 
   answerInput.addEventListener('keydown', (event) => {
