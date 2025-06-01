@@ -14,6 +14,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     let sumLessThanNextMultipleOfTen = true;
     let submitClickHandler;
     let submitKeyHandler;
+    let tickLeft;
+    let tickRight;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -54,6 +56,21 @@ import { drawNumberBond } from './number_bond_builder.js';
     questionSection.style.display = "block";
     generateQuestion();
 
+    function showTick(partId) {
+      requestAnimationFrame(() => {
+        tickLeft = document.getElementById("tick-left");
+        tickRight = document.getElementById("tick-right");
+
+        if (partId.toLowerCase() == 'left') {
+          tickLeft.classList.remove('hidden');
+        } else if (partId.toLowerCase() == 'right') {
+          tickRight.classList.remove('hidden');
+        } else {
+          console.log("Tick not found yet!");
+        }
+    })
+  }
+
     // First part of the question when carrying involved 
         // sample for this step: 28 + 4 , circle would be 4 as whole, 2 and 2 as parts, this step solves for the circle
         function generateQuestion() {
@@ -71,9 +88,30 @@ import { drawNumberBond } from './number_bond_builder.js';
             questionText.innerHTML = `
                 <h2>${twoDigitNumber} + ${oneDigitNumber} = ${twoDigitNumber} + ${leftCircleNumber} + ${rightCircleNumber}</h2>
                 <div class="number-bond">
-                <div class="circle" id="total">?</div>
-                <div class="circle" id="left">?</div>
-                <div class="circle" id="right">?</div>
+                <div class="circle" id="total">
+                  <div class="circle-content">
+                    <span class="number">?</span>
+                    <span class="total tick hidden" id="tick-total">
+                      <img src="https://res.cloudinary.com/dm37aktki/image/upload/v1747555519/MentalMaths/tick_mark_jepedz.png" alt="tick" width="24" />
+                    </span>
+                  </div>
+                </div>
+                <div class="circle" id="left">
+                  <div class="circle-content">
+                    <span class="number">?</span>
+                    <span class="left tick hidden" id="tick-left">
+                      <img src="https://res.cloudinary.com/dm37aktki/image/upload/v1747555519/MentalMaths/tick_mark_jepedz.png" alt="tick" width="24" />
+                    </span>
+                  </div>
+                </div>
+                <div class="circle" id="right">
+                  <div class="circle-content">
+                    <span class="number">?</span>
+                    <span class="right tick hidden" id="tick-right">
+                      <img src="https://res.cloudinary.com/dm37aktki/image/upload/v1747555519/MentalMaths/tick_mark_jepedz.png" alt="tick" width="24" />
+                    </span>
+                  </div>
+                </div>
                 <canvas class="lines" id="gameCanvas">
                     <line id="line1" stroke="black" stroke-width="2" />
                     <line id="line2" stroke="black" stroke-width="2" />
@@ -108,6 +146,9 @@ import { drawNumberBond } from './number_bond_builder.js';
               const userAnswer = parseInt(answerInput.value, 10);
               if (userAnswer === answerPart1) {
               feedback.textContent = "Correct!";
+
+              tickLeft = document.getElementById("tick-left");
+              tickRight = document.getElementById("tick-right");
               
               confetti({
                 particleCount: 150,
@@ -147,9 +188,30 @@ import { drawNumberBond } from './number_bond_builder.js';
             questionText.innerHTML = `
                 <h2>${twoDigitNumber} + ${oneDigitNumber} = ${previousMultipleOfTen} + ${rightCircleNumber} + ${oneDigitNumber}</h2>
                 <div class="number-bond">
-                <div class="circle" id="total">?</div>
-                <div class="circle" id="left">?</div>
-                <div class="circle" id="right">?</div>
+                <div class="circle" id="total">
+                  <div class="circle-content">
+                    <span class="number">?</span>
+                    <span class="total tick hidden" id="tick-total">
+                      <img src="https://res.cloudinary.com/dm37aktki/image/upload/v1747555519/MentalMaths/tick_mark_jepedz.png" alt="tick" width="24" />
+                    </span>
+                  </div>
+                </div>
+                <div class="circle" id="left">
+                  <div class="circle-content">
+                    <span class="number">?</span>
+                    <span class="left tick hidden" id="tick-left">
+                      <img src="https://res.cloudinary.com/dm37aktki/image/upload/v1747555519/MentalMaths/tick_mark_jepedz.png" alt="tick" width="24" />
+                    </span>
+                  </div>
+                </div>
+                <div class="circle" id="right">
+                  <div class="circle-content">
+                    <span class="number">?</span>
+                    <div class="right tick hidden" id="tick-right">
+                      <img src="https://res.cloudinary.com/dm37aktki/image/upload/v1747555519/MentalMaths/tick_mark_jepedz.png" alt="tick" width="24" />
+                    </div>
+                  </div>
+                </div>
                 <canvas class="lines" id="gameCanvas">
                     <line id="line1" stroke="black" stroke-width="2" />
                     <line id="line2" stroke="black" stroke-width="2" />
@@ -215,7 +277,7 @@ import { drawNumberBond } from './number_bond_builder.js';
       //  question path when carrying over involved
       // sample for this step: 28 + 4, this step does 28 + 2 
      function generateQuestionPart2(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber) {
-      document.getElementById('right').textContent = rightCircleNumber;
+      document.querySelector('#right .number').textContent = rightCircleNumber;
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
           questionPartsHeading.textContent = `PART 2 :   ${twoDigitNumber} + ${leftCircleNumber}`;
@@ -245,6 +307,11 @@ import { drawNumberBond } from './number_bond_builder.js';
     
               const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
               tada.play();
+
+              tickLeft = document.getElementById("tick-left");
+              tickRight = document.getElementById("tick-right");
+              
+              showTick("left");
               
               generateQuestionPart3(answerPart2, rightCircleNumber);
               } else {
@@ -266,7 +333,7 @@ import { drawNumberBond } from './number_bond_builder.js';
     //  question path when no carrying over involved
     // sample: 21 + 3, this step does 1 + 3
      function generateQuestionPart2b(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber, previousMultipleOfTen) {
-      document.getElementById('right').textContent = rightCircleNumber;
+      document.querySelector('#right .number').textContent = rightCircleNumber;
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
           questionPartsHeading.textContent = `PART 2 :   ${rightCircleNumber} + ${oneDigitNumber}`;
@@ -297,6 +364,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     
               const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
               tada.play();
+
+              showTick("right");
               
               generateQuestionPart3b(answerPart2, previousMultipleOfTen);
               } else {
@@ -347,6 +416,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     
             const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
             tada.play();
+
+            showTick("right");
             
             generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3);
             } else {    
@@ -450,6 +521,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     
             const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
             tada.play();
+
+            showTick("left");
             
             generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3)
             } else {
