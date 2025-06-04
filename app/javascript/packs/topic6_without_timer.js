@@ -1,4 +1,6 @@
 import { drawNumberBond } from './number_bond_builder.js';
+import { wiggleCircle } from './circle_wiggler.js';
+import { stopWiggle } from './circle_wiggler.js';
 
 (function runGame() {
     const gameContainer = document.getElementById('game-container');
@@ -16,6 +18,11 @@ import { drawNumberBond } from './number_bond_builder.js';
     let submitKeyHandler;
     let tickLeft;
     let tickRight;
+    let leftCircle;
+    let rightCircle;
+    let firstPart;
+    let secondPart;
+    let replacement;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -74,7 +81,10 @@ import { drawNumberBond } from './number_bond_builder.js';
     // First part of the question when carrying involved 
         // sample for this step: 28 + 4 , circle would be 4 as whole, 2 and 2 as parts, this step solves for the circle
         function generateQuestion() {
-            twoDigitNumber = Math.floor(Math.random() * 90) + 10;
+          // should be a two digit number that is not a multiple of 10 
+            do {
+              twoDigitNumber = Math.floor(Math.random() * 90) + 10; // 10–99
+            } while (twoDigitNumber % 10 === 0); // Retry if it's a multiple of 10
             oneDigitNumber = Math.floor(Math.random() * 8) + 1;
             nextMultipleOfTen = Math.ceil(twoDigitNumber / 10) * 10; 
             sumLessThanNextMultipleOfTen = (twoDigitNumber + oneDigitNumber) < nextMultipleOfTen;
@@ -86,7 +96,7 @@ import { drawNumberBond } from './number_bond_builder.js';
         
             // ✅ Set innerHTML first
             questionText.innerHTML = `
-                <h2>${twoDigitNumber} + ${oneDigitNumber} = ${twoDigitNumber} + ${leftCircleNumber} + ${rightCircleNumber}</h2>
+                <h1 id="main-question">${twoDigitNumber} + ${oneDigitNumber} ➡️✨ ${twoDigitNumber} + ${leftCircleNumber} + _____</h1>
                 <div class="number-bond">
                 <div class="circle" id="total">
                   <div class="circle-content">
@@ -112,12 +122,12 @@ import { drawNumberBond } from './number_bond_builder.js';
                     </span>
                   </div>
                 </div>
-                <canvas class="lines" id="gameCanvas">
-                    <line id="line1" stroke="black" stroke-width="2" />
-                    <line id="line2" stroke="black" stroke-width="2" />
+                <canvas class="lines" id="gameCanvas" width="300" height="200">
+                    <line id="line1" />
+                    <line id="line2" />
                 </canvas>
                 </div>
-                <h2 id="questionParts">PART 1 :   ${oneDigitNumber} - ${leftCircleNumber} = </h2>
+                <h2 id="questionParts"></h2>
             `;
         
             // ✅ Then draw the number bond
@@ -128,7 +138,10 @@ import { drawNumberBond } from './number_bond_builder.js';
                     drawNumberBond(leftCircleNumber, rightCircleNumber, leftCircleNumber + rightCircleNumber, 'b');
                   }, 0);
                 });
-              });          
+              }); 
+              
+              rightCircle = document.querySelector('#right.circle');
+              wiggleCircle(rightCircle);
         
             answerPart1 = rightCircleNumber;
             answerInput.value = '';
@@ -147,6 +160,8 @@ import { drawNumberBond } from './number_bond_builder.js';
               if (userAnswer === answerPart1) {
               feedback.textContent = "Correct!";
 
+              stopWiggle();
+
               tickLeft = document.getElementById("tick-left");
               tickRight = document.getElementById("tick-right");
               
@@ -158,6 +173,8 @@ import { drawNumberBond } from './number_bond_builder.js';
     
               const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
               tada.play();
+
+              document.getElementById("main-question").textContent = `${twoDigitNumber} + ${oneDigitNumber} ➡️✨ ${twoDigitNumber} + ${leftCircleNumber} + ${rightCircleNumber}`;
               
               generateQuestionPart2(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber);
               } else {
@@ -186,7 +203,7 @@ import { drawNumberBond } from './number_bond_builder.js';
     
                 // ✅ Set innerHTML first
             questionText.innerHTML = `
-                <h2>${twoDigitNumber} + ${oneDigitNumber} = ${previousMultipleOfTen} + ${rightCircleNumber} + ${oneDigitNumber}</h2>
+                <h1 id="main-question">${twoDigitNumber} + ${oneDigitNumber} ➡️✨ ${previousMultipleOfTen} + ______ + ${oneDigitNumber}</h1>
                 <div class="number-bond">
                 <div class="circle" id="total">
                   <div class="circle-content">
@@ -212,12 +229,12 @@ import { drawNumberBond } from './number_bond_builder.js';
                     </div>
                   </div>
                 </div>
-                <canvas class="lines" id="gameCanvas">
-                    <line id="line1" stroke="black" stroke-width="2" />
-                    <line id="line2" stroke="black" stroke-width="2" />
+                <canvas class="lines" id="gameCanvas" width="300" height="200">
+                    <line id="line1" />
+                    <line id="line2" />
                 </canvas>
                 </div>
-                <h2 id="questionParts">PART 1 :   ${twoDigitNumber} - ${leftCircleNumber} = </h2>
+                <h2 id="questionParts"></h2>
             `;
     
         
@@ -229,7 +246,10 @@ import { drawNumberBond } from './number_bond_builder.js';
                     drawNumberBond(leftCircleNumber, rightCircleNumber, leftCircleNumber + rightCircleNumber, 'b');
                   }, 0);
                 });
-              });          
+              });  
+              
+            rightCircle = document.querySelector('#right.circle');
+            wiggleCircle(rightCircle);
         
             answerPart1 = rightCircleNumber;
             answerInput.value = '';
@@ -256,6 +276,10 @@ import { drawNumberBond } from './number_bond_builder.js';
     
               const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
               tada.play();
+
+              stopWiggle();
+
+              document.getElementById("main-question").textContent = `${twoDigitNumber} + ${oneDigitNumber}    ➡️✨   ${previousMultipleOfTen} + ${rightCircleNumber} + ${oneDigitNumber}`;
               
               generateQuestionPart2b(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber, previousMultipleOfTen);
               } else {
@@ -278,9 +302,22 @@ import { drawNumberBond } from './number_bond_builder.js';
       // sample for this step: 28 + 4, this step does 28 + 2 
      function generateQuestionPart2(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber) {
       document.querySelector('#right .number').textContent = rightCircleNumber;
+
+      // generate innerHTML for the main question up top, allowing for js styling
+      document.getElementById("main-question").innerHTML = `${twoDigitNumber} + ${oneDigitNumber} ➡️✨ 
+      <span class="highlight-wrapper">
+        <span class="replacement-value hidden" id="replacement-value"></span>
+        <span class="first-part">${twoDigitNumber} + ${leftCircleNumber}</span> 
+        <span class="second-part">+ ${rightCircleNumber}</span>
+      </span>`;
+
+      // add highlighted box to the first part 
+      firstPart = document.querySelector(".first-part");
+      firstPart.classList.add("highlighted-part");
+
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `PART 2 :   ${twoDigitNumber} + ${leftCircleNumber}`;
+          questionPartsHeading.textContent = `FIRST........ ${twoDigitNumber} + ${leftCircleNumber} = `;
         }
         answerPart2 = twoDigitNumber + leftCircleNumber;
         answerInput.value = '';
@@ -293,6 +330,9 @@ import { drawNumberBond } from './number_bond_builder.js';
         if (submitKeyHandler) {
           answerInput.removeEventListener('keydown', submitKeyHandler);
         }
+
+        leftCircle = document.querySelector('#left.circle');
+        wiggleCircle(leftCircle);
     
             submitClickHandler = () => {
               const userAnswer = parseInt(answerInput.value, 10);
@@ -310,7 +350,8 @@ import { drawNumberBond } from './number_bond_builder.js';
 
               tickLeft = document.getElementById("tick-left");
               tickRight = document.getElementById("tick-right");
-              
+
+              stopWiggle();
               showTick("left");
               
               generateQuestionPart3(answerPart2, rightCircleNumber);
@@ -334,10 +375,26 @@ import { drawNumberBond } from './number_bond_builder.js';
     // sample: 21 + 3, this step does 1 + 3
      function generateQuestionPart2b(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber, previousMultipleOfTen) {
       document.querySelector('#right .number').textContent = rightCircleNumber;
+
+      // generate innerHTML for the main question up top, allowing for js styling
+      document.getElementById("main-question").innerHTML = `${twoDigitNumber} + ${oneDigitNumber} ➡️✨ 
+      <span class="highlight-wrapper">
+        <span class="second-part">${previousMultipleOfTen} +</span> 
+        <span class="replacement-value hidden" id="replacement-value"></span>
+        <span class="first-part">${rightCircleNumber} + ${oneDigitNumber}</span>
+      </span>`;
+
+      // add highlighted box to the first part 
+      firstPart = document.querySelector(".first-part");
+      firstPart.classList.add("highlighted-part");
+      
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `PART 2 :   ${rightCircleNumber} + ${oneDigitNumber}`;
+          questionPartsHeading.textContent = `FIRST....... ${rightCircleNumber} + ${oneDigitNumber} =`;
         }
+
+        rightCircle = document.querySelector('#right.circle');
+        wiggleCircle(rightCircle);
     
         answerPart2 = rightCircleNumber + oneDigitNumber;
         answerInput.value = '';
@@ -365,6 +422,7 @@ import { drawNumberBond } from './number_bond_builder.js';
               const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
               tada.play();
 
+              stopWiggle();
               showTick("right");
               
               generateQuestionPart3b(answerPart2, previousMultipleOfTen);
@@ -387,13 +445,26 @@ import { drawNumberBond } from './number_bond_builder.js';
     // question path when carrying involved
     // sample : 28 + 4 , this step does 30 + 2
      function generateQuestionPart3(newTotal, rightCircleNumber) {
+      // remove highlighted first part and show its answer, highlight second part 
+      firstPart = document.querySelector(".first-part");
+      secondPart = document.querySelector(".second-part");
+      replacement = document.getElementById("replacement-value");
+      firstPart.style.backgroundColor = "transparent";
+      firstPart.style.border = "none";
+      firstPart.classList.add("answered");
+      replacement.textContent = newTotal;
+      replacement.classList.remove("hidden");
+      secondPart.classList.add("highlighted-part");
       const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `${newTotal} + ${rightCircleNumber}`;
+          questionPartsHeading.textContent = `NEXT......... ${newTotal} + ${rightCircleNumber} =`;
         }
       answerPart3 = newTotal + rightCircleNumber;
       answerInput.value = '';
       answerInput.focus();
+
+      rightCircle = document.querySelector('#right.circle');
+      wiggleCircle(rightCircle);
     
         // Remove previous handlers, if they exist
       if (submitClickHandler) {
@@ -417,6 +488,7 @@ import { drawNumberBond } from './number_bond_builder.js';
             const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
             tada.play();
 
+            stopWiggle();
             showTick("right");
             
             generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3);
@@ -445,7 +517,7 @@ import { drawNumberBond } from './number_bond_builder.js';
     function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `SO...  ${twoDigitNumber} + ${oneDigitNumber} = `;
+          questionPartsHeading.textContent = `SO......  ${twoDigitNumber} + ${oneDigitNumber} = `;
         }
       answerInput.value = '';
       answerInput.focus();
@@ -492,13 +564,27 @@ import { drawNumberBond } from './number_bond_builder.js';
     
     //  question path when no carrying involved
     function generateQuestionPart3b(answerPart2, previousMultipleOfTen) {
+      // remove highlighted first part and show its answer, highlight second part 
+      firstPart = document.querySelector(".first-part");
+      secondPart = document.querySelector(".second-part");
+      replacement = document.getElementById("replacement-value");
+      firstPart.style.backgroundColor = "transparent";
+      firstPart.style.border = "none";
+      firstPart.classList.add("answered");
+      replacement.textContent = answerPart2;
+      replacement.classList.remove("hidden");
+      secondPart.classList.add("highlighted-part");
+
       const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `${previousMultipleOfTen} + ${answerPart2}`;
+          questionPartsHeading.textContent = `NEXT......... ${previousMultipleOfTen} + ${answerPart2} =`;
         }
       answerPart3 = previousMultipleOfTen + answerPart2;
       answerInput.value = '';
       answerInput.focus();
+
+      leftCircle = document.querySelector('#left.circle');
+      wiggleCircle(leftCircle);
     
         // Remove previous handlers, if they exist
       if (submitClickHandler) {
@@ -522,14 +608,13 @@ import { drawNumberBond } from './number_bond_builder.js';
             const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
             tada.play();
 
+            stopWiggle();
             showTick("left");
             
             generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3)
             } else {
             feedback.textContent = "Try again!";
             }
-    
-            currentQuestionCounted = false;
     
         submitKeyHandler = (event) => {
         if (event.key === 'Enter') {
@@ -546,7 +631,7 @@ import { drawNumberBond } from './number_bond_builder.js';
     function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `SO..... ${twoDigitNumber} + ${oneDigitNumber} = `;
+          questionPartsHeading.textContent = `SO....... ${twoDigitNumber} + ${oneDigitNumber} = `;
         }
       answerInput.value = '';
       answerInput.focus();
@@ -577,8 +662,6 @@ import { drawNumberBond } from './number_bond_builder.js';
             } else {
             feedback.textContent = "Try again!";
             }
-    
-            currentQuestionCounted = false;
     
         submitKeyHandler = (event) => {
         if (event.key === 'Enter') {
