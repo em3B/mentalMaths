@@ -493,7 +493,7 @@ import { stopWiggle } from './circle_wiggler.js';
           tada.play();
 
           stopWiggle();
-          showTick("right");
+          showTick("left");
           
           generateQuestionPart3b(answerPart2, rightCircleNumber);
           } else {
