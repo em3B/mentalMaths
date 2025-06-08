@@ -515,6 +515,15 @@ import { stopWiggle } from './circle_wiggler.js';
     
     // for question path with carrying 
     function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
+              // remove highlighted first part and show its answer, highlight second part 
+        secondPart = document.querySelector(".second-part");
+        replacement = document.getElementById("replacement-value");
+        secondPart.style.backgroundColor = "transparent";
+        secondPart.style.border = "none";
+        secondPart.classList.add("answered");
+        replacement.textContent = answerPart3;
+        replacement.classList.remove("hidden");
+
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
           questionPartsHeading.textContent = `SO......  ${twoDigitNumber} + ${oneDigitNumber} = `;
@@ -629,6 +638,15 @@ import { stopWiggle } from './circle_wiggler.js';
     
      // for question path without carrying 
     function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
+              // remove highlighted first part and show its answer, highlight second part 
+        secondPart = document.querySelector(".second-part");
+        replacement = document.getElementById("replacement-value");
+        secondPart.style.backgroundColor = "transparent";
+        secondPart.style.border = "none";
+        secondPart.classList.add("answered");
+        replacement.textContent = answerPart3;
+        replacement.classList.remove("hidden");
+
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
           questionPartsHeading.textContent = `SO....... ${twoDigitNumber} + ${oneDigitNumber} = `;
