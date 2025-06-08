@@ -313,7 +313,7 @@ import { stopWiggle } from './circle_wiggler.js';
     
       //  question path when carrying over involved
       // sample for this step: 28 + 4, this step does 28 + 2 
-     function generateQuestionPart2(twoDigitNumber, oneDigitNumber, leftCircleNumber, rightCircleNumber) {
+     function generateQuestionPart2(firstTwoDigitNumber, secondTwoDigitNumber, previousMultipleOfTenSecondNumber, leftCircleNumber, rightCircleNumber) {
       document.querySelector('#right .number').textContent = rightCircleNumber;
 
     // generate innerHTML for the main question up top, allowing for js styling
@@ -334,9 +334,9 @@ import { stopWiggle } from './circle_wiggler.js';
 
         const questionPartsHeading = document.getElementById('questionParts');
         if (questionPartsHeading) {
-          questionPartsHeading.textContent = `FIRST........ ${twoDigitNumber} + ${leftCircleNumber} = `;
+          questionPartsHeading.textContent = `FIRST........ ${firstTwoDigitNumber} + ${leftCircleNumber} = `;
         }
-        answerPart2 = twoDigitNumber + leftCircleNumber;
+        answerPart2 = firstTwoDigitNumber + leftCircleNumber;
         answerInput.value = '';
         answerInput.focus();
     
@@ -440,7 +440,7 @@ import { stopWiggle } from './circle_wiggler.js';
               tada.play();
 
               stopWiggle();
-              showTick("right");
+              showTick("left");
               
               generateQuestionPart3b(answerPart2, rightCircleNumber);
               } else {
@@ -652,7 +652,7 @@ import { stopWiggle } from './circle_wiggler.js';
             tada.play();
 
             stopWiggle();
-            showTick("left");
+            showTick("right");
             
             generateFinalQuestionB(firstTwoDigitNumber, secondTwoDigitNumber, answerPart3)
             } else {
