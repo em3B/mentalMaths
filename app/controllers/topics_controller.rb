@@ -1,6 +1,11 @@
 class TopicsController < ApplicationController
   def index
-    @topics = Topic.all
+    if params[:category].present?
+      @category = Topic::CATEGORIES.find { |cat| cat.parameterize == params[:category] }
+      @topics = Topic.where(category: @category) if @category
+    else
+      @categories = Topic.distinct.pluck(:category)
+    end
   end
 
   def show
