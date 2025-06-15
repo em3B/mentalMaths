@@ -160,6 +160,30 @@ topics = [
     intro: "Practice multiplication as groups of a certain number added together. Add or subtract by 12 starting from 0.",
     public: false,
     requires_auth: true
+  },
+  {
+    title: "Number Bond Fact Families: 1 - 10",
+    intro: "List and solve all fact families for a number.",
+    public: true,
+    requires_auth: false
+  },
+  {
+    title: "Number Bond Fact Families: Two-Digit",
+    intro: "List and solve all fact families for a number.",
+    public: false,
+    requires_auth: true
+  },
+  {
+    title: "Number Bond Fact Families: Three-Digit",
+    intro: "List and solve all fact families for a number.",
+    public: false,
+    requires_auth: true
+  },
+  {
+    title: "Two-Digit Multiplication",
+    intro: "Use a number bont to help you solve two-digit multiplication.",
+    public: false,
+    requires_auth: true
   }
 ]
 
