@@ -29,6 +29,9 @@ Rails.application.routes.draw do
 
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
+      collection do
+        get "category/:category", to: "topics#index", as: :category
+      end
       # Route to show questions for a specific topic (will handle the intro and question display)
       #   member do
       member do
