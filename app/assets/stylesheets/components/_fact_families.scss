@@ -1,0 +1,17 @@
+.fact-family {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.addition-facts, .subtraction-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.addition-facts span,
+.subtraction-facts span {
+  font-size: 1.2rem;
+}
