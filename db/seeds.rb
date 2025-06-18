@@ -34,14 +34,14 @@ topics = [
   },
   {
     title: "Adding to the Nearest Ten",
-    intro: "Use our knowledge of Rainbow Pairs to guess the number that would bring us to our next multiple of ten.",
+    intro: "Use our knowledge of Rainbow Pairs to guess the next multiple of ten.",
     public: true,
     requires_auth: false,
     category: "Addition and Subtraction"
   },
   {
     title: "Subtracting to the Nearest Ten",
-    intro: "Use our knowledge of Rainbow Pairs to guess the number that would bring us to our previous multiple of ten",
+    intro: "Use our knowledge of Rainbow Pairs to guess the previous multiple of ten",
     public: false,
     requires_auth: true,
     category: "Addition and Subtraction"
@@ -213,6 +213,20 @@ topics = [
     public: false,
     requires_auth: true,
     category: "Multiplication"
+  },
+  {
+    title: "Adding to the Nearest Ten Part 2",
+    intro: "Use our knowledge of Rainbow Pairs to guess the number that would bring us to our next multiple of ten.",
+    public: true,
+    requires_auth: false,
+    category: "Addition and Subtraction"
+  },
+  {
+    title: "Subtracting to the Nearest Ten Part 2",
+    intro: "Use our knowledge of Rainbow Pairs to guess the number that would bring us to our previous multiple of ten",
+    public: false,
+    requires_auth: true,
+    category: "Addition and Subtraction"
   }
 ]
 
