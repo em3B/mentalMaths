@@ -1,10 +1,9 @@
 (function runGame() {
     const gameContainer = document.getElementById('game-container');
-    const userSignedIn = gameContainer.dataset.userSignedIn == "true";
     let totalQuestions = 0; 
     let correctAnswers = 0;
     let answer = 0;
-    let nextMultipleOfTen = 0;
+    let previousMultipleOfTen = 0;
     let twoDigitNumber = 0;
   
     if (!gameContainer) {
@@ -47,10 +46,12 @@
     generateQuestion();
 
     function generateQuestion() {
-        twoDigitNumber = Math.floor(Math.random() * 99) + 1;
-        nextMultipleOfTen = Math.ceil((twoDigitNumber + 1) / 10) * 10;
-        answer = nextMultipleOfTen - twoDigitNumber;
-        questionText.innerHTML = `<h2>${twoDigitNumber} + _____ = ${nextMultipleOfTen}</h2>`;
+        do {
+            twoDigitNumber = Math.floor(Math.random() * 90) + 10; // generates 10–99
+        } while (twoDigitNumber % 10 === 0 || twoDigitNumber <= 10);
+        previousMultipleOfTen = Math.floor(twoDigitNumber / 10) * 10;
+        answer = twoDigitNumber - previousMultipleOfTen;
+        questionText.innerHTML = `<h2>${twoDigitNumber} - _____ = ${previousMultipleOfTen}</h2>`;
         answerInput.value = '';
         answerInput.focus();
     }
@@ -71,11 +72,11 @@
       const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
       tada.play();
       
-        // Delay next question so feedback is visible
+          // Delay next question so feedback is visible
         setTimeout(() => {
-          generateQuestion();
-          feedback.textContent = ""; // clear feedback after next question loads
-          answerInput.value = "";    // clear input for next question
+        generateQuestion();
+        feedback.textContent = ""; // clear feedback after next question loads
+        answerInput.value = "";    // clear input for next question
         }, 1500); 
       } else {
       feedback.textContent = "Try again!";
@@ -95,7 +96,7 @@
     });
   
     endGameBtn.onclick = () => {
-      window.location.href = '/topics/30';
+      window.location.href = '/topics/31';
     }
   })();
   
