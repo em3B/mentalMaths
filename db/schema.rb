@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_15_154659) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_063448) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -34,9 +34,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_15_154659) do
   create_table "scores", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "topic_id", null: false
-    t.integer "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "correct"
+    t.integer "total"
     t.index ["topic_id"], name: "index_scores_on_topic_id"
     t.index ["user_id"], name: "index_scores_on_user_id"
   end

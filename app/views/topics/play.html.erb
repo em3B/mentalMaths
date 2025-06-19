@@ -12,7 +12,7 @@
 </div>
 
 <%# this is where the game will go %>
-<div id="game-container" style="display: none !important;" data-user-signed-in="<%= user_signed_in? %>"></div>
+<div id="game-container" style="display: none !important;" data-user-signed-in="<%= user_signed_in? %>" data-topic-id="<%= @topic.id %>">></div>
 
 <script>
   document.addEventListener("turbo:load", function () {

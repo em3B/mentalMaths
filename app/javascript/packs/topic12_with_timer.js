@@ -168,7 +168,8 @@
       body: JSON.stringify({
         score: {
           correct: correct,
-          total_questions: totalQuestions
+          total_questions: totalQuestions,
+          topic_id: 12
         }
       })
     })

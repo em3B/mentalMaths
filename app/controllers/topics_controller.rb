@@ -15,21 +15,14 @@ class TopicsController < ApplicationController
   def play
     @topic = Topic.find(params[:id])
 
-    # Default question limit to 20 if no limit is provided
-    limit = params[:limit].present? ? params[:limit].to_i : 20
-
     # You can also configure a time limit for certain activities here
     time_limit = params[:time_limit].present? ? params[:time_limit].to_i : nil
 
-    # Randomize questions and set a limit
-    session[:questions] = @topic.questions.order("RANDOM()").limit(limit).pluck(:id)
     session[:score] = 0 # Reset score
 
     if time_limit
       session[:time_limit] = time_limit # Store time limit for the session
     end
-
-    redirect_to question_path(session[:questions].first) # Start quiz
   end
 
   def intro
@@ -38,9 +31,22 @@ class TopicsController < ApplicationController
 
   def score
     @topic = Topic.find(params[:id])
+    @scores = @topic.scores
+      .where(user: current_user)
+      .order(created_at: :desc)
+      .page(params[:page])
+      .per(10)
   end
 
-  def play
+  def submit_score
     @topic = Topic.find(params[:id])
+
+    # Assume params[:score] contains the user's final score from the quiz form
+    final_score = params[:score].to_i
+
+    # Save the score record for current_user and this topic
+    @topic.scores.create(user: current_user, value: final_score)
+
+    redirect_to score_topic_path(@topic), notice: "Your score has been saved!"
   end
 end

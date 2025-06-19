@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       #   member do
       member do
         get "score"  # adds /topics/:id/score
+        post "submit_score"
         get "intro"
         get "play"
       end
