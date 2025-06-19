@@ -1,14 +1,35 @@
-<h1>Your Scores</h1>
-
 <% if @scores.present? %>
-  <ul>
-    <% @scores.each do |score| %>
-      <li>
-        <strong><%= score.topic.title %>:</strong>
-        <%= score.value %> points – <%= score.created_at.strftime("%d %b %Y") %>
-      </li>
-    <% end %>
-  </ul>
+  <table class="score-table">
+    <thead>
+      <tr>
+        <th>🌟 Topic</th>
+        <th>📅 Date</th>
+        <th>✅ Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @scores.each do |score| %>
+        <tr>
+          <td><%= score.topic.title %></td>
+          <td><%= score.created_at.strftime("%d %B %Y") %></td>
+          <td>
+            <%= "#{score.correct} / #{score.total}" %>
+            <% if score.correct >= 10 %>
+              🎉
+            <% elsif score.correct >= 8 %>
+              👍
+            <% elsif score.correct <= 5 %>
+              💪 Keep going!
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <%= paginate @scores %>
+  </div>
 <% else %>
   <p>You don’t have any scores yet. Try a topic!</p>
 <% end %>

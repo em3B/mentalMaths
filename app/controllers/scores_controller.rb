@@ -2,7 +2,7 @@ class ScoresController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @scores = current_user.scores.includes(:topic).order(created_at: :desc).group_by(&:topic)
+    @scores = current_user.scores.includes(:topic).order(created_at: :desc).page(params[:page])
   end
 
   def create
