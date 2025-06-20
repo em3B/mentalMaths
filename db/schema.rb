@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_20_192226) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_20_200450) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_192226) do
     t.index ["question_id"], name: "index_responses_on_question_id"
   end
 
+  create_table "schools", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "contact_email"
+    t.string "subscription_status"
+    t.datetime "subscription_expires_at"
+  end
+
   create_table "scores", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "topic_id", null: false
@@ -82,7 +92,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_192226) do
     t.integer "parent_id"
     t.boolean "created_by_family"
     t.string "username", default: "", null: false
+    t.bigint "school_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
@@ -93,4 +105,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_192226) do
   add_foreign_key "responses", "questions"
   add_foreign_key "scores", "topics"
   add_foreign_key "scores", "users"
+  add_foreign_key "users", "schools"
 end
