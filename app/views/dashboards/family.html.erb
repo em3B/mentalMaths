@@ -1,0 +1,32 @@
+<h3>Create a Child Account</h3>
+<%= form_with model: @child, url: create_child_path do |f| %>
+  <% if @child.errors.any? %>
+    <ul>
+      <% @child.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= f.label :username, "Child’s Username" %><br>
+    <%= f.text_field :username %>
+  </div>
+
+  <div>
+    <%= f.label :email, "Child’s Email" %><br>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <%= f.submit "Create Child" %>
+<% end %>

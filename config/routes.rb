@@ -46,6 +46,19 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :classrooms do
+      resources :students, only: [ :new, :create, :index ]
+      get :scores, on: :member
+    end
+
+    # dashboards
+    get  "dashboard/teacher",           to: "dashboards#teacher",          as: :teacher_dashboard
+    post "dashboard/teacher/create",    to: "dashboards#create_classroom", as: :create_classroom
+    post "dashboard/teacher/add_student", to: "dashboards#create_student",  as: :create_student
+
+    get  "dashboard/family",           to: "dashboards#family",         as: :family_dashboard
+    post "dashboard/family/create",    to: "dashboards#create_child",   as: :create_child
+
     resources :scores, only: [ :index, :create ]
 
     # Score route (this could be shown after completing a session or at the end)

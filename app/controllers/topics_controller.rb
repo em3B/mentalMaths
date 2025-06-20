@@ -4,6 +4,7 @@ class TopicsController < ApplicationController
       @category = Topic::CATEGORIES.find { |cat| cat.parameterize == params[:category] }
       @topics = Topic.where(category: @category) if @category
     else
+      @topics = Topic.all
       @categories = Topic.distinct.pluck(:category)
     end
   end
