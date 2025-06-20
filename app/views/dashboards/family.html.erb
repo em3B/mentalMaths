@@ -1,3 +1,19 @@
+<h1>Your Children</h1>
+
+<% if @children.any? %>
+  <ul>
+    <% @children.each do |child| %>
+      <li>
+        <%= child.name %>
+        <!-- Link to see child's scores -->
+        <%= link_to "View Scores", scores_path(child_id: child.id) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You haven't added any children yet.</p>
+<% end %>
+
 <h3>Create a Child Account</h3>
 <%= form_with model: @child, url: create_child_path do |f| %>
   <% if @child.errors.any? %>
