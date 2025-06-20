@@ -1,8 +1,8 @@
 class User < ApplicationRecord
   # Devise modules
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         authentication_keys: [ :login, :role ]
+       :recoverable, :rememberable,
+       authentication_keys: [ :login, :role ]
 
   ROLES = %w[student teacher family].freeze
 
@@ -37,6 +37,9 @@ class User < ApplicationRecord
   # Scores
   has_many :scores
 
+  validates :username, presence: true, uniqueness: true
+  validates :email, presence: true, unless: -> { student? && created_by_family? }
+  validates :email, uniqueness: true, allow_blank: true
   validates :username, presence: true, uniqueness: true
 
   def learner?
