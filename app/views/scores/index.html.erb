@@ -1,3 +1,14 @@
+<% case current_user.role.downcase %>
+<% when "student" %>
+  <h1>Scores for <%= current_user.username %></h1>
+<% when "family" %>
+  <h1>Scores for <%= current_user.children.find_by(id: params[:child_id]).username %></h1>
+<% when "teacher" %>
+  <h1>Scores for <%= User.find_by(id: params[:student_id]).username %> </h1>
+<% else %>
+  <% raise "Unsupported role: #{current_user.role}" %>
+<% end %>
+
 <% if @scores.present? %>
   <table class="score-table">
     <thead>
