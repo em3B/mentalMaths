@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   # Devise modules
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         authentication_keys: [ :login, :role ]
 
   ROLES = %w[student teacher family].freeze
 
@@ -39,5 +40,20 @@ class User < ApplicationRecord
 
   def learner?
     student? && (created_by_family? || enrolled_classrooms.any?)
+  end
+
+  def login
+    @login || (username.presence if student? && created_by_family?) || email
+  end
+
+  # Override Devise to allow login by email or username
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    role       = conditions.delete(:role)
+    login_val  = conditions.delete(:login)&.downcase
+
+    where(role: role).where(
+      [ "(lower(username) = :value OR lower(email) = :value)", { value: login_val } ]
+    ).first
   end
 end
