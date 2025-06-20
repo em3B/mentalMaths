@@ -10,7 +10,7 @@
             required: true %>
     
     <%= f.input :login,
-                  label: (resource.student? ? "Username" : "Email"),
+                  label: "Username or Email",
                   required: true,
                   input_html: { autofocus: true, autocomplete: "login" } %>
 

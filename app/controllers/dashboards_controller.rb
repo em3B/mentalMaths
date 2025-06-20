@@ -20,6 +20,11 @@ class DashboardsController < ApplicationController
     @child.created_by_family = true
     @child.parent_id = current_user.id
 
+    if @child.email.blank?
+      # Prevent collision and satisfy Devise
+      @child.email = "#{SecureRandom.hex(6)}@child.local"
+    end
+
     if @child.save
       redirect_to family_dashboard_path, notice: "Child created successfully."
     else

@@ -3,46 +3,35 @@
 <% if @children.any? %>
   <ul>
     <% @children.each do |child| %>
-      <li>
-        <%= child.name %>
-        <!-- Link to see child's scores -->
-        <%= link_to "View Scores", scores_path(child_id: child.id) %>
-      </li>
+      <div class="main-btn-group">
+        <%= link_to scores_path(child_id: child.id) do %>
+          <button class="main-btn">
+            <h4><%= child.username %></h4>
+            <h2>View Scores</h2>
+          </button>
+        <% end %>
+      </div>
     <% end %>
   </ul>
 <% else %>
   <p>You haven't added any children yet.</p>
 <% end %>
 
-<h3>Create a Child Account</h3>
-<%= form_with model: @child, url: create_child_path do |f| %>
-  <% if @child.errors.any? %>
-    <ul>
-      <% @child.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-    </ul>
+<div class="devise-form">
+  <h2>Create Child Account</h2>
+
+  <%= simple_form_for @child, url: create_child_path, method: :post, html: { class: "form-table" } do |f| %>
+    <div class="form-inputs">
+      <%= f.input :username, label: "Child’s Username", required: true %>
+
+      <%= f.input :password, required: true, input_html: { autocomplete: "new-password" } %>
+
+      <%= f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" } %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, "Create Child", class: "devise-btn" %>
+    </div>
   <% end %>
+</div>
 
-  <div>
-    <%= f.label :username, "Child’s Username" %><br>
-    <%= f.text_field :username %>
-  </div>
-
-  <div>
-    <%= f.label :email, "Child’s Email" %><br>
-    <%= f.email_field :email %>
-  </div>
-
-  <div>
-    <%= f.label :password %><br>
-    <%= f.password_field :password %>
-  </div>
-
-  <div>
-    <%= f.label :password_confirmation %><br>
-    <%= f.password_field :password_confirmation %>
-  </div>
-
-  <%= f.submit "Create Child" %>
-<% end %>
