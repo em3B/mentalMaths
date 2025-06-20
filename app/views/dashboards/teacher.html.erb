@@ -1,0 +1,37 @@
+<h2>Your Classrooms</h2>
+<ul>
+  <% @classrooms.each do |c| %>
+    <li><%= c.name %></li>
+  <% end %>
+</ul>
+
+<h3>Create a Classroom</h3>
+<%= form_with model: @new_classroom, url: create_classroom_path do |f| %>
+  <%= f.text_field :name, placeholder: "Classroom Name" %>
+  <%= f.submit "Create Classroom" %>
+<% end %>
+
+<h3>Add a Student</h3>
+<%= form_with model: @new_student, url: create_student_path do |f| %>
+  <div>
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </div>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+  <div>
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+  <div>
+    <%= f.label :classroom_id, "Enroll in Classroom" %>
+    <%= f.select :classroom_id, @classrooms.map { |c| [c.name, c.id] } %>
+  </div>
+  <%= f.submit "Add Student" %>
+<% end %>
