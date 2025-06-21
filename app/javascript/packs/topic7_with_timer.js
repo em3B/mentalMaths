@@ -819,7 +819,7 @@ function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
         body: JSON.stringify({
           score: {
             correct: correct,
-            total_questions: totalQuestions,
+            total: totalQuestions,
             topic_id: 7
           }
         })
