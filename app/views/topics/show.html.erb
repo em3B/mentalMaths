@@ -9,28 +9,30 @@
         </button>
     <% end %>
 
-    <%= link_to play_topic_path(@topic) do %>
-        <button class="main-btn">
-            <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1746429456/javier-martinez-hUD0PUczwJQ-unsplash_rwdstx.jpg", class: "main-btn-icon") %>
-            <h1>Play</h1>
-        </button>
-    <% end %>
-
-    <% if @topic.public? || user_signed_in? %>
-        <%= link_to score_topic_path(@topic) do %>
+    <% if current_user.role.downcase === "student" %>
+        <%= link_to play_topic_path(@topic) do %>
             <button class="main-btn">
-                <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745258711/MentalMaths/pearse-o-halloran-t0N-LwOu0hg-unsplash_asj4su.jpg", class: "main-btn-icon") %>
-                <h1>My Scores</h1>
+                <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1746429456/javier-martinez-hUD0PUczwJQ-unsplash_rwdstx.jpg", class: "main-btn-icon") %>
+                <h1>Play</h1>
             </button>
-        <% end %>   
-    <% else %>
-        <%= link_to new_user_registration_path do %>
-            <button class="main-btn locked">
-                <div class="main-img">
-                <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744969400/franck-DoWZMPZ-M9s-unsplash_utayvh.jpg", alt: "Locked") %>
-                </div>
-                <span style="color: white;"><%= "My Scores" %> 🔒</span>
-            </button>
+        <% end %>
+
+        <% if @topic.public? || user_signed_in? %>
+            <%= link_to score_topic_path(@topic) do %>
+                <button class="main-btn">
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745258711/MentalMaths/pearse-o-halloran-t0N-LwOu0hg-unsplash_asj4su.jpg", class: "main-btn-icon") %>
+                    <h1>My Scores</h1>
+                </button>
+            <% end %>   
+        <% else %>
+            <%= link_to new_user_registration_path do %>
+                <button class="main-btn locked">
+                    <div class="main-img">
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744969400/franck-DoWZMPZ-M9s-unsplash_utayvh.jpg", alt: "Locked") %>
+                    </div>
+                    <span style="color: white;"><%= "My Scores" %> 🔒</span>
+                </button>
+            <% end %>
         <% end %>
     <% end %>
 
