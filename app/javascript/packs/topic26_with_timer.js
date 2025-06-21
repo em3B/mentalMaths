@@ -516,7 +516,7 @@ function generateFifthPart() {
         body: JSON.stringify({
           score: {
             correct: correct,
-            total_questions: totalQuestions,
+            total: totalQuestions,
             topic_id: 26
           }
         })
