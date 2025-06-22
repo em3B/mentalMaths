@@ -110,7 +110,7 @@ import { stopWiggle } from './circle_wiggler.js';
     
         // ✅ Set innerHTML first
         questionText.innerHTML = `
-            <h1 id="main-question">${firstTwoDigitNumber} - ${secondTwoDigitNumber} ➡️✨ ${firstTwoDigitNumber} - ${previousMultipleOfTenSecondNumber} - ${leftCircleNumber} - _____</h1>
+            <h1 id="main-question"></h1>
             <div class="number-bond">
             <div class="circle" id="total">
               <div class="circle-content">
@@ -220,7 +220,7 @@ import { stopWiggle } from './circle_wiggler.js';
 
             // ✅ Set innerHTML first
         questionText.innerHTML = `
-            <h1 id="main-question">${firstTwoDigitNumber} - ${secondTwoDigitNumber} ➡️✨ ${firstTwoDigitNumber} - ${previousMultipleOfTenSecondNumber} -  ____</h1>
+            <h1 id="main-question"></h1>
             <div class="number-bond">
             <div class="circle" id="total">
               <div class="circle-content">
