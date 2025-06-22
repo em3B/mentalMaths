@@ -156,7 +156,6 @@ import { stopWiggle } from './circle_wiggler.js';
         tickRight = document.getElementById("tick-right");
     
         // ✅ Then draw the number bond
-        // ✅ Wait for layout to stabilize
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               setTimeout(() => {
