@@ -38,7 +38,6 @@ import { stopWiggle } from './circle_wiggler.js';
       <div class="devise-form form-table">
         <div class="form-table">
           <div id="question-section" style="display: none;">
-            <p>You have <span id="timer">60</span> seconds.</p>
             <div id="question-text"></div>
             <input type="number" id="answer-input" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
@@ -67,7 +66,9 @@ import { stopWiggle } from './circle_wiggler.js';
     // sample for this step:  whole of 9, part of 2, remaining would be 7
     function generateQuestion() {
         wholeNumber = Math.floor(Math.random() * 900) + 100;
+        console.log("whole: " + wholeNumber);
         leftCircleNumber = Math.floor(Math.random() * (wholeNumber - 1)) + 1; 
+        console.log("left: " + leftCircleNumber)
         rightCircleNumber = wholeNumber - leftCircleNumber;
     
         // ✅ Set innerHTML first
@@ -134,52 +135,12 @@ import { stopWiggle } from './circle_wiggler.js';
         rightCircle = document.querySelector('#right.circle');
         wiggleCircle(rightCircle);
 
-        submitClickHandler = () => {
-        
-          const userAnswer = parseInt(answerInput.value, 10);
-          if (userAnswer === answerPart1) {
-          feedback.textContent = "Correct!";
-          correctAnswers += 1;
-          totalQuestions += 1;
-          
-          confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 }
-          });
+      submitClickHandler = handleSubmitPart1Click;
+      submitKeyHandler = handleSubmitKey;
 
-          const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
-          tada.play();
-
-          stopWiggle();
-
-          questionParts.innerHTML = `
-            <div class="fact-family">
-                <div class="addition-facts">
-                <span id="add-1">${leftCircleNumber} + ____ = ${wholeNumber}</span>
-                <span id="add-2">${rightCircleNumber} + ____ = ${wholeNumber}</span>
-                </div>
-                <div class="subtraction-facts">
-                <span id="minus-1">${wholeNumber} - ${leftCircleNumber} = ____</span>
-                <span id="minus-2">${wholeNumber} - ${rightCircleNumber} = ____</span>
-                </div>
-            </div>
-            `;
-          
-          generateQuestionPart2(leftCircleNumber, rightCircleNumber);
-          } else {
-          feedback.textContent = "Try again!";
-          }
-        }
-
-      submitKeyHandler = (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
-    };  
-        // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
+      // Attach new handlers
+      submitAnswerBtn.addEventListener('click', submitClickHandler);
+      answerInput.addEventListener('keydown', submitKeyHandler);
   };  
 
   // sample for this step: 9 with part 2, 2 + ____ = 9
@@ -207,40 +168,12 @@ import { stopWiggle } from './circle_wiggler.js';
     rightCircle = document.querySelector('#right.circle');
     wiggleCircle(rightCircle);
 
-        submitClickHandler = () => {
-          const userAnswer = parseInt(answerInput.value, 10);
-          if (userAnswer === answerPart2) {
-          feedback.textContent = "Correct!";
-          correctAnswers += 1;
-          totalQuestions += 1;
-          
-          confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 }
-          });
+    submitClickHandler = handleSubmitPart2Click;
+    submitKeyHandler = handleSubmitKey;
 
-          const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
-          tada.play();
-
-          document.getElementById('add-1').textContent = `${leftCircleNumber} + ${rightCircleNumber} = ${wholeNumber}`;
-          
-          stopWiggle();
-          generateQuestionPart3();
-          } else {
-          feedback.textContent = "Try again!";
-          }
-        }
-
-      submitKeyHandler = (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
-    }; 
-
-      // Attach new handlers
-      submitAnswerBtn.onclick = submitClickHandler;
-      answerInput.onkeydown = submitKeyHandler;
+    // Attach new handlers
+    submitAnswerBtn.addEventListener('click', submitClickHandler);
+    answerInput.addEventListener('keydown', submitKeyHandler);
  }
 
 
@@ -268,57 +201,23 @@ import { stopWiggle } from './circle_wiggler.js';
   leftCircle = document.querySelector('#left.circle');
   wiggleCircle(leftCircle);
 
-      submitClickHandler = () => {
-        const userAnswer = parseInt(answerInput.value, 10);
-        if (userAnswer === answerPart3) {
-        feedback.textContent = "Correct!";
-        correctAnswers += 1;
-        totalQuestions += 1;
-        
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-
-        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
-        tada.play();
-
-        document.getElementById('add-2').textContent = `${rightCircleNumber} + ${leftCircleNumber} = ${wholeNumber}`;
-
-        stopWiggle();
-        
-        generateFourthPart();
-        } else {
-        feedback.textContent = "Try again!";
-        }
-
-    submitKeyHandler = (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
-    }
-  }; 
+  submitClickHandler = handleSubmitPart3Click;
+  submitKeyHandler = handleSubmitKey;
 
   // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
- }
-
-
-  // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);  
 }
 
 // in 9 with part 2 this part is 9 -2 = ____
 function generateFourthPart() {
 
-        // remove highlighted first part and show its answer, highlight second part 
-    firstPartB = document.getElementById("add-2");
-    secondPartA = document.getElementById("minus-1");
-    firstPartB.style.backgroundColor = "transparent";
-    firstPartB.style.border = "none";
-    secondPartA.classList.add("highlighted-part");
+      // remove highlighted first part and show its answer, highlight second part 
+  firstPartB = document.getElementById("add-2");
+  secondPartA = document.getElementById("minus-1");
+  firstPartB.style.backgroundColor = "transparent";
+  firstPartB.style.border = "none";
+  secondPartA.classList.add("highlighted-part");
   answerInput.value = '';
   answerInput.focus();
 
@@ -330,39 +229,12 @@ function generateFourthPart() {
     answerInput.removeEventListener('keydown', submitKeyHandler);
   }
 
-      submitClickHandler = () => {
-        const userAnswer = parseInt(answerInput.value, 10);
-        if (userAnswer === wholeNumber - leftCircleNumber) {
-        feedback.textContent = "Correct!";
-        correctAnswers += 1;
-        totalQuestions += 1;
-        
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+  submitClickHandler = handleSubmitPart4Click;
+  submitKeyHandler = handleSubmitKey;
 
-        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
-        tada.play();
-
-        document.getElementById('minus-1').textContent = `${wholeNumber} - ${leftCircleNumber} = ${rightCircleNumber}`;
-        
-        generateFifthPart();
-        } else {
-        feedback.textContent = "Try again!";
-        }
-
-    submitKeyHandler = (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
-    }
-  }; 
- }
-
-    // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
+  // Attach new handlers
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 // in sample 9 with part 2, this part does 9 - 7 = ____
@@ -384,46 +256,155 @@ function generateFifthPart() {
         answerInput.removeEventListener('keydown', submitKeyHandler);
     }
 
-        submitClickHandler = () => {
-            const userAnswer = parseInt(answerInput.value, 10);
-            if (userAnswer === wholeNumber - rightCircleNumber) {
-            feedback.textContent = "Correct!";
-            correctAnswers += 1;
-            totalQuestions += 1;
-            
-            confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 }
-            });
+  submitClickHandler = handleSubmitPart5Click;
+  submitKeyHandler = handleSubmitKey;
 
-            const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
-            tada.play();
-
-            document.getElementById('minus-2').textContent = `${wholeNumber} - ${rightCircleNumber} = ${leftCircleNumber}`;
-            
-            generateQuestion();
-            } else {
-            feedback.textContent = "Try again!";
-            }
-
-        submitKeyHandler = (event) => {
-        if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-        }
-    }; 
- }
-
-    // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
+  // Attach new handlers
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);  
 } 
 
-    answerInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
+  function handleSubmitPart1Click() {
+    const userAnswer = parseInt(answerInput.value, 10);
+    if (userAnswer === answerPart1) {
+      feedback.textContent = "Correct!";
+      correctAnswers += 1;
+      totalQuestions += 1;
+      
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+      tada.play();
+
+      stopWiggle();
+
+      questionParts.innerHTML = `
+        <div class="fact-family">
+            <div class="addition-facts">
+            <span id="add-1">${leftCircleNumber} + ____ = ${wholeNumber}</span>
+            <span id="add-2">${rightCircleNumber} + ____ = ${wholeNumber}</span>
+            </div>
+            <div class="subtraction-facts">
+            <span id="minus-1">${wholeNumber} - ${leftCircleNumber} = ____</span>
+            <span id="minus-2">${wholeNumber} - ${rightCircleNumber} = ____</span>
+            </div>
+        </div>
+        `;
+      
+      generateQuestionPart2(leftCircleNumber, rightCircleNumber);
+    } else {
+      feedback.textContent = "Try again!";
+    }
+  }
+
+  function handleSubmitPart2Click() {
+    const userAnswer = parseInt(answerInput.value, 10);
+    if (userAnswer === answerPart2) {
+      feedback.textContent = "Correct!";
+      correctAnswers += 1;
+      totalQuestions += 1;
+      
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+      tada.play();
+
+      document.getElementById('add-1').textContent = `${leftCircleNumber} + ${rightCircleNumber} = ${wholeNumber}`;
+      
+      stopWiggle();
+      generateQuestionPart3();
+    } else {
+      feedback.textContent = "Try again!";
+    }
+  }
+
+  function handleSubmitPart3Click() {
+    const userAnswer = parseInt(answerInput.value, 10);
+    if (userAnswer === answerPart3) {
+      feedback.textContent = "Correct!";
+      correctAnswers += 1;
+      totalQuestions += 1;
+      
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+      tada.play();
+
+      document.getElementById('add-2').textContent = `${rightCircleNumber} + ${leftCircleNumber} = ${wholeNumber}`;
+
+      stopWiggle();
+      
+      generateFourthPart();
+    } else {
+      feedback.textContent = "Try again!";
+    }
+}
+
+function handleSubmitPart4Click() {
+  const userAnswer = parseInt(answerInput.value, 10);
+  if (userAnswer === wholeNumber - leftCircleNumber) {
+    feedback.textContent = "Correct!";
+    correctAnswers += 1;
+    totalQuestions += 1;
+    
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
     });
+
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.play();
+
+    document.getElementById('minus-1').textContent = `${wholeNumber} - ${leftCircleNumber} = ${rightCircleNumber}`;
+    
+    generateFifthPart();
+  } else {
+    feedback.textContent = "Try again!";
+  }
+}
+
+function handleSubmitPart5Click() {
+  const userAnswer = parseInt(answerInput.value, 10);
+  if (userAnswer === wholeNumber - rightCircleNumber) {
+    feedback.textContent = "Correct!";
+    correctAnswers += 1;
+    totalQuestions += 1;
+    
+    confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 }
+    });
+
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.play();
+
+    document.getElementById('minus-2').textContent = `${wholeNumber} - ${rightCircleNumber} = ${leftCircleNumber}`;
+    
+    generateQuestion();
+  } else {
+    feedback.textContent = "Try again!";
+  }
+}
+
+    function handleSubmitKey(event) {
+    if (event.key === 'Enter') {
+      submitAnswerBtn.click();
+    }
+  }
   
     endGameBtn.onclick = () => {
       window.location.href = '/topics/28';
