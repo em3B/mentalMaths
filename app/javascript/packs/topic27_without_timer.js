@@ -12,8 +12,8 @@ import { stopWiggle } from './circle_wiggler.js';
     let wholeNumber = 0;
     let leftCircleNumber = 0;
     let rightCircleNumber = 0;
-    let submitClickHandler;
-    let submitKeyHandler;
+    let submitClickHandler = null;
+    let submitKeyHandler = null;
     let leftCircle;
     let rightCircle;
     let firstPartA;
@@ -38,7 +38,6 @@ import { stopWiggle } from './circle_wiggler.js';
       <div class="devise-form form-table">
         <div class="form-table">
           <div id="question-section" style="display: none;">
-            <p>You have <span id="timer">60</span> seconds.</p>
             <div id="question-text"></div>
             <input type="number" id="answer-input" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
@@ -134,9 +133,138 @@ import { stopWiggle } from './circle_wiggler.js';
         rightCircle = document.querySelector('#right.circle');
         wiggleCircle(rightCircle);
 
-        submitClickHandler = () => {
-        
-          const userAnswer = parseInt(answerInput.value, 10);
+        submitClickHandler = handleSubmitPart1Click;
+        submitKeyHandler = handleSubmitKey;
+
+        submitAnswerBtn.addEventListener('click', submitClickHandler);
+        answerInput.addEventListener('keydown', submitKeyHandler);
+  };  
+
+  // sample for this step: 9 with part 2, 2 + ____ = 9
+ function generateQuestionPart2() {
+    document.querySelector('#right .number').textContent = rightCircleNumber;
+
+    // add highlighted box to the first part 
+    firstPartA = document.getElementById("add-1");
+    firstPartA.classList.add("highlighted-part");
+    mainInstructions.classList.remove("hidden");
+
+    answerPart2 = wholeNumber - leftCircleNumber;
+    answerInput.value = '';
+    answerInput.focus();
+
+      // Remove previous handlers, if they exist
+    if (submitClickHandler) {
+      submitAnswerBtn.removeEventListener('click', submitClickHandler);
+    }
+    if (submitKeyHandler) {
+      answerInput.removeEventListener('keydown', submitKeyHandler);
+    }
+
+
+    rightCircle = document.querySelector('#right.circle');
+    wiggleCircle(rightCircle);
+
+    submitClickHandler = handleSubmitPart2Click;
+    submitKeyHandler = handleSubmitKey;
+
+    submitAnswerBtn.addEventListener('click', submitClickHandler);
+    answerInput.addEventListener('keydown', submitKeyHandler);
+ }
+
+
+// sample : 9 with part 2, this part does 7 + ____ = 9
+ function generateQuestionPart3() {
+    // remove highlighted first part and show its answer, highlight second part 
+  firstPartA = document.getElementById("add-1");
+  firstPartB = document.getElementById("add-2");
+  firstPartA.style.backgroundColor = "transparent";
+  firstPartA.style.border = "none";
+  firstPartB.classList.add("highlighted-part");
+
+  answerPart3 = wholeNumber - rightCircleNumber;
+  answerInput.value = '';
+  answerInput.focus();
+
+    // Remove previous handlers, if they exist
+  if (submitClickHandler) {
+    submitAnswerBtn.removeEventListener('click', submitClickHandler);
+  }
+  if (submitKeyHandler) {
+    answerInput.removeEventListener('keydown', submitKeyHandler);
+  }
+
+  leftCircle = document.querySelector('#left.circle');
+  wiggleCircle(leftCircle);
+
+  submitClickHandler = handleSubmitPart3Click;
+  submitKeyHandler = handleSubmitKey;
+
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
+}
+
+// in 9 with part 2 this part is 9 -2 = ____
+function generateFourthPart() {
+
+        // remove highlighted first part and show its answer, highlight second part 
+    firstPartB = document.getElementById("add-2");
+    secondPartA = document.getElementById("minus-1");
+    firstPartB.style.backgroundColor = "transparent";
+    firstPartB.style.border = "none";
+    secondPartA.classList.add("highlighted-part");
+  answerInput.value = '';
+  answerInput.focus();
+
+    // Remove previous handlers, if they exist
+  if (submitClickHandler) {
+    submitAnswerBtn.removeEventListener('click', submitClickHandler);
+  }
+  if (submitKeyHandler) {
+    answerInput.removeEventListener('keydown', submitKeyHandler);
+  }
+
+  submitClickHandler = handleSubmitPart4Click;
+  submitKeyHandler = handleSubmitKey;
+
+  submitAnswerBtn.addEventListener('click', submitClickHandler);
+  answerInput.addEventListener('keydown', submitKeyHandler);
+}
+
+// in sample 9 with part 2, this part does 9 - 7 = ____
+function generateFifthPart() {
+        // remove highlighted first part and show its answer, highlight second part 
+    secondPartB = document.getElementById("minus-2");
+    secondPartA = document.getElementById("minus-1");
+    secondPartA.style.backgroundColor = "transparent";
+    secondPartA.style.border = "none";
+    secondPartB.classList.add("highlighted-part");
+    answerInput.value = '';
+    answerInput.focus();
+
+        // Remove previous handlers, if they exist
+    if (submitClickHandler) {
+        submitAnswerBtn.removeEventListener('click', submitClickHandler);
+    }
+    if (submitKeyHandler) {
+        answerInput.removeEventListener('keydown', submitKeyHandler);
+    }
+
+    submitClickHandler = handleSubmitPart5Click;
+    submitKeyHandler = handleSubmitKey;
+
+    submitAnswerBtn.addEventListener('click', submitClickHandler);
+    answerInput.addEventListener('keydown', submitKeyHandler);
+} 
+
+    answerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitAnswerBtn.click();
+      }
+    });
+
+    function handleSubmitPart1Click() {
+      const userAnswer = parseInt(answerInput.value, 10);
           if (userAnswer === answerPart1) {
           feedback.textContent = "Correct!";
           correctAnswers += 1;
@@ -170,44 +298,9 @@ import { stopWiggle } from './circle_wiggler.js';
           } else {
           feedback.textContent = "Try again!";
           }
-        }
-
-      submitKeyHandler = (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
-    };  
-        // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
-  };  
-
-  // sample for this step: 9 with part 2, 2 + ____ = 9
- function generateQuestionPart2() {
-    document.querySelector('#right .number').textContent = rightCircleNumber;
-
-    // add highlighted box to the first part 
-    firstPartA = document.getElementById("add-1");
-    firstPartA.classList.add("highlighted-part");
-    mainInstructions.classList.remove("hidden");
-
-    answerPart2 = wholeNumber - leftCircleNumber;
-    answerInput.value = '';
-    answerInput.focus();
-
-      // Remove previous handlers, if they exist
-    if (submitClickHandler) {
-      submitAnswerBtn.removeEventListener('click', submitClickHandler);
-    }
-    if (submitKeyHandler) {
-      answerInput.removeEventListener('keydown', submitKeyHandler);
     }
 
-
-    rightCircle = document.querySelector('#right.circle');
-    wiggleCircle(rightCircle);
-
-        submitClickHandler = () => {
+    function handleSubmitPart2Click() {
           const userAnswer = parseInt(answerInput.value, 10);
           if (userAnswer === answerPart2) {
           feedback.textContent = "Correct!";
@@ -230,46 +323,10 @@ import { stopWiggle } from './circle_wiggler.js';
           } else {
           feedback.textContent = "Try again!";
           }
-        }
+    }
 
-      submitKeyHandler = (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
-    }; 
-
-      // Attach new handlers
-      submitAnswerBtn.onclick = submitClickHandler;
-      answerInput.onkeydown = submitKeyHandler;
- }
-
-
-// sample : 9 with part 2, this part does 7 + ____ = 9
- function generateQuestionPart3() {
-    // remove highlighted first part and show its answer, highlight second part 
-  firstPartA = document.getElementById("add-1");
-  firstPartB = document.getElementById("add-2");
-  firstPartA.style.backgroundColor = "transparent";
-  firstPartA.style.border = "none";
-  firstPartB.classList.add("highlighted-part");
-
-  answerPart3 = wholeNumber - rightCircleNumber;
-  answerInput.value = '';
-  answerInput.focus();
-
-    // Remove previous handlers, if they exist
-  if (submitClickHandler) {
-    submitAnswerBtn.removeEventListener('click', submitClickHandler);
-  }
-  if (submitKeyHandler) {
-    answerInput.removeEventListener('keydown', submitKeyHandler);
-  }
-
-  leftCircle = document.querySelector('#left.circle');
-  wiggleCircle(leftCircle);
-
-      submitClickHandler = () => {
-        const userAnswer = parseInt(answerInput.value, 10);
+    function handleSubmitPart3Click() {
+              const userAnswer = parseInt(answerInput.value, 10);
         if (userAnswer === answerPart3) {
         feedback.textContent = "Correct!";
         correctAnswers += 1;
@@ -292,45 +349,9 @@ import { stopWiggle } from './circle_wiggler.js';
         } else {
         feedback.textContent = "Try again!";
         }
-
-    submitKeyHandler = (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
     }
-  }; 
 
-  // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
- }
-
-
-  // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
-}
-
-// in 9 with part 2 this part is 9 -2 = ____
-function generateFourthPart() {
-
-        // remove highlighted first part and show its answer, highlight second part 
-    firstPartB = document.getElementById("add-2");
-    secondPartA = document.getElementById("minus-1");
-    firstPartB.style.backgroundColor = "transparent";
-    firstPartB.style.border = "none";
-    secondPartA.classList.add("highlighted-part");
-  answerInput.value = '';
-  answerInput.focus();
-
-    // Remove previous handlers, if they exist
-  if (submitClickHandler) {
-    submitAnswerBtn.removeEventListener('click', submitClickHandler);
-  }
-  if (submitKeyHandler) {
-    answerInput.removeEventListener('keydown', submitKeyHandler);
-  }
-
-      submitClickHandler = () => {
+    function handleSubmitPart4Click() {
         const userAnswer = parseInt(answerInput.value, 10);
         if (userAnswer === wholeNumber - leftCircleNumber) {
         feedback.textContent = "Correct!";
@@ -352,40 +373,10 @@ function generateFourthPart() {
         } else {
         feedback.textContent = "Try again!";
         }
-
-    submitKeyHandler = (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
-    }
-  }; 
- }
-
-    // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
-}
-
-// in sample 9 with part 2, this part does 9 - 7 = ____
-function generateFifthPart() {
-        // remove highlighted first part and show its answer, highlight second part 
-    secondPartB = document.getElementById("minus-2");
-    secondPartA = document.getElementById("minus-1");
-    secondPartA.style.backgroundColor = "transparent";
-    secondPartA.style.border = "none";
-    secondPartB.classList.add("highlighted-part");
-    answerInput.value = '';
-    answerInput.focus();
-
-        // Remove previous handlers, if they exist
-    if (submitClickHandler) {
-        submitAnswerBtn.removeEventListener('click', submitClickHandler);
-    }
-    if (submitKeyHandler) {
-        answerInput.removeEventListener('keydown', submitKeyHandler);
     }
 
-        submitClickHandler = () => {
-            const userAnswer = parseInt(answerInput.value, 10);
+    function handleSubmitPart5Click() {
+                  const userAnswer = parseInt(answerInput.value, 10);
             if (userAnswer === wholeNumber - rightCircleNumber) {
             feedback.textContent = "Correct!";
             correctAnswers += 1;
@@ -406,24 +397,13 @@ function generateFifthPart() {
             } else {
             feedback.textContent = "Try again!";
             }
+    }
 
-        submitKeyHandler = (event) => {
-        if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-        }
-    }; 
- }
-
-    // Attach new handlers
-    submitAnswerBtn.onclick = submitClickHandler;
-    answerInput.onkeydown = submitKeyHandler;
-} 
-
-    answerInput.addEventListener('keydown', (event) => {
+    function handleSubmitKey(event) {
       if (event.key === 'Enter') {
         submitAnswerBtn.click();
       }
-    });
+  }
   
     endGameBtn.onclick = () => {
       window.location.href = '/topics/27';
