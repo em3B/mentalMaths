@@ -4,6 +4,8 @@ class DashboardsController < ApplicationController
   def teacher
     redirect_to root_path unless current_user.teacher?
     @classrooms = current_user.classrooms
+    @new_classroom = Classroom.new
+    @new_student = User.new
   end
 
   def family
@@ -53,7 +55,9 @@ class DashboardsController < ApplicationController
     @new_student.created_by_family = false
     # we’ll enroll them in a classroom via a join:
     if @new_student.save
-      Membership.create!(user: @new_student, classroom: Classroom.find(params[:classroom_id]))
+      classroom = Classroom.find(params[:classroom_id])
+      @new_student.update(classroom: classroom)
+      Membership.create!(user: @new_student, classroom: classroom)  # if you want to still use the join
       redirect_to teacher_dashboard_path, notice: "Student added successfully."
     else
       @classrooms     = current_user.classrooms

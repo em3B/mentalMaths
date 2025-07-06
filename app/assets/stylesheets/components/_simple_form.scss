@@ -6,6 +6,13 @@ $turquoise: #7AC4BD;
 $purple: #A81375;
 $pink: #F0688C;
 
+.form-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap; /* allows stacking on small screens */
+}
+
 .devise-form {
     display: flex;
     flex-direction: column;

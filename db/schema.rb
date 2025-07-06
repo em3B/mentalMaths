@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_20_200450) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_06_194009) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,6 +93,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_200450) do
     t.boolean "created_by_family"
     t.string "username", default: "", null: false
     t.bigint "school_id"
+    t.bigint "classroom_id"
+    t.index ["classroom_id"], name: "index_users_on_classroom_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
     t.index ["username"], name: "index_users_on_username", unique: true
@@ -105,5 +107,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_200450) do
   add_foreign_key "responses", "questions"
   add_foreign_key "scores", "topics"
   add_foreign_key "scores", "users"
+  add_foreign_key "users", "classrooms"
   add_foreign_key "users", "schools"
 end
