@@ -1,37 +1,39 @@
-<h2>Your Classrooms</h2>
-<ul>
-  <% @classrooms.each do |c| %>
-    <li><%= c.name %></li>
-  <% end %>
-</ul>
-
-<h3>Create a Classroom</h3>
-<%= form_with model: @new_classroom, url: create_classroom_path do |f| %>
-  <%= f.text_field :name, placeholder: "Classroom Name" %>
-  <%= f.submit "Create Classroom" %>
+<% if @classrooms.present? %>
+  <h2>Your Classrooms</h2>
+  <ul>
+    <% @classrooms.each do |c| %>
+      <li><%= c.name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You don’t have any classrooms yet.</p>
 <% end %>
 
-<h3>Add a Student</h3>
-<%= form_with model: @new_student, url: create_student_path do |f| %>
-  <div>
-    <%= f.label :email %>
-    <%= f.text_field :email %>
+<div class="form-container">
+  <div class="devise-form">
+    <h3>Create a Classroom</h3>
+    <%= simple_form_for @new_classroom, url: create_classroom_path do |f| %>
+      <%= f.text_field :name, placeholder: "Classroom Name" %>
+      <div class="form-inputs">
+        <%= f.button :submit, "Create Classroom", class: "devise-btn" %>
+      </div>
+    <% end %>
   </div>
-  <div>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
+
+  <div class="devise-form">
+    <h3>Add a Student</h3>
+    <%= simple_form_for @new_student, url: create_student_path do |f| %>
+      <div class="form-inputs">
+        <%= f.input :name, label: "Child’s Username", required: true %>
+        <%= f.input :password, label: "Child’s Password", required: true %>
+        <%= f.input :password_confirmation, label: "Child’s Password Confirmation", required: true %>
+        <%= f.label :classroom_id, "Enroll in Classroom" %>
+        <%= f.select :classroom_id, @classrooms.map { |c| [c.name, c.id] } %>
+      </div>
+      <div class="form-inputs">
+        <%= f.button :submit, "Add Student", class: "devise-btn" %>
+      </div>
+    <% end %>
   </div>
-  <div>
-    <%= f.label :password %>
-    <%= f.password_field :password %>
-  </div>
-  <div>
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation %>
-  </div>
-  <div>
-    <%= f.label :classroom_id, "Enroll in Classroom" %>
-    <%= f.select :classroom_id, @classrooms.map { |c| [c.name, c.id] } %>
-  </div>
-  <%= f.submit "Add Student" %>
-<% end %>
+</div>
+

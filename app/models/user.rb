@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :children, class_name: "User", foreign_key: "parent_id", dependent: :nullify
   belongs_to :parent, class_name: "User", optional: true
   belongs_to :school, optional: true
+  belongs_to :classroom, optional: true
 
   # Teacher owns classrooms
   has_many :classrooms, foreign_key: :teacher_id, dependent: :destroy
