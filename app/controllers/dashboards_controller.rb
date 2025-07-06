@@ -71,4 +71,10 @@ class DashboardsController < ApplicationController
   def child_params
     params.require(:user).permit(:email, :username, :password, :password_confirmation)
   end
+
+  private
+
+  def classroom_params
+    params.require(:classroom).permit(:name)
+  end
 end

@@ -1,13 +1,18 @@
 <% if @classrooms.present? %>
   <h2>Your Classrooms</h2>
-  <ul>
-    <% @classrooms.each do |c| %>
-      <li><%= c.name %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>You don’t have any classrooms yet.</p>
-<% end %>
+  <% @classrooms.each do |c| %>
+    <div class="main-btn-group">
+      <%= link_to classroom_path(id: c.id) do %>
+        <button class="main-btn">
+          <h4><%= c.name %></h4>
+          <h2>View Classroom</h2>
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+  <% else %>
+    <p>You don’t have any classrooms yet.</p>
+  <% end %>
 
 <div class="form-container">
   <div class="devise-form">
