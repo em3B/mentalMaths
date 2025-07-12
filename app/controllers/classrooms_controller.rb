@@ -8,6 +8,8 @@ class ClassroomsController < ApplicationController
 
   def show
     @classroom = current_user.classrooms.find(params[:id])
+    @students = @classroom.students
+    @new_student = User.new(role: "student", classroom: @classroom)
   end
 
   def new

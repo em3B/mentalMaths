@@ -27,6 +27,8 @@ Rails.application.routes.draw do
     # Custom topic routes (intro and play)
     get "topics/:id/intro", to: "topics#intro", as: "topic_intro"
 
+    get "students/:id/scores", to: "scores#show", as: :student_scores
+
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
       collection do
@@ -47,7 +49,7 @@ Rails.application.routes.draw do
     end
 
     resources :classrooms do
-      resources :students, only: [ :new, :create, :index ]
+      resources :students, only: [ :new, :create, :index, :destroy ]
       get :scores, on: :member
     end
 

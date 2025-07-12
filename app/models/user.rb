@@ -31,20 +31,15 @@ class User < ApplicationRecord
   # Teacher owns classrooms
   has_many :classrooms, foreign_key: :teacher_id, dependent: :destroy
 
-  # Students and Teachers can be in classrooms
-  has_many :memberships
-  has_many :enrolled_classrooms, through: :memberships, source: :classroom
-
   # Scores
   has_many :scores
 
   validates :username, presence: true, uniqueness: true
-  validates :email, presence: true, unless: -> { student? && created_by_family? }
+  validates :email, presence: true, unless: :student_or_child?
   validates :email, uniqueness: true, allow_blank: true
-  validates :username, presence: true, uniqueness: true
 
   def learner?
-    student? && (created_by_family? || enrolled_classrooms.any?)
+    student? && (created_by_family? || classroom.present?)
   end
 
   def login
@@ -60,5 +55,9 @@ class User < ApplicationRecord
     where(role: role).where(
       [ "(lower(username) = :value OR lower(email) = :value)", { value: login_val } ]
     ).first
+  end
+
+  def student_or_child?
+    student? || parent.present?
   end
 end

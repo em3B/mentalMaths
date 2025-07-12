@@ -12,13 +12,27 @@ class StudentsController < ApplicationController
 
   def create
     @student = User.new(student_params)
-    @student.role = :student
-    @student.password = Devise.friendly_token.first(8) # auto-generate a password
+    @student.role = "student"
+    generated_password = Devise.friendly_token.first(8)
+    @student.password = generated_password
     if @student.save
-      Membership.create(user: @student, classroom: @classroom)
-      redirect_to classroom_students_path(@classroom), notice: "Student added"
+      @student.update(classroom: @classroom)
+      redirect_to classroom_path(@classroom), notice: "Student added with password: #{generated_password}"
     else
-      render :new
+      @students = @classroom.students
+      @new_student = @student
+      render "classrooms/show", status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @classroom = Classroom.find(params[:classroom_id])
+    @student = @classroom.students.find(params[:id])
+    @student.update(classroom: nil)  # Remove student from classroom but don’t delete user
+
+    respond_to do |format|
+      format.turbo_stream if turbo_frame_request?
+      format.html { redirect_to classroom_path(@classroom), notice: "Student removed." }
     end
   end
 
@@ -29,6 +43,6 @@ class StudentsController < ApplicationController
   end
 
   def student_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:username, :email)
   end
 end
