@@ -40,6 +40,10 @@ def index
   end
 end
 
+def show
+  @student = User.find(params[:id])
+  @scores = @student.scores
+end
 
   def create
     # Safely permit params with strong params
