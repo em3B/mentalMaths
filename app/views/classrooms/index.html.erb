@@ -9,8 +9,8 @@
             <h2>View Classroom</h2>
         </button>
         <% end %>
-        <%= button_to classroom_path(c), method: :delete, data: { confirm: "Are you sure you want to remove #{c.name}?" }, class: "devise-btn" do %>
-          Remove
+        <%= button_to classroom_path(c), method: :delete, data: { confirm: "Are you sure you want to remove #{c.name}?" }, class: "remove-btn" do %>
+          X
         <% end %>
   <% end %>
   </div>
