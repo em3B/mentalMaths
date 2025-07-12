@@ -42,7 +42,7 @@ end
 
 def show
   @student = User.find(params[:id])
-  @scores = @student.scores
+  @scores = @student.scores.order(created_at: :desc).page(params[:page])
 end
 
   def create
