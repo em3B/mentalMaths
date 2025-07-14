@@ -14,10 +14,14 @@ class StudentsController < ApplicationController
     @student = User.new(student_params)
     @student.role = "student"
     generated_password = Devise.friendly_token.first(8)
-    @student.password = generated_password
+    @student.password = @student.password_confirmation = generated_password
+
     if @student.save
       @student.update(classroom: @classroom)
-      redirect_to classroom_path(@classroom), notice: "Student added with password: #{generated_password}"
+      respond_to do |format|
+        format.html { render :show_password, locals: { student: @student, password: generated_password } }
+        format.turbo_stream { render :show_password, locals: { student: @student, password: generated_password } }
+      end
     else
       @students = @classroom.students
       @new_student = @student

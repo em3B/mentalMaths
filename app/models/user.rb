@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   ROLES = %w[student teacher family].freeze
 
+  attr_accessor :plain_password
+
   def teacher?
     role == "teacher"
   end
