@@ -49,7 +49,9 @@ Rails.application.routes.draw do
     end
 
     resources :classrooms do
-      resources :students, only: [ :new, :create, :index, :destroy ]
+      resources :students, only: [ :new, :create, :index, :destroy ] do
+        get "show_password", on: :collection
+      end
       get :scores, on: :member
     end
 
