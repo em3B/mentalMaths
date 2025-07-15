@@ -36,7 +36,7 @@ class User < ApplicationRecord
   # Scores
   has_many :scores
 
-  validates :username, presence: true, uniqueness: true
+  validates :username, presence: true, uniqueness: { conditions: -> { where.not(classroom_id: nil) } }
   validates :email, presence: true, unless: :student_or_child?
   validates :email, uniqueness: true, allow_blank: true
 
