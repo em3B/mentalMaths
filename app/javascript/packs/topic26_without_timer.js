@@ -290,7 +290,7 @@ function generateFifthPart() {
         correctAnswers += 1;
         totalQuestions += 1;
 
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        confetti({ particleCount: 80, spread: 110, origin: { y: 0.6 } });
 
         const tada = new Audio('https://...tada.mp3');
         tada.play();
@@ -324,8 +324,8 @@ function generateFifthPart() {
         totalQuestions += 1;
 
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -353,8 +353,8 @@ function generateFifthPart() {
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -379,8 +379,8 @@ function generateFifthPart() {
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -403,8 +403,8 @@ function generateFifthPart() {
         totalQuestions += 1;
         
         confetti({
-        particleCount: 150,
-        spread: 70,
+        particleCount: 80,
+        spread: 110,
         origin: { y: 0.6 }
         });
 
