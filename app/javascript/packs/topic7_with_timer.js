@@ -188,8 +188,8 @@ import { stopWiggle } from './circle_wiggler.js';
           totalQuestions += 1;
           
           confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
           });
 
@@ -301,8 +301,8 @@ import { stopWiggle } from './circle_wiggler.js';
           totalQuestions += 1;
           
           confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
           });
 
@@ -382,8 +382,8 @@ import { stopWiggle } from './circle_wiggler.js';
           totalQuestions += 1;
           
           confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
           });
 
@@ -463,8 +463,8 @@ import { stopWiggle } from './circle_wiggler.js';
           totalQuestions += 1;
           
           confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
           });
 
@@ -539,8 +539,8 @@ import { stopWiggle } from './circle_wiggler.js';
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -613,8 +613,8 @@ function generateFinalPart(twoDigitNumber, oneDigitNumber, answerPart3) {
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -685,8 +685,8 @@ function generateQuestionPart3b(answerPart2, previousMultipleOfTen) {
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -753,8 +753,8 @@ function generateFinalQuestionB(twoDigitNumber, oneDigitNumber, answerPart3) {
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 

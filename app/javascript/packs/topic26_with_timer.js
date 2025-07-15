@@ -178,8 +178,8 @@ import { stopWiggle } from './circle_wiggler.js';
           totalQuestions += 1;
           
           confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
           });
 
@@ -256,8 +256,8 @@ import { stopWiggle } from './circle_wiggler.js';
           totalQuestions += 1;
           
           confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
           });
 
@@ -323,8 +323,8 @@ import { stopWiggle } from './circle_wiggler.js';
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -392,8 +392,8 @@ function generateFourthPart() {
         totalQuestions += 1;
         
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -453,8 +453,8 @@ function generateFifthPart() {
             totalQuestions += 1;
             
             confetti({
-            particleCount: 150,
-            spread: 70,
+            particleCount: 80,
+            spread: 110,
             origin: { y: 0.6 }
             });
 
