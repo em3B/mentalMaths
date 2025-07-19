@@ -10,6 +10,7 @@ class ClassroomsController < ApplicationController
     @classroom = current_user.classrooms.find(params[:id])
     @students = @classroom.students
     @new_student = User.new(role: "student", classroom: @classroom)
+    @assignments = @classroom.assigned_topics.includes(:topic)
   end
 
   def new

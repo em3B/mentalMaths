@@ -11,6 +11,14 @@ class TopicsController < ApplicationController
 
   def show
     @topic = Topic.find(params[:id])
+    if current_user.teacher?
+      @classrooms = current_user.classrooms
+      if params[:classroom_id].present?
+      @selected_classroom = @classrooms.find_by(id: params[:classroom_id])
+      else
+        @selected_classroom = @classrooms.first
+      end
+    end
   end
 
   def play

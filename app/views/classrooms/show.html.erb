@@ -1,7 +1,7 @@
 <h1><%= @classroom.name %></h1>
 <div class="form-container">
   <div class="devise-form">
-    <h3>Add a Student</h3>
+    <h2>Add a Student</h2>
     <%= simple_form_for @new_student, url: classroom_students_path(@classroom) do |f| %>
       <div class="form-inputs">
         <%= f.input :username, label: "Student’s Username", required: true %>
@@ -9,6 +9,24 @@
       <div class="form-inputs">
         <%= f.button :submit, "Add", class: "devise-btn" %>
       </div>
+    <% end %>
+  </div>
+
+  <div class="devise-form">
+    <h2>Assigned Topics</h2>
+    <% if @assignments.any? %>
+      <ul>
+        <% @assignments.each do |a| %>
+          <li>
+            <strong><%= a.topic.title %></strong>
+            <%= button_to 'Remove', classroom_assigned_topic_path(@classroom, a), method: :delete,
+                        data: { confirm: 'Remove this assignment?' },
+                        class: 'remove-btn' %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No topics have been assigned yet.</p>
     <% end %>
   </div>
 

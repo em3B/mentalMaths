@@ -36,6 +36,11 @@ class User < ApplicationRecord
   # Scores
   has_many :scores
 
+  # Homework
+  has_many :assigned_topics
+  has_many :assigned_topics_as_assigner, class_name: "AssignedTopic", foreign_key: "assigned_by_id"
+  has_many :topics_assigned, through: :assigned_topics, source: :topic
+
   validates :username, presence: true, uniqueness: { conditions: -> { where.not(classroom_id: nil) } }
   validates :email, presence: true, unless: :student_or_child?
   validates :email, uniqueness: true, allow_blank: true

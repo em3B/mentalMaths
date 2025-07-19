@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_15_180006) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_19_165656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "assigned_topics", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "topic_id", null: false
+    t.date "due_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "classroom_id"
+    t.bigint "assigned_by_id"
+    t.index ["assigned_by_id"], name: "index_assigned_topics_on_assigned_by_id"
+    t.index ["classroom_id"], name: "index_assigned_topics_on_classroom_id"
+    t.index ["topic_id"], name: "index_assigned_topics_on_topic_id"
+    t.index ["user_id"], name: "index_assigned_topics_on_user_id"
+  end
 
   create_table "classrooms", force: :cascade do |t|
     t.string "name"
@@ -100,6 +114,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_15_180006) do
     t.index ["username"], name: "index_users_on_username_for_students", unique: true, where: "(classroom_id IS NOT NULL)"
   end
 
+  add_foreign_key "assigned_topics", "classrooms"
+  add_foreign_key "assigned_topics", "topics"
+  add_foreign_key "assigned_topics", "users"
+  add_foreign_key "assigned_topics", "users", column: "assigned_by_id"
   add_foreign_key "classrooms", "users", column: "teacher_id"
   add_foreign_key "memberships", "classrooms"
   add_foreign_key "memberships", "users"
