@@ -48,12 +48,22 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :classrooms do
-      resources :students, only: [ :new, :create, :index, :destroy ] do
-        get "show_password", on: :collection
-      end
-      get :scores, on: :member
+resources :classrooms do
+  member do
+    post "assign_topic_to_class", to: "assigned_topics#create_for_class"
+  end
+
+  resources :students, only: [ :new, :create, :index, :destroy ] do
+    member do
+      post "assign_topic", to: "assigned_topics#create_for_user"
     end
+    collection do
+      get "show_password"
+    end
+  end
+  delete "assigned_topics/:id", to: "assigned_topics#destroy_for_class", as: :assigned_topic
+  get :scores, on: :member
+end
 
     # dashboards
     get  "dashboard/teacher",           to: "dashboards#teacher",          as: :teacher_dashboard
