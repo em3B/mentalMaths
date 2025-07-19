@@ -1,8 +1,8 @@
 export function drawNumberBond(a, b, total, missing = 'a') {
     // Set the text content based on which value is missing
-    document.getElementById('left').textContent = missing === 'a' ? '?' : a;
-    document.getElementById('right').textContent = missing === 'b' ? '?' : b;
-    document.getElementById('total').textContent = missing === 'total' ? '?' : total;
+    document.querySelector('#left .number').textContent = missing === 'a' ? '?' : a;
+    document.querySelector('#right .number').textContent = missing === 'b' ? '?' : b;
+    document.querySelector('#total .number').textContent = missing === 'total' ? '?' : total;
 
     const gameContainer = document.getElementById("game-container");
 
@@ -17,9 +17,9 @@ export function drawNumberBond(a, b, total, missing = 'a') {
         };
       };       
 
-    const leftCircle = document.getElementById('left');
-    const rightCircle = document.getElementById('right');
-    const totalCircle = document.getElementById('total');
+    const leftCircle = document.querySelector('#left.circle')
+    const rightCircle = document.querySelector('#right.circle')
+    const totalCircle = document.querySelector('#total.circle')
 
     requestAnimationFrame(() => {
         const p1 = getCenter(leftCircle);

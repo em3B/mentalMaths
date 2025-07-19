@@ -1,0 +1,33 @@
+<h1>🎯 Your Scores for <%= @topic.title %></h1>
+
+<table class="score-table">
+  <thead>
+    <tr>
+      <th>🌟 #</th>
+      <th>📅 Date</th>
+      <th>✅ Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @scores.each_with_index do |score, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= score.created_at.strftime("%d %B %Y") %></td>
+        <td>
+          <%= "#{score.correct} / #{score.total}" %>
+          <% if score.correct >= 10 %>
+            🎉
+          <% elsif score.correct >= 8 %>
+            👍
+          <% elsif score.correct <= 5 %>
+            💪 Keep going!
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="pagination">
+  <%= paginate @scores %>
+</div>

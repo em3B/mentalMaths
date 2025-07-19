@@ -27,12 +27,18 @@ Rails.application.routes.draw do
     # Custom topic routes (intro and play)
     get "topics/:id/intro", to: "topics#intro", as: "topic_intro"
 
+    get "students/:id/scores", to: "scores#show", as: :student_scores
+
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
+      collection do
+        get "category/:category", to: "topics#index", as: :category
+      end
       # Route to show questions for a specific topic (will handle the intro and question display)
       #   member do
       member do
         get "score"  # adds /topics/:id/score
+        post "submit_score"
         get "intro"
         get "play"
       end
@@ -41,6 +47,31 @@ Rails.application.routes.draw do
         post "answer", on: :member  # this will handle submitting answers to questions
       end
     end
+
+resources :classrooms do
+  member do
+    post "assign_topic_to_class", to: "assigned_topics#create_for_class"
+  end
+
+  resources :students, only: [ :new, :create, :index, :destroy ] do
+    member do
+      post "assign_topic", to: "assigned_topics#create_for_user"
+    end
+    collection do
+      get "show_password"
+    end
+  end
+  delete "assigned_topics/:id", to: "assigned_topics#destroy_for_class", as: :assigned_topic
+  get :scores, on: :member
+end
+
+    # dashboards
+    get  "dashboard/teacher",           to: "dashboards#teacher",          as: :teacher_dashboard
+    post "dashboard/teacher/create",    to: "dashboards#create_classroom", as: :create_classroom
+    post "dashboard/teacher/add_student", to: "dashboards#create_student",  as: :create_student
+
+    get  "dashboard/family",           to: "dashboards#family",         as: :family_dashboard
+    post "dashboard/family/create",    to: "dashboards#create_child",   as: :create_child
 
     resources :scores, only: [ :index, :create ]
 

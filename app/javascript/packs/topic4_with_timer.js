@@ -65,11 +65,14 @@
     }
 
     function generateQuestion() {
-        nextMultipleOfTen = Math.floor(Math.random() * 99) + 1;
-        answer = Math.ceil(nextMultipleOfTen/ 10) * 10;
-        questionText.innerHTML = `<h2>${nextMultipleOfTen}</h2>`;
-        answerInput.value = '';
-        answerInput.focus();
+      let twoDigitNumber;
+      do {
+        twoDigitNumber = Math.floor(Math.random() * 99) + 1;
+      } while (twoDigitNumber % 10 === 0); 
+      answer = Math.ceil(twoDigitNumber/ 10) * 10;
+      questionText.innerHTML = `<h2>${twoDigitNumber}</h2>`;
+      answerInput.value = '';
+      answerInput.focus();
     }
 
     submitAnswerBtn.onclick = () => {
@@ -80,8 +83,8 @@
       totalQuestions += 1;
       
       confetti({
-        particleCount: 150,
-        spread: 70,
+        particleCount: 80,
+        spread: 110,
         origin: { y: 0.6 }
       });
 
@@ -135,7 +138,8 @@
         body: JSON.stringify({
           score: {
             correct: correct,
-            total_questions: totalQuestions
+            total: totalQuestions,
+            topic_id: 4
           }
         })
       })

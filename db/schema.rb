@@ -10,9 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_18_195125) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_19_165656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "assigned_topics", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "topic_id", null: false
+    t.date "due_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "classroom_id"
+    t.bigint "assigned_by_id"
+    t.index ["assigned_by_id"], name: "index_assigned_topics_on_assigned_by_id"
+    t.index ["classroom_id"], name: "index_assigned_topics_on_classroom_id"
+    t.index ["topic_id"], name: "index_assigned_topics_on_topic_id"
+    t.index ["user_id"], name: "index_assigned_topics_on_user_id"
+  end
+
+  create_table "classrooms", force: :cascade do |t|
+    t.string "name"
+    t.bigint "teacher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_classrooms_on_teacher_id"
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "classroom_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["classroom_id"], name: "index_memberships_on_classroom_id"
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
 
   create_table "questions", force: :cascade do |t|
     t.bigint "topic_id", null: false
@@ -31,12 +62,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_18_195125) do
     t.index ["question_id"], name: "index_responses_on_question_id"
   end
 
+  create_table "schools", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "contact_email"
+    t.string "subscription_status"
+    t.datetime "subscription_expires_at"
+  end
+
   create_table "scores", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "topic_id", null: false
-    t.integer "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "correct"
+    t.integer "total"
     t.index ["topic_id"], name: "index_scores_on_topic_id"
     t.index ["user_id"], name: "index_scores_on_user_id"
   end
@@ -48,6 +90,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_18_195125) do
     t.datetime "updated_at", null: false
     t.boolean "public"
     t.boolean "requires_auth"
+    t.string "category"
   end
 
   create_table "users", force: :cascade do |t|
@@ -59,11 +102,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_18_195125) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "role", default: "0"
+    t.integer "parent_id"
+    t.boolean "created_by_family"
+    t.string "username", default: "", null: false
+    t.bigint "school_id"
+    t.bigint "classroom_id"
+    t.index ["classroom_id"], name: "index_users_on_classroom_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["school_id"], name: "index_users_on_school_id"
+    t.index ["username"], name: "index_users_on_username_for_students", unique: true, where: "(classroom_id IS NOT NULL)"
   end
 
+  add_foreign_key "assigned_topics", "classrooms"
+  add_foreign_key "assigned_topics", "topics"
+  add_foreign_key "assigned_topics", "users"
+  add_foreign_key "assigned_topics", "users", column: "assigned_by_id"
+  add_foreign_key "classrooms", "users", column: "teacher_id"
+  add_foreign_key "memberships", "classrooms"
+  add_foreign_key "memberships", "users"
   add_foreign_key "questions", "topics"
   add_foreign_key "responses", "questions"
   add_foreign_key "scores", "topics"
   add_foreign_key "scores", "users"
+  add_foreign_key "users", "classrooms"
+  add_foreign_key "users", "schools"
 end

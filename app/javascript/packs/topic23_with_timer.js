@@ -99,8 +99,8 @@
         totalQuestions += 1;
 
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -155,7 +155,8 @@
         body: JSON.stringify({
           score: {
             correct: correct,
-            total_questions: totalQuestions
+            total: totalQuestions,
+            topic_id: 23
           }
         })
       })

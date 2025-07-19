@@ -1,0 +1,56 @@
+<h1><%= @classroom.name %></h1>
+<div class="form-container">
+  <div class="devise-form">
+    <h2>Add a Student</h2>
+    <%= simple_form_for @new_student, url: classroom_students_path(@classroom) do |f| %>
+      <div class="form-inputs">
+        <%= f.input :username, label: "Student’s Username", required: true %>
+      </div>
+      <div class="form-inputs">
+        <%= f.button :submit, "Add", class: "devise-btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="devise-form">
+    <h2>Assigned Topics</h2>
+    <% if @assignments.any? %>
+      <ul>
+        <% @assignments.each do |a| %>
+          <li>
+            <strong><%= a.topic.title %></strong>
+            <%= button_to 'Remove', classroom_assigned_topic_path(@classroom, a), method: :delete,
+                        data: { confirm: 'Remove this assignment?' },
+                        class: 'remove-btn' %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No topics have been assigned yet.</p>
+    <% end %>
+  </div>
+
+</div>
+
+<div id="new-student-password"></div>
+
+<% if @students.present? %>
+  <h2>Your Students</h2>
+  <div class="main-btn-group">
+    <% @students.each do |student| %>
+        <%= link_to student_scores_path(id: student.id) do %>
+        <button class="main-btn">
+            <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1751905937/lewis-keegan-UQnee_f61_M-unsplash_w51bc1.jpg", class: "main-btn-icon") %>
+            <h2><%= student.username %></h2>
+            <h4>View Scores</h4>
+        </button>
+        <% end %>
+
+        <%= button_to classroom_student_path(@classroom, student), method: :delete, data: { confirm: "Are you sure you want to remove #{student.username}?" }, class: "remove-btn" do %>
+        X
+        <% end %>
+    <% end %>
+    </div>
+  <% else %>
+    <p>You don’t have any students yet.</p>
+  <% end %>
