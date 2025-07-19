@@ -1,0 +1,59 @@
+<h1><%= @topic.title %></h1>
+
+<div class="devise-form">
+  <div class="checkbox-label-wrapper form-table">
+    <div class="checkbox-row">
+      <input type="checkbox" id="use-timer" />
+      <label for="use-timer">Use Timer</label>
+    </div>
+
+    <button class="devise-btn" id="play-button">Play</button>
+  </div>
+</div>
+
+<%# this is where the game will go %>
+<div id="game-container" style="display: none !important;" data-user-signed-in="<%= user_signed_in? %>" data-topic-id="<%= @topic.id %>">></div>
+
+<script>
+  document.addEventListener("turbo:load", function () {
+    window.WEBPACK_MANIFEST = <%= raw File.read(Rails.root.join("public/packs/manifest.json")) %>;
+
+    const formWrapper = document.querySelector(".devise-form");
+    const playButton = document.getElementById("play-button");
+    const useTimerCheckbox = document.getElementById("use-timer");
+    const gameContainer = document.getElementById("game-container");
+    const gameIndex = <%= @topic.id %>;
+
+    gameContainer.style.display = "none";
+
+    if (!playButton) return; // Prevents error if element doesn't exist
+
+    playButton.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      formWrapper.style.display = "none";
+      gameContainer.innerHTML = '';
+      gameContainer.style.display = "block";
+
+      const existingScript = document.getElementById("dynamic-game-script");
+      if (existingScript) existingScript.remove();
+
+      const mode = useTimerCheckbox.checked ? 'with_timer' : 'without_timer';
+      const logicalName = `packs/topic${gameIndex}_${mode}.js`;
+      const manifest = window.WEBPACK_MANIFEST;
+      const hashedPath = manifest[logicalName];
+
+      if (hashedPath) {
+        const script = document.createElement("script");
+        script.id = "dynamic-game-script";
+        script.type = "text/javascript";
+        script.src = hashedPath;
+        document.body.appendChild(script);
+      } else {
+        console.error(`Topic script not found in manifest: ${logicalName}`);
+      }
+    });
+  });
+</script>
+
+

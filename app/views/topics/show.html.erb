@@ -1,0 +1,65 @@
+
+<h1><%= @topic.title %></h1>
+
+<div class="main-btn-group">
+    <%= link_to topic_intro_path(@topic) do %>
+        <button class="main-btn">
+            <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1746429457/muhammad-rizki-5tZRN6LZ2Tw-unsplash_gpzs3d.jpg", class: "main-btn-icon") %>
+            <h1>Intro</h1>
+        </button>
+    <% end %>
+
+    <% if current_user.role.downcase == "student" %>
+        <%= link_to play_topic_path(@topic) do %>
+            <button class="main-btn">
+                <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1746429456/javier-martinez-hUD0PUczwJQ-unsplash_rwdstx.jpg", class: "main-btn-icon") %>
+                <h1>Play</h1>
+            </button>
+        <% end %>
+
+        <% if @topic.public? || user_signed_in? %>
+            <%= link_to score_topic_path(@topic) do %>
+                <button class="main-btn">
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745258711/MentalMaths/pearse-o-halloran-t0N-LwOu0hg-unsplash_asj4su.jpg", class: "main-btn-icon") %>
+                    <h1>My Scores</h1>
+                </button>
+            <% end %>   
+        <% else %>
+            <%= link_to new_user_registration_path do %>
+                <button class="main-btn locked">
+                    <div class="main-img">
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1744969400/franck-DoWZMPZ-M9s-unsplash_utayvh.jpg", alt: "Locked") %>
+                    </div>
+                    <span style="color: white;"><%= "My Scores" %> 🔒</span>
+                </button>
+            <% end %>
+        <% end %>
+
+    <% elsif current_user.teacher? && @classrooms.any? %>
+        <div class="devise-form">
+            <%= form_with model: [ @selected_classroom, AssignedTopic.new ], url: assign_topic_to_class_classroom_path(@selected_classroom), local: true do |f| %>
+            <%= hidden_field_tag :topic_id, @topic.id %>
+            <%= label_tag :classroom_id, "Assign to Classroom" %>
+            <%= select_tag :classroom_id,
+                options_from_collection_for_select(@classrooms, :id, :name),
+                prompt: "Select a classroom" %>
+            <%= label_tag :due_date, "Due date" %>
+            <%= date_field_tag :due_date %>
+            <%= f.submit "Assign", class: "devise-btn" %>
+            <% end %>
+        </div>
+    <% end %>
+
+</div>
+
+<script>
+    document.querySelectorAll('.main-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const boing = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746369903/toy-button-105724_arxpps.mp3');
+        boing.play().catch((e) => console.warn("Playback failed:", e));
+
+        btn.classList.add('bounce');
+        setTimeout(() => btn.classList.remove('bounce'), 300);
+    });
+    });
+</script>
