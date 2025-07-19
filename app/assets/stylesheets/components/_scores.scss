@@ -1,0 +1,48 @@
+$dyslexia_background: #FFFBF7;
+$orange: #F59435;
+$light_green: #CDE17B;
+$turquoise: #7AC4BD;
+$purple: #A81375;
+$pink: #F0688C;
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.2rem;
+  background: #f9fdfc;
+}
+
+.score-table th, .score-table td {
+  border: 5px solid $pink;
+  padding: 12px;
+  text-align: center;
+}
+
+.score-table tr:nth-child(even) {
+  background-color: #f1f8e9;
+}
+
+.score-table td {
+  font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  font-size: 1.5rem;
+}
+
+.pagination a, .pagination span {
+  margin: 0 10px;
+  padding: 8px 12px;
+  background-color: $orange;
+  color: #333;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+  background-color: $light_green;
+}

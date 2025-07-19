@@ -3,6 +3,8 @@
     const userSignedIn = gameContainer.dataset.userSignedIn == "true";
     let totalQuestions = 0; 
     let correctAnswers = 0;
+    let nextValue = 0;
+    let currentQuestionCounted = false;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -77,7 +79,7 @@
     function generateQuestion() {
       // Decide randomly to add or subtract
       const direction = Math.random() < 0.5 ? -1 : 1;
-      let nextValue = currentValue + (step * direction);
+      nextValue = currentValue + (step * direction);
   
       // Clamp to 0–200
       if (nextValue < 0 || nextValue > 108) {
@@ -87,31 +89,42 @@
       questionText.innerHTML = `<h2>${currentValue} ${nextValue > currentValue ? "+" : "-"} ${step} = </h2>`;
       answerInput.value = '';
       answerInput.focus();
-  
-      submitAnswerBtn.onclick = () => {
-        const userAnswer = parseInt(answerInput.value, 10);
-        if (userAnswer === nextValue) {
-          feedback.textContent = "Correct!";
-          correctAnswers += 1;
-          totalQuestions += 1;
-
-          confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 }
-          });
-
-          const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
-          tada.play();
-          
-          currentValue = nextValue;
-          generateQuestion();
-        } else {
-          totalQuestions += 1;
-          feedback.textContent = "Try again!";
-        }
-      };
     }
+
+    submitAnswerBtn.onclick = () => {
+      const userAnswer = parseInt(answerInput.value, 10);
+      if (userAnswer === nextValue) {
+        feedback.textContent = "Correct!";
+        correctAnswers += 1;
+        totalQuestions += 1;
+
+        confetti({
+          particleCount: 80,
+          spread: 110,
+          origin: { y: 0.6 }
+        });
+
+        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+        tada.play();
+        
+        currentValue = nextValue;
+        generateQuestion();
+      } else {
+        if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
+        feedback.textContent = "Try again!";
+      }
+
+      currentQuestionCounted = false;
+    };
+
+    answerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitAnswerBtn.click();
+      }
+    });
   
     function endGame() {
       questionText.textContent = '';
@@ -142,7 +155,8 @@
         body: JSON.stringify({
           score: {
             correct: correct,
-            total_questions: totalQuestions
+            total: totalQuestions,
+            topic_id: 22
           }
         })
       })

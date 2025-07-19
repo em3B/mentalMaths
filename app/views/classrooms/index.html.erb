@@ -1,0 +1,19 @@
+<% if @classrooms.present? %>
+  <h2>Your Classrooms</h2>
+  <div class="main-btn-group">
+  <% @classrooms.each do |c| %>
+      <%= link_to classroom_path(id: c.id) do %>
+        <button class="main-btn">
+            <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1751905937/lewis-keegan-UQnee_f61_M-unsplash_w51bc1.jpg", class: "main-btn-icon") %>
+            <h4><%= c.name %></h4>
+            <h2>View Classroom</h2>
+        </button>
+        <% end %>
+        <%= button_to classroom_path(c), method: :delete, data: { confirm: "Are you sure you want to remove #{c.name}?" }, class: "remove-btn" do %>
+          X
+        <% end %>
+  <% end %>
+  </div>
+  <% else %>
+    <p>You don’t have any classrooms yet.</p>
+  <% end %>

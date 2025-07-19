@@ -83,8 +83,8 @@
         feedback.textContent = "Correct!";
 
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -97,6 +97,12 @@
         feedback.textContent = "Try again!";
       }
     };
+
+    answerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitAnswerBtn.click();
+      }
+    });
   
     endGameBtn.onclick = () => {
       window.location.href = '/topics/13';

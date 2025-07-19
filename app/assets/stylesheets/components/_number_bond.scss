@@ -1,0 +1,212 @@
+$dyslexia_background: #FFFBF7;
+$orange: #F59435;
+$light_green: #CDE17B;
+$turquoise: #7AC4BD;
+$purple: #A81375;
+$pink: #F0688C;
+
+$font: 'Comic Sans MS', 'Fredoka', 'Baloo 2', sans-serif;
+
+.number-bond {
+  position: relative;
+  overflow: visible;
+  width: 300px;
+  height: 200px;
+  margin: 2rem auto;
+  background-color: $dyslexia_background;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.circle {
+  width: 70px;
+  height: 70px;
+  background-color: $light_green;
+  border: 4px dashed $turquoise;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 70px;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: $font;
+  color: #333;
+  position: absolute;
+  z-index: 1;
+  transition: transform 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+
+  &:hover {
+    transform: scale(1.1) rotate(-2deg);
+    background-color: $pink;
+    border-color: $purple;
+    color: white;
+  }
+}
+
+#total {
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: $orange;
+}
+
+#left {
+  top: 100px;
+  left: 10px;
+  background-color: $turquoise;
+}
+
+#right {
+  top: 100px;
+  right: 10px;
+  background-color: $purple;
+  color: white;
+}
+
+.lines {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  stroke: $orange;
+  stroke-width: 4;
+  stroke-dasharray: 5, 5;
+}
+
+// #line1,
+// #line2 {
+//   stroke: $orange;
+//   stroke-width: 4;
+//   stroke-dasharray: 5, 5;
+// }
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+.circle-content {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+}
+
+.tick {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  background-color: $light_green;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  font-family: $font;
+  z-index: 2;
+}
+
+// for hiding and displaying the green ticks as the user answers questions 
+.hidden {
+  display: none;
+}
+
+// for the circles to wriggle and get bigger when the user needs to answer a question from them 
+@keyframes wiggle {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.7) rotate(-5deg); }
+  50% { transform: scale(2.0) rotate(5deg); }
+  75% { transform: scale(1.7) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.wiggle {
+  animation: wiggle 1s ease-in-out infinite;
+  z-index: 3;
+  box-shadow: 0 0 20px 5px rgba(255, 153, 0, 0.6);
+}
+
+.wiggle::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background-color: rgba(255, 223, 0, 0.3); // light yellow pulse
+  animation: pulse 1.2s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+// for highlighting the part of the equation that is being answered
+.highlight-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.highlighted-part {
+  padding: 8px 12px;
+  border: 4px solid #ffa500; /* bright orange border */
+  border-radius: 12px;
+  background-color: #fff8dc; /* light yellow background */
+  font-weight: bold;
+  font-size: 1.4em;
+  animation: popIn 0.6s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.highlighted-part {
+  /* ...existing styles... */
+  box-shadow: 0 0 12px 3px rgba(255, 165, 0, 0.5); /* glowing effect */
+}
+
+// for striking through a part of the equation that has already been answered 
+.answered {
+  position: relative;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.answered::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 4px;
+  background-color: #ff4c4c;
+  animation: strike 0.4s ease-out forwards;
+  transform-origin: left;
+}
+
+@keyframes strike {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+// for the answered part of the equation 
+.replacement-value, .replacement-value-2 {
+  font-size: 1.2em;
+  color: #4CAF50;
+  font-weight: bold;
+  margin-bottom: 4px;
+}

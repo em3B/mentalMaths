@@ -4,6 +4,7 @@
     let totalQuestions = 0; 
     let correctAnswers = 0;
     let nextValue = 0;
+    let currentQuestionCounted = false;
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -106,8 +107,8 @@
         totalQuestions += 1;
 
         confetti({
-          particleCount: 150,
-          spread: 70,
+          particleCount: 80,
+          spread: 110,
           origin: { y: 0.6 }
         });
 
@@ -117,10 +118,21 @@
         currentValue = nextValue;
         generateQuestion();
       } else {
-        totalQuestions += 1;
+        if (!currentQuestionCounted) {
+            totalQuestions += 1;
+            currentQuestionCounted = true;
+          }
         feedback.textContent = "Try again!";
       }
+
+      currentQuestionCounted = false;
     };
+
+    answerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitAnswerBtn.click();
+      }
+    });
   
     function endGame() {
       questionText.textContent = '';
@@ -152,7 +164,8 @@
         body: JSON.stringify({
           score: {
             correct: correct,
-            total_questions: totalQuestions
+            total: totalQuestions,
+            topic_id: 14
           }
         })
       })
