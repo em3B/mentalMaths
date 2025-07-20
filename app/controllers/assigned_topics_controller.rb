@@ -27,17 +27,29 @@ class AssignedTopicsController < ApplicationController
     redirect_back fallback_location: teacher_dashboard_path, notice: "Assigned to #{@student.username}!"
   end
 
-  def destroy_for_class
-    classroom = current_user.classrooms.find(params[:id] = params[:classroom_id])
-    assignment = AssignedTopic.find(params[:id])
+def destroy_for_class
+  classroom = current_user.classrooms.find(params[:classroom_id])
+  assignment = AssignedTopic.find(params[:id])
 
-    if assignment.classroom_id == classroom.id
-      assignment.destroy
-      redirect_to classroom_path(classroom), notice: "Assignment removed."
-    else
-      head :forbidden
-    end
+  if assignment.classroom_id == classroom.id
+    assignment.destroy
+    redirect_to classroom_path(classroom), notice: "Assignment removed."
+  else
+    head :forbidden
   end
+end
+
+def destroy_for_user
+  user = current_user.children.find(params[:user_id])
+  assignment = AssignedTopic.find(params[:id])
+
+  if assignment.user_id == user.id
+    assignment.destroy
+    redirect_to family_dashboard_path, notice: "Assignment removed."
+  else
+    head :forbidden
+  end
+end
 
   private
 

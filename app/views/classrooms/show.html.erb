@@ -19,7 +19,7 @@
         <% @assignments.each do |a| %>
           <li>
             <strong><%= a.topic.title %></strong>
-            <%= button_to 'Remove', classroom_assigned_topic_path(@classroom, a), method: :delete,
+            <%= button_to 'X', classroom_assigned_topic_path(@classroom, a), method: :delete,
                         data: { confirm: 'Remove this assignment?' },
                         class: 'remove-btn' %>
           </li>
