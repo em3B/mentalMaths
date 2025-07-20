@@ -33,11 +33,7 @@
         <li class="active fancy-link m-3">
           <%= link_to "Topics", topics_path%>
         </li>
-        <% if current_user.role.downcase === "teacher" %>
-          <li class="active fancy-link m-3">
-            <%= link_to "Add Classroom", teacher_dashboard_path %>
-          </li>
-        <% else %>
+        <% if current_user.role.downcase === "student" %>
           <li class="active fancy-link m-3">
             <%= link_to "Home", :root %>
           </li>
