@@ -18,6 +18,9 @@ class TopicsController < ApplicationController
       else
         @selected_classroom = @classrooms.first
       end
+    elsif current_user.role.downcase == "family"
+      @students = current_user.children
+      @selected_student = @students.find_by(id: params[:student_id]) || @students.first
     end
   end
 

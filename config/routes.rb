@@ -65,6 +65,8 @@ resources :classrooms do
   get :scores, on: :member
 end
 
+post "/assign_topic_to_user/:user_id", to: "assigned_topics#create_for_user", as: :assign_topic_to_user
+
     # dashboards
     get  "dashboard/teacher",           to: "dashboards#teacher",          as: :teacher_dashboard
     post "dashboard/teacher/create",    to: "dashboards#create_classroom", as: :create_classroom
