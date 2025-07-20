@@ -4,6 +4,7 @@ class ClassroomsController < ApplicationController
 
   def index
     @classrooms = current_user.classrooms
+    @new_classroom = Classroom.new
   end
 
   def show

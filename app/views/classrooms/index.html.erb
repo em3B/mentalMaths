@@ -1,3 +1,14 @@
+
+<div class="devise-form">
+  <h3>Add a Classroom</h3>
+  <%= simple_form_for @new_classroom, url: create_classroom_path do |f| %>
+    <%= f.text_field :name, placeholder: "Classroom Name" %>
+    <div class="form-inputs">
+      <%= f.button :submit, "Add", class: "devise-btn" %>
+    </div>
+  <% end %>
+</div>
+
 <% if @classrooms.present? %>
   <h2>Your Classrooms</h2>
   <div class="main-btn-group">
