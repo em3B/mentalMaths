@@ -1,3 +1,41 @@
+<div class="form-container">
+  <div class="devise-form">
+    <h2>Create Child Account</h2>
+
+    <%= simple_form_for @child, url: create_child_path, method: :post, html: { class: "form-table" } do |f| %>
+      <div class="form-inputs">
+        <%= f.input :username, label: "Child’s Username", required: true %>
+
+        <%= f.input :password, required: true, input_html: { autocomplete: "new-password" } %>
+
+        <%= f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" } %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.button :submit, "Create Child", class: "devise-btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="devise-form">
+    <h2>Assigned Topics</h2>
+      <% if @assignments_by_child.values.any?(&:any?) %>
+        <% @assignments_by_child.each do |student, assignments| %>
+          <% if assignments.any? %>
+            <h3><%= student.username %>'s Assignments</h3>
+            <ul>
+              <% assignments.each do |assignment| %>
+                <li><%= assignment.topic.title %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p>No assigned topics yet.</p>
+      <% end %>
+  </div>
+</div>
+
 <h1>Your Children</h1>
 
 <% if @children.any? %>
@@ -17,21 +55,4 @@
   <p>You haven't added any children yet.</p>
 <% end %>
 
-<div class="devise-form">
-  <h2>Create Child Account</h2>
-
-  <%= simple_form_for @child, url: create_child_path, method: :post, html: { class: "form-table" } do |f| %>
-    <div class="form-inputs">
-      <%= f.input :username, label: "Child’s Username", required: true %>
-
-      <%= f.input :password, required: true, input_html: { autocomplete: "new-password" } %>
-
-      <%= f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" } %>
-    </div>
-
-    <div class="form-actions">
-      <%= f.button :submit, "Create Child", class: "devise-btn" %>
-    </div>
-  <% end %>
-</div>
-
+<br><br><br><br>

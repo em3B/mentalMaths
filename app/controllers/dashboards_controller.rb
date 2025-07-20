@@ -12,6 +12,9 @@ class DashboardsController < ApplicationController
     redirect_to root_path unless current_user.family?
     @children = current_user.children
     @child    = User.new
+    @assignments_by_child = @children.each_with_object({}) do |child, h|
+      h[child] = child.assigned_topics.includes(:topic)
+    end
   end
 
   def create_child
