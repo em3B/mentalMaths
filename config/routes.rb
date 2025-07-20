@@ -66,6 +66,7 @@ resources :classrooms do
 end
 
 post "/assign_topic_to_user/:user_id", to: "assigned_topics#create_for_user", as: :assign_topic_to_user
+delete "/assigned_topics/:id/for_user/:user_id", to: "assigned_topics#destroy_for_user", as: :destroy_user_assigned_topic
 
     # dashboards
     get  "dashboard/teacher",           to: "dashboards#teacher",          as: :teacher_dashboard

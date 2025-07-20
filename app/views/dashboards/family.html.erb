@@ -26,6 +26,10 @@
             <ul>
               <% assignments.each do |assignment| %>
                 <li><%= assignment.topic.title %></li>
+                <%= button_to 'X', destroy_user_assigned_topic_path(assignment.id, user_id: assignment.user_id),
+              method: :delete,
+              data: { confirm: 'Remove this assignment?' },
+              class: 'remove-btn' %>
               <% end %>
             </ul>
           <% end %>
