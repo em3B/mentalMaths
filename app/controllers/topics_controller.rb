@@ -7,6 +7,9 @@ class TopicsController < ApplicationController
       @topics = Topic.all
       @categories = Topic.distinct.pluck(:category)
     end
+    if current_user.role.downcase == "student"
+      @assignments = current_user.assigned_topics.includes(:topic)
+    end
   end
 
   def show
