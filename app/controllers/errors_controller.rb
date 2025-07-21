@@ -1,5 +1,5 @@
 class ErrorsController < ApplicationController
-  layout 'error'
+  layout "error"
 
   def not_found
     render status: :not_found
