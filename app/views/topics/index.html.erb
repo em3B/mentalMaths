@@ -1,3 +1,20 @@
+<% if current_user.role.downcase == "student" %>
+  <h2>My Assignments</h2>
+  <% if @assignments.any? %>
+    <ul>
+      <% @assignments.each do |a| %>
+        <%= link_to topic_path(a.topic) do %>
+        <li>
+          <strong><%= a.topic.title %></strong>
+        </li>
+        <% end %>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>You don't have any assignments yet.</p>
+  <% end %>
+  <h2>All Topics</h2>
+<% end %>
 
 <% if @categories.present? %>
     <div class="topics-home main-btn-group">
