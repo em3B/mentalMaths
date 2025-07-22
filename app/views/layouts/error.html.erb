@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= content_for?(:title) ? yield(:title) : "Oops!" %></title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "application", media: "all" %>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #fff8dc;
+      color: #333;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 60px;
+    }
+
+    img {
+      width: 250px;
+      height: auto;
+    }
+
+    .btn {
+      background-color: #ffcc00;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      color: #000;
+    }
+
+    .btn:hover {
+      background-color: #ffdd33;
+    }
+  </style>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>
