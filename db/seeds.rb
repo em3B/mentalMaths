@@ -256,6 +256,54 @@ topics = [
     public: false,
     requires_auth: true,
     category: "Addition and Subtraction"
+  },
+  # 32
+  {
+    title: "Part/Whole: 0 - 10",
+    intro: "Create the bar models to help you solve the word problems.",
+    public: true,
+    requires_auth: false,
+    category: "Bar Models"
+  },
+  # 33
+  {
+    title: "Part/Whole: 11 - 99",
+    intro: "Create the bar models to help you solve the word problems.",
+    public: false,
+    requires_auth: true,
+    category: "Bar Models"
+  },
+  # 34
+  {
+    title: "Comparison: 0 - 10",
+    intro: "Create the bar models to help you solve the word problems.",
+    public: false,
+    requires_auth: true,
+    category: "Bar Models"
+  },
+  # 35
+  {
+    title: "Comparison: 11 - 99",
+    intro: "Create the bar models to help you solve the word problems.",
+    public: false,
+    requires_auth: true,
+    category: "Bar Models"
+  },
+  # 36
+  {
+    title: "Multiplication: 0 - 10",
+    intro: "Create the bar models to help you solve the word problems.",
+    public: false,
+    requires_auth: true,
+    category: "Bar Models"
+  },
+  # 37
+  {
+    title: "Multiplication: 11 - 99",
+    intro: "Create the bar models to help you solve the word problems.",
+    public: false,
+    requires_auth: true,
+    category: "Bar Models"
   }
 ]
 
