@@ -1,0 +1,23 @@
+.bar-bank, .number-bank, .bar-parts, .drop-zone {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  flex-wrap: nowrap;
+}
+
+.bar, .number-chip {
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 30px;
+  padding: 5px;
+}
+
+.drop-part {
+  // width: 60px;
+  height: 40px;
+  text-align: center;
+  font-size: 1.2em;
+  border-radius: 6px;
+}
