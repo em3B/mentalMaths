@@ -11,7 +11,8 @@ import { BarModelHelper } from "./bar_model_helper.js";
     let firstPart = 0;
     let secondPart = 0;
     let total = 0;
-    let name = "";
+    let name1 = "";
+    let name2 = "";
     let item = "";
     let templateQuestion = "";
     let templateIndex = 0;
@@ -84,33 +85,34 @@ import { BarModelHelper } from "./bar_model_helper.js";
             secondPart = Math.floor(Math.random() * 11);
         } while (secondPart == 0);
         total = firstPart + secondPart;
-        name = names[Math.floor(Math.random() * names.length)];
+        name1 = names[Math.floor(Math.random() * names.length)];
+        do {
+            name2 = names[Math.floor(Math.random() * names.length)];
+        } while (name1 == name2);
         item = items[Math.floor(Math.random() * items.length)];
-        let { pronoun, pronounLower } = getPronouns(name);
         if (templateIndex == 0) {
-            answer = total - firstPart;
-            templateQuestion = templates.partWhole[0]
-                .replace("{name}", name)
-                .replace("{item}", item)
-                .replace("{total}", total)
-                .replace("{part}", firstPart)
-                .replaceAll("{pronoun}", pronoun)
-                .replaceAll("{pronounLower}", pronounLower);
-        } else {
             answer = firstPart + secondPart;
-            templateQuestion = templates.partWhole[1]
-                .replace("{name}", name)
-                .replace("{part1}", firstPart)
+            templateQuestion = templates.comparison[0]
+                .replaceAll("{name1}", name1)
+                .replaceAll("{name2}", name2)
+                .replace("{item}", item)
+                .replace("{amount}", firstPart)
+                .replace("{diff}", secondPart);
+        } else {
+            answer = total - secondPart;
+            templateQuestion = templates.comparison[1]
+                .replaceAll("{name1}", name1)
+                .replaceAll("{name2}", name2)
                 .replaceAll("{item}", item)
-                .replaceAll("{pronounLower}", pronounLower)
-                .replaceAll("{part2}", secondPart)
+                .replace("{amount}", total)
+                .replace("{diff}", secondPart);
         }
         questionText.innerHTML = templateQuestion;
         answerInput.style.display = "none"; 
         if (templateIndex == 0) {
-            generateSubtractionBarModel();
-        } else {
             generateAdditionBarModel();
+        } else {
+            generateSubtractionBarModel();
         }
     }
 
@@ -121,7 +123,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
             total: total,
             part1: firstPart,
             part2: secondPart,
-            comparison: false,
+            comparison: true,
             onDropComplete: () => {
               answerInput.style.display = "block";
               answerInput.value = '';
@@ -137,7 +139,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
             total: total,
             part1: firstPart,
             part2: secondPart,
-            comparison: false,
+            comparison: true,
             onDropComplete: () => {
               answerInput.style.display = "block";
               answerInput.value = '';
@@ -195,7 +197,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
       }
     
       returnToTopicIndexBtn.onclick = () => {
-        window.location.href = '/topics/32';
+        window.location.href = '/topics/34';
       }
     }    
   
@@ -210,7 +212,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
           score: {
             correct: correct,
             total: totalQuestions,
-            topic_id: 32
+            topic_id: 34
           }
         })
       })

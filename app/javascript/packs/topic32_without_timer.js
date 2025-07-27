@@ -99,6 +99,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
             total: total,
             part1: firstPart,
             part2: secondPart,
+            comparison: false,
             onDropComplete: () => {
               answerInput.style.display = "block";
               answerInput.value = '';
@@ -114,6 +115,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
             total: total,
             part1: firstPart,
             part2: secondPart,
+            comparison: false,
             onDropComplete: () => {
               answerInput.style.display = "block";
               answerInput.value = '';

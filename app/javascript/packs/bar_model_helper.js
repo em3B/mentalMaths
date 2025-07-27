@@ -46,7 +46,7 @@ export class BarModelHelper {
   }
 
   // 2️⃣ Addition/Subtraction: Fill in missing parts
-  loadAddSubModel({ type = "addition", total = 10, part1 = null, part2 = null, onDropComplete = () => {} }) {
+  loadAddSubModel({ type = "addition", total = 10, part1 = null, part2 = null, comparison = false, onDropComplete = () => {} }) {
     this.modelType = type;
     this.clearModel();
 
@@ -67,6 +67,8 @@ export class BarModelHelper {
     let availableNumbers;
     if (type === "addition") {
       availableNumbers = [part1, part2];
+    } else if (comparison && type != "addition") {
+      availableNumbers = [total, part2];
     } else {
       availableNumbers = [total, part1];
     }
@@ -108,6 +110,7 @@ export class BarModelHelper {
   const checkIfComplete = () => {
     const isComplete = (
       (type === "addition" && filled.partBars[0] && filled.partBars[1]) ||
+      (type === "subtraction" && comparison && filled.totalBar && filled.partBars[1]) ||
       (type === "subtraction" && filled.totalBar && filled.partBars[0])
     );
 
@@ -152,11 +155,16 @@ export class BarModelHelper {
     const partDrop = document.createElement("div");
     partDrop.className = "drop-part";
     partDrop.dataset.index = index;
-    partDrop.style.backgroundColor = "#F0688C";
     partDrop.style.border = "3px dashed #aaa";
     partDrop.style.padding = "10px";
     partDrop.style.width = `${value / total * 100}%`;
     partDrop.style.textAlign = "center";
+
+    if (comparison && index == 1) {
+      partDrop.style.backgroundColor = "transparent";
+    } else {
+      partDrop.style.backgroundColor = "#F0688C";
+    }
 
     partDrop.addEventListener("dragover", e => e.preventDefault());
 
