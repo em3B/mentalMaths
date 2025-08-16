@@ -11,39 +11,199 @@ export class BarModelHelper {
   }
 
   // 1️⃣ Multiplication (drag equal bars)
-  loadMultiplicationModel(groups = 2, unit = 3) {
-    this.modelType = "multiplication";
-    this.clearModel();
+loadMultiplicationModel({ groups = 2, unit = 3, onComplete = () => {} }) {
+  this.modelType = "multiplication";
+  this.clearModel();
 
-    const instruction = document.createElement("p");
-    instruction.textContent = `Drag ${groups} bars of size ${unit} to represent ${groups} × ${unit}`;
-    this.container.appendChild(instruction);
+  const buttonRow = document.createElement("div");
+  buttonRow.style.display = "flex";
+  buttonRow.style.gap = "10px";
+  buttonRow.style.marginBottom = "10px";
+  buttonRow.id = "button-row";
 
-    const barBank = document.createElement("div");
-    barBank.className = "bar-bank";
+  const addButton = document.createElement("button");
+  addButton.textContent = "+ Add Bar";
+  addButton.classList.add("devise-btn");
 
-    // Create draggable unit bar
-    const unitBar = this.createBar(unit, true);
-    unitBar.addEventListener("dragstart", e => {
-      e.dataTransfer.setData("text/plain", unit);
-    });
-    barBank.appendChild(unitBar);
-    this.container.appendChild(barBank);
+  const removeButton = document.createElement("button");
+  removeButton.textContent = "− Take Away Bar";
+  removeButton.classList.add("devise-btn");
 
-    const dropZone = document.createElement("div");
-    dropZone.className = "drop-zone";
-    dropZone.addEventListener("dragover", e => e.preventDefault());
-    dropZone.addEventListener("drop", e => {
-      e.preventDefault();
-      const val = e.dataTransfer.getData("text/plain");
-      if (dropZone.children.length < groups) {
-        const dropped = this.createBar(val);
-        dropZone.appendChild(dropped);
+  const submitButton = document.createElement("button");
+  submitButton.textContent = "Submit";
+  submitButton.classList.add("devise-btn");
+
+  buttonRow.appendChild(addButton);
+  buttonRow.appendChild(removeButton);
+  buttonRow.appendChild(submitButton);
+  this.container.appendChild(buttonRow);
+
+  const dropZone = document.createElement("div");
+  dropZone.className = "drop-zone";
+  dropZone.style.display = "flex";
+  dropZone.style.flexWrap = "wrap";
+  dropZone.style.gap = "10px";
+  this.container.appendChild(dropZone);
+
+  const createLabeledBar = () => {
+    const bar = this.createBarWithFixedWidth(false);
+    const label = document.createElement("span");
+    label.textContent = unit;
+    label.style.position = "absolute";
+    label.style.left = "50%";
+    label.style.top = "50%";
+    label.style.transform = "translate(-50%, -50%)";
+    label.style.fontWeight = "bold";
+    label.style.fontSize = "16px";
+    bar.style.position = "relative";
+    bar.appendChild(label);
+    return bar;
+  };
+
+  addButton.addEventListener("click", () => {
+    if (dropZone.children.length < groups) {
+      dropZone.appendChild(createLabeledBar());
+    }
+  });
+
+  removeButton.addEventListener("click", () => {
+    if (dropZone.lastChild) {
+      dropZone.removeChild(dropZone.lastChild);
+    }
+  });
+
+  submitButton.addEventListener("click", () => {
+    if (dropZone.children.length === groups) {
+      onComplete();
+    } else {
+      alert(`You need exactly ${groups} bars to represent ${groups} × ${unit}`);
+    }
+  });
+
+  // ✅ Return controller with bar count access
+  return {
+    getBarCount: () => dropZone.children.length
+  };
+}
+
+loadDivisionModel({ groups = 2, unit = 3, onComplete = () => {} } = {}) {
+  this.modelType = "division";
+  this.clearModel();
+  let wasCorrect = null;
+
+  const extractNumber = (val, fallback) => {
+    if (typeof val === "number") return val;
+    if (typeof val === "string") return parseInt(val, 10) || fallback;
+    if (typeof val === "object" && val !== null) {
+      if ("groups" in val) return parseInt(val.groups, 10) || fallback;
+      if ("unit" in val) return parseInt(val.unit, 10) || fallback;
+    }
+    return fallback;
+  };
+
+  // Fix malformed inputs
+  const originalGroups = groups;
+  const originalUnit = unit;
+
+  groups = extractNumber(groups, 2);
+  unit = extractNumber(unit, 3);
+
+  console.log("Received groups:", originalGroups, "->", groups);
+  console.log("Received unit:", originalUnit, "->", unit);
+
+  const correctTotal = groups * unit;
+
+  const instruction = document.createElement("p");
+  instruction.textContent = `Which model shows this?`;
+  this.container.appendChild(instruction);
+
+  const optionsContainer = document.createElement("div");
+  optionsContainer.className = "division-options";
+  optionsContainer.style.display = "grid";
+  optionsContainer.style.gridTemplateColumns = "1fr 1fr";
+  optionsContainer.style.gap = "20px";
+  optionsContainer.style.justifyItems = "center";
+
+  const options = [];
+
+  // 1. Add correct option
+  options.push({ groups: groups, unit: unit, isCorrect: true });
+
+  // 2. Add "reversed" incorrect option
+  if (groups !== unit) {
+    options.push({ groups: unit, unit: groups, isCorrect: false });
+  }
+
+  // 3. Add random incorrect options
+  let attempts = 0;
+  while (options.length < 4 && attempts < 50) {
+    attempts++;
+    const randGroups = Math.floor(Math.random() * 5) + 1;
+    const randUnit = Math.floor(Math.random() * 5) + 1;
+
+    const isDuplicate = options.some(opt =>
+      opt.groups === randGroups && opt.unit === randUnit
+    );
+
+    const isCorrectTotal = randGroups * randUnit === correctTotal;
+
+    if (!isCorrectTotal && !isDuplicate) {
+      options.push({ groups: randGroups, unit: randUnit, isCorrect: false });
+    }
+  }
+
+  // 4. Pad if still under 4
+  while (options.length < 4) {
+    options.push({ groups: 1, unit: 1, isCorrect: false });
+  }
+
+  // 5. Shuffle
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+
+  // 6. Render
+  options.forEach(({ groups, unit, isCorrect }) => {
+    const option = document.createElement("div");
+    option.className = "division-option";
+    option.style.border = "2px solid #aaa";
+    option.style.padding = "10px";
+    option.style.cursor = "pointer";
+    option.style.display = "flex";
+    option.style.flexDirection = "column";
+    option.style.alignItems = "center";
+    option.style.gap = "4px";
+    option.style.width = "100%";
+
+    for (let i = 0; i < groups; i++) {
+      const bar = this.createLabeledBarWithFixedWidth(unit);
+      option.appendChild(bar);
+    }
+
+    option.addEventListener("click", () => {
+      wasCorrect = isCorrect;
+      if (isCorrect) {
+        option.style.border = "2px solid green";
+        onComplete();
+      } else {
+        option.style.border = "2px solid red";
+        setTimeout(() => {
+          option.style.border = "2px solid #aaa";
+        }, 300);
       }
     });
 
-    this.container.appendChild(dropZone);
-  }
+    optionsContainer.appendChild(option);
+  });
+
+  this.container.appendChild(optionsContainer);
+  return {
+    get isCorrect() {
+      return wasCorrect;
+    }
+  };
+}
 
   // 2️⃣ Addition/Subtraction: Fill in missing parts
   loadAddSubModel({ type = "addition", total = 10, part1 = null, part2 = null, comparison = false, onDropComplete = () => {} }) {
@@ -212,6 +372,45 @@ export class BarModelHelper {
     }
     return bar;
   }
+
+    createBarWithFixedWidth(isDraggable = false) {
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.width = "20%";
+    bar.style.height = "40px";
+    bar.style.backgroundColor = "#CDE17B";
+    bar.style.margin = "5px";
+    bar.style.display = "inline-block";
+    bar.style.textAlign = "center";
+    bar.style.lineHeight = "30px";
+    if (isDraggable) {
+      bar.draggable = true;
+      bar.style.cursor = "grab";
+    }
+    return bar;
+  }
+
+  createLabeledBarWithFixedWidth(unit, draggable = false) {
+  const bar = document.createElement("div");
+  bar.className = "unit-bar";
+  bar.textContent = unit;
+  bar.style.backgroundColor = "#F0688C";
+  bar.style.color = "white";
+  bar.style.fontWeight = "bold";
+  bar.style.padding = "6px";
+  bar.style.margin = "2px";
+  bar.style.borderRadius = "6px";
+  bar.style.textAlign = "center";
+  bar.style.width = "40%";
+  bar.style.boxSizing = "border-box";
+
+  if (draggable) {
+    bar.draggable = true;
+    bar.style.cursor = "grab";
+  }
+
+  return bar;
+}
 
     createTotalBar(value, isDraggable = false) {
     const bar = document.createElement("div");

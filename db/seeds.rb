@@ -8,6 +8,9 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+Topic.where("id >= ?", 38).destroy_all
+ActiveRecord::Base.connection.reset_pk_sequence!('topics')
+
 topics = [
   # 1
   {
@@ -291,7 +294,7 @@ topics = [
   },
   # 36
   {
-    title: "Multiplication: 0 - 10",
+    title: "Multiplication/Division: 0 - 10",
     intro: "Create the bar models to help you solve the word problems.",
     public: false,
     requires_auth: true,
@@ -299,7 +302,7 @@ topics = [
   },
   # 37
   {
-    title: "Multiplication: 11 - 99",
+    title: "Multiplication/Division: 11 - 99",
     intro: "Create the bar models to help you solve the word problems.",
     public: false,
     requires_auth: true,
@@ -307,9 +310,14 @@ topics = [
   }
 ]
 
-topics.each do |attrs|
-  topic = Topic.find_or_initialize_by(title: attrs[:title])
-  topic.update!(attrs)
+topics.each do |topic_attrs|
+  topic = Topic.find_or_initialize_by(title: topic_attrs[:title])
+  topic.update!(
+    intro: topic_attrs[:intro],
+    public: topic_attrs[:public],
+    requires_auth: topic_attrs[:requires_auth],
+    category: topic_attrs[:category]
+  )
 end
 
 puts "Seeded #{topics.size} topics."

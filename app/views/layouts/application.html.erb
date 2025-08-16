@@ -7,13 +7,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
 
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-
-    <%# font awesome social icons %>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%# font awesome %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <%# fonts %>
@@ -23,35 +19,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Kranky&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
 
-    <%# text animation %>
+    <%# scripts %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
-
-    <%# jQuery %>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <%# Canvas Confetti %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <%# <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %> 
-    <%= javascript_pack_tag 'packs/main', 'data-turbolinks-track': 'reload' %>
-    <%= csrf_meta_tags %>
 
+    <%= javascript_pack_tag 'main', 'data-turbo-track': 'reload', defer: true %>
 
+    <script>
+      window.WEBPACK_MANIFEST = <%= Shakapacker.manifest.lookup_pack_with_chunks('main').to_json.html_safe %>;
+    </script>
   </head>
 
-<% is_play_page = controller_name == 'topics' && action_name == 'play' %>
+  <% is_play_page = controller_name == 'topics' && action_name == 'play' %>
 
-<body class="<%= 'landing' if controller_name == 'home' && action_name == 'index' %> <%= 'play-mode' if is_play_page %>">
+  <body class="<%= 'landing' if controller_name == 'home' && action_name == 'index' %> <%= 'play-mode' if is_play_page %>">
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
 
-  <%= render 'shared/navbar' unless is_play_page %>
-  <%= render "shared/footer" unless is_play_page %>
+    <%= render 'shared/navbar' unless is_play_page %>
+    <%= render "shared/footer" unless is_play_page %>
 
-  <% unless controller_name == 'home' && action_name == 'index' %>
-    <div class="wrapper">
+    <% unless controller_name == 'home' && action_name == 'index' %>
+      <div class="wrapper">
+        <%= yield %>
+      </div>
+    <% else %>
       <%= yield %>
-    </div>
-  <% else %>
-    <%= yield %>
-  <% end %>
-
-</body>
-
+    <% end %>
+  </body>
 </html>

@@ -1,4 +1,4 @@
-<% if current_user.role.downcase == "student" %>
+<% if current_user&.role&.downcase == "student" %>
   <h2>My Assignments</h2>
   <% if @assignments.any? %>
     <ul>
