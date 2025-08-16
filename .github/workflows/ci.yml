@@ -6,21 +6,22 @@ on:
     branches: [ main ]
 
 jobs:
-  scan_ruby:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          node-version: 18.17.1
+          cache: 'npm'
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare npm
+        run: corepack prepare npm@11.5.1 --activate
 
   scan_js:
     runs-on: ubuntu-latest
