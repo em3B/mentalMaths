@@ -67,6 +67,5 @@
   },
   "browserslist": [
     "defaults"
-  ],
-  "packageManager": "npm@11.5.1"
+  ]
 }
