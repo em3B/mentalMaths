@@ -31,7 +31,7 @@ export const templates = {
 };
 
 // 🔄 Optional: Generate a random container noun
-export const containers = ["box", "bag", "jar", "tray", "basket", "bin"];
+export const containers = ["bowl", "bag", "jar", "tray", "basket", "bin"];
 
 // 🧠 Helper: Choose pronouns based on name
 export function getPronouns(name) {

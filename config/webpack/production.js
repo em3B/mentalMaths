@@ -1,9 +1,5 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'production'
 
-const environment = require('./environment')
+const { webpackConfig } = require('shakapacker')
+module.exports = webpackConfig
 
-const config = environment.toWebpackConfig();
-
-config.node = false;
-
-module.exports = config;

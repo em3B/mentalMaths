@@ -39,7 +39,7 @@
       if (existingScript) existingScript.remove();
 
       const mode = useTimerCheckbox.checked ? 'with_timer' : 'without_timer';
-      const logicalName = `packs/topic${gameIndex}_${mode}.js`;
+      const logicalName = `topic${gameIndex}_${mode}.js`;
       const manifest = window.WEBPACK_MANIFEST;
       const hashedPath = manifest[logicalName];
 

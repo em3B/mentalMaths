@@ -1,13 +1,14 @@
 class TopicsController < ApplicationController
   def index
     if params[:category].present?
-      @category = Topic::CATEGORIES.find { |cat| cat.parameterize == params[:category] }
-      @topics = Topic.where(category: @category) if @category
+      category_param = params[:category].tr("-", " ")
+      @category = category_param.titleize
+      @topics = Topic.where("LOWER(category) = ?", category_param.downcase)
     else
       @topics = Topic.all
       @categories = Topic.distinct.pluck(:category)
     end
-    if current_user.role.downcase == "student"
+    if current_user&.role&.downcase == "student"
       @assignments = current_user.assigned_topics.includes(:topic)
     end
   end
