@@ -19,8 +19,10 @@ jobs:
           cache: 'npm'
 
       - name: Enable Corepack
-        run: corepack enable
-        run: corepack prepare npm@11.5.1 --activate
+        run: |
+          corepack enable
+          corepack prepare npm@11.5.1 --activate
+
 
       - name: Prepare npm
         run: corepack prepare npm@11.5.1 --activate
