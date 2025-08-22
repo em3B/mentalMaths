@@ -14,5 +14,5 @@ require "webpacker/dev_server_runner"
 
 APP_ROOT = File.expand_path("..", __dir__)
 Dir.chdir(APP_ROOT) do
-  Webpacker::DevServerRunner.run(ARGV)
+  exec "npx", "webpack", *ARGV
 end
