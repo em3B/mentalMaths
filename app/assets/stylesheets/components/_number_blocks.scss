@@ -1,0 +1,61 @@
+$dyslexia_background: #FFFBF7;
+$orange: #F59435;
+$light_green: #CDE17B;
+$turquoise: #7AC4BD;
+$purple: #A81375;
+$pink: #F0688C;
+
+.block-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* ensures visible separation between rods and squares */
+  margin-bottom: 10px;
+}
+
+.block {
+  border: 2px solid #333;
+  box-sizing: border-box;
+  position: relative;
+  border-radius: 4px;
+}
+
+/* Sizes */
+.block.hundred {
+  width: 60px;
+  height: 60px;
+}
+
+.block.ten {
+  width: 15px;
+  height: 60px;
+}
+
+.block.one {
+  width: 15px;
+  height: 15px;
+}
+
+/* Addend 1 colors */
+.block.addend1.hundred { background: $purple; }
+.block.addend1.ten     { background: $purple; }
+.block.addend1.one     { background: $purple; }
+
+/* Addend 2 colors (contrast) */
+.block.addend2.hundred { background: $orange; }
+.block.addend2.ten     { background: $orange; }
+.block.addend2.one     { background: $orange; }
+
+/* Struck-through (for subtraction mode) */
+.block.struck {
+  opacity: 0.4;
+}
+.block.struck::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: red;
+  transform: rotate(-20deg);
+}

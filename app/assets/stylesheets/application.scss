@@ -11,6 +11,7 @@
 @import "components/fact_families";
 @import "components/scores";
 @import "components/bar_model";
+@import "components/number_blocks";
 
 // colors
 $dyslexia_background: #FFFBF7;
@@ -49,6 +50,11 @@ body {
 }
 
 a {
+  cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
+}
+
+button, 
+button:hover {
   cursor: url("https://img.icons8.com/dusk/50/000000/hand-cursor.png"), auto;
 }
 
