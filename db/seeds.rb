@@ -324,7 +324,7 @@ topics = [
     requires_auth: true,
     category: "Number Blocks"
   },
-  #40
+  # 40
   {
     title: "Two-Digit Minus One-Digit: No Regrouping",
     intro: "Use Number blocks to help you solve.",
@@ -332,7 +332,7 @@ topics = [
     requires_auth: true,
     category: "Number Blocks"
   },
-  #41
+  # 41
   {
     title: "Two-Digit Minus One-Digit: With Regrouping",
     intro: "Use Number blocks to help you solve.",
