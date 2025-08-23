@@ -307,6 +307,38 @@ topics = [
     public: false,
     requires_auth: true,
     category: "Bar Models"
+  },
+  # 38
+  {
+    title: "Two-Digit Plus One-Digit: No Regrouping",
+    intro: "Use Number blocks to help you solve.",
+    public: true,
+    requires_auth: false,
+    category: "Number Blocks"
+  },
+  # 39
+  {
+    title: "Two-Digit Plus One-Digit: With Regrouping",
+    intro: "Use Number blocks to help you solve.",
+    public: false,
+    requires_auth: true,
+    category: "Number Blocks"
+  },
+  #40
+  {
+    title: "Two-Digit Minus One-Digit: No Regrouping",
+    intro: "Use Number blocks to help you solve.",
+    public: false,
+    requires_auth: true,
+    category: "Number Blocks"
+  },
+  #41
+  {
+    title: "Two-Digit Minus One-Digit: With Regrouping",
+    intro: "Use Number blocks to help you solve.",
+    public: false,
+    requires_auth: true,
+    category: "Number Blocks"
   }
 ]
 

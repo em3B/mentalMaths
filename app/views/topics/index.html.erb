@@ -34,6 +34,8 @@
                         <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", class: "main-btn-icon")%>
                     <% elsif category.downcase.include?("bar model") %>
                       <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1753209747/Math_App_Images_5_pa18i2.png", class: "main-btn-icon") %>
+                    <% elsif category.downcase.include?("blocks") %>
+                      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1755931551/MentalMaths/shubham-dhage-xvWdG34_uQY-unsplash_r4qtjp.jpg", class: "main-btn-icon") %>
                     <% else %>
                         <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
                     <% end %>
@@ -64,6 +66,8 @@
                     <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", class: "main-btn-icon")%>
                 <% elsif topic.category.downcase.include?("bar model") %>
                     <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1753209747/Math_App_Images_5_pa18i2.png", class: "main-btn-icon") %>
+                <% elsif topic.category.downcase.include?("blocks") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1755931551/MentalMaths/shubham-dhage-xvWdG34_uQY-unsplash_r4qtjp.jpg", class: "main-btn-icon") %>
                 <% else %>
                     <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
                 <% end %>
