@@ -10,16 +10,17 @@ export class NumberBlocksHelper {
     this.container = container;  // HTML element
     this.onComplete = onComplete;
 
-    console.log("first number:" + firstNumber);
-    console.log("second number: " + secondNumber);
-
     // Decompose the first number into blocks
     this.fixedBlocks = NumberBlocksHelper.decomposeNumber(firstNumber);
 
     if (this.type === "addition") {
       this.userBlocks = { hundreds: 0, tens: 0, ones: 0 };
     } else if (this.type === "subtraction") {
-      this.struck = { hundreds: 0, tens: 0, ones: 0 };
+      this.struck = {
+        hundreds: Array(this.fixedBlocks.hundreds).fill(false),
+        tens: Array(this.fixedBlocks.tens).fill(false),
+        ones: Array(this.fixedBlocks.ones).fill(false),
+      };
     }
 
     // Build the UI
@@ -50,15 +51,13 @@ export class NumberBlocksHelper {
     }
   }
 
-  toggleStrike(type) {
-    if (this.type !== "subtraction") return;
-    if (this.struck[type] < this.fixedBlocks[type]) {
-      this.struck[type]++;
-    } else {
-      this.struck[type] = 0;
-    }
-    this.render();
-  }
+toggleStrike(type, index) {
+  if (this.type !== "subtraction") return;
+
+  const key = this.getStrikeKey(type); 
+  this.struck[key][index] = !this.struck[key][index];
+  this.render();
+}
 
   // --- Validation ---
   checkAnswer() {
@@ -74,11 +73,14 @@ export class NumberBlocksHelper {
     }
 
     if (this.type === "subtraction") {
-      const remainingValue =
-        (this.fixedBlocks.hundreds - this.struck.hundreds) * 100 +
-        (this.fixedBlocks.tens - this.struck.tens) * 10 +
-        (this.fixedBlocks.ones - this.struck.ones);
-      return remainingValue === this.answer;
+      if (this.type === "subtraction") {
+        const remainingValue =
+          this.struck.hundreds.filter(v => !v).length * 100 +
+          this.struck.tens.filter(v => !v).length * 10 +
+          this.struck.ones.filter(v => !v).length;
+        return remainingValue === this.answer;
+}
+
     }
 
     return false;
@@ -101,9 +103,15 @@ render() {
   blockArea.className = "block-area";
 
     // First addend (always visible)
-    this.renderBlocks(blockArea, "hundred", this.fixedBlocks.hundreds, "addend1", this.type==="subtraction", this.struck?.hundreds);
-    this.renderBlocks(blockArea, "ten", this.fixedBlocks.tens, "addend1", this.type==="subtraction", this.struck?.tens);
-    this.renderBlocks(blockArea, "one", this.fixedBlocks.ones, "addend1", this.type==="subtraction", this.struck?.ones);
+    if (this.type == "addition") {
+      this.renderBlocks(blockArea, "hundred", this.fixedBlocks.hundreds, "addend1", this.type==="subtraction", this.struck?.hundreds);
+      this.renderBlocks(blockArea, "ten", this.fixedBlocks.tens, "addend1", this.type==="subtraction", this.struck?.tens);
+      this.renderBlocks(blockArea, "one", this.fixedBlocks.ones, "addend1", this.type==="subtraction", this.struck?.ones);
+    } else {
+      this.renderBlocks(blockArea, "hundred", this.fixedBlocks.hundreds, "subtraction", this.type==="subtraction", this.struck?.hundreds);
+      this.renderBlocks(blockArea, "ten", this.fixedBlocks.tens, "subtraction", this.type==="subtraction", this.struck?.tens);
+      this.renderBlocks(blockArea, "one", this.fixedBlocks.ones, "subtraction", this.type==="subtraction", this.struck?.ones);
+    }
 
     // For addition, also show user blocks (second addend, different color)
     if (this.type === "addition") {
@@ -117,15 +125,14 @@ render() {
 
   this.container.appendChild(blockArea);
 
-  // Controls (only for addition — add/remove buttons)
-if (this.type === "addition") {
-  // create controls wrapper div
   const controlsDiv = document.createElement("div");
   controlsDiv.style.marginTop = "12px";
   controlsDiv.style.display = "flex";
   controlsDiv.style.flexWrap = "wrap";
   controlsDiv.style.gap = "8px";
 
+  // Controls (only for addition — add/remove buttons)
+if (this.type === "addition") {
   ["hundreds", "tens", "ones"].forEach(type => {
     const plusBtn = document.createElement("button");
     plusBtn.textContent = `+ ${type}`;
@@ -138,23 +145,25 @@ if (this.type === "addition") {
     controlsDiv.appendChild(minusBtn);
   });
 
-  // break line before submit button (optional)
+  // break line before submit button
   const br = document.createElement("div");
   br.style.flexBasis = "100%";
   controlsDiv.appendChild(br);
 
-  // submit button
-  const submitBtn = document.createElement("button");
+  // add the controlsDiv to the container
+  this.container.appendChild(controlsDiv);
+  this.controlsDiv = controlsDiv; // save reference for hide/show later
+}
+
+const submitBtn = document.createElement("button");
   submitBtn.textContent = "Submit";
   submitBtn.style.marginTop = "10px";
   submitBtn.classList.add("devise-btn");
   submitBtn.onclick = () => this.submit();
   controlsDiv.appendChild(submitBtn);
 
-  // add the controlsDiv to the container
   this.container.appendChild(controlsDiv);
-  this.controlsDiv = controlsDiv; // save reference for hide/show later
-}
+  this.controlsDiv = controlsDiv;
 }
 
 renderBlocks(parent, type, count, addendClass, clickable = false, strikeInfo = null) {
@@ -162,16 +171,30 @@ renderBlocks(parent, type, count, addendClass, clickable = false, strikeInfo = n
     const div = document.createElement("div");
     div.className = `block ${type} ${addendClass}`;
 
-    // For subtraction: allow strike-through toggling
+    // INDEX MATCHES VISUAL POSITION: 0 = leftmost
+    div.dataset.index = i;
+
     if (clickable && this.type === "subtraction") {
-      if (strikeInfo && i < strikeInfo) {
+      // Apply strike if this block is struck
+      if (strikeInfo && strikeInfo[i]) {
         div.classList.add("struck");
       }
-      div.onclick = () => this.toggleStrike(type);
+
+      div.onclick = () => this.toggleStrike(type, i);
     }
 
     parent.appendChild(div);
   }
+}
+
+getStrikeKey(type) {
+  // normalize both singular and plural inputs
+  const map = {
+    hundred: "hundreds", hundreds: "hundreds",
+    ten: "tens",         tens: "tens",
+    one: "ones",         ones: "ones",
+  };
+  return map[type];
 }
 
 }
