@@ -7,8 +7,9 @@ $pink: #F0688C;
 
 .block-area {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px; /* ensures visible separation between rods and squares */
+  flex-direction: row;
+  gap: 6px;
+  flex-wrap: nowrap;
   margin-bottom: 10px;
 }
 
@@ -17,6 +18,7 @@ $pink: #F0688C;
   box-sizing: border-box;
   position: relative;
   border-radius: 4px;
+  cursor: url("https://freesvg.org/img/cursor-hand-icon.png") 8 2, pointer;
 }
 
 /* Sizes */
@@ -35,6 +37,23 @@ $pink: #F0688C;
   height: 15px;
 }
 
+/* Subtraction Sizes */
+/* Sizes */
+.block.subtraction.hundred {
+  width: 80px;
+  height: 80px;
+}
+
+.block.subraction.ten {
+  width: 20px;
+  height: 80px;
+}
+
+.block.subtraction.one {
+  width: 20px;
+  height: 20px;
+}
+
 /* Addend 1 colors */
 .block.addend1.hundred { background: $purple; }
 .block.addend1.ten     { background: $purple; }
@@ -45,17 +64,24 @@ $pink: #F0688C;
 .block.addend2.ten     { background: $orange; }
 .block.addend2.one     { background: $orange; }
 
+/* Subtraction colour */
+.block.subtraction.hundred { background: $turquoise; }
+.block.subtraction.ten     { background: $turquoise; }
+.block.subtraction.one     { background: $turquoise; }
+
 /* Struck-through (for subtraction mode) */
 .block.struck {
-  opacity: 0.4;
+  position: relative;
 }
+
 .block.struck::after {
-  content: "";
+  content: "✕";
   position: absolute;
   top: 50%;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: red;
-  transform: rotate(-20deg);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5em;
+  color: red;
+  font-weight: bold;
+  pointer-events: none;
 }
