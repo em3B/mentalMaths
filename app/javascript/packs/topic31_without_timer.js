@@ -5,6 +5,7 @@
     let answer = 0;
     let previousMultipleOfTen = 0;
     let twoDigitNumber = 0;
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -69,7 +70,7 @@
         origin: { y: 0.6 }
       });
 
-      const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+      tada.currentTime = 0;
       tada.play();
       
           // Delay next question so feedback is visible
@@ -83,17 +84,9 @@
       }
   };
 
-  answerInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
-    }
-  });
-  
-      answerInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
-    });
+  answerInput.onkeydown = (event) => {
+    if (event.key === 'Enter') submitAnswerBtn.click();
+  };
   
     endGameBtn.onclick = () => {
       window.location.href = '/topics/31';

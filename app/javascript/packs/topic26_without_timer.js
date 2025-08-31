@@ -15,7 +15,6 @@ import { stopWiggle } from './circle_wiggler.js';
     let leftCircleNumber = 0;
     let rightCircleNumber = 0;
     let submitClickHandler = null;
-    let submitKeyHandler = null;
     let leftCircle;
     let rightCircle;
     let firstPartA;
@@ -24,6 +23,7 @@ import { stopWiggle } from './circle_wiggler.js';
     let secondPartB;
     let questionParts;
     let mainInstructions;
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -58,6 +58,10 @@ import { stopWiggle } from './circle_wiggler.js';
     const submitAnswerBtn = document.getElementById("submit-answer-btn");
     const feedback = document.getElementById("feedback");
     const endGameBtn = document.getElementById("go-to-topic-index");
+
+    answerInput.onkeydown = (event) => {
+      if (event.key === 'Enter') submitAnswerBtn.click();
+    };
 
     // Hide setup, show game
     questionSection.style.display = "block";
@@ -140,18 +144,13 @@ import { stopWiggle } from './circle_wiggler.js';
         if (submitClickHandler) {
           submitAnswerBtn.removeEventListener('click', submitClickHandler);
         }
-        if (submitKeyHandler) {
-          answerInput.removeEventListener('keydown', submitKeyHandler);
-        }
 
         rightCircle = document.querySelector('#right.circle');
         wiggleCircle(rightCircle);
 
         submitClickHandler = handleSubmitPart1Click;
-        submitKeyHandler = handleSubmitKey;
 
         submitAnswerBtn.addEventListener('click', submitClickHandler);
-        answerInput.addEventListener('keydown', submitKeyHandler);
 
   };  
 
@@ -171,20 +170,15 @@ import { stopWiggle } from './circle_wiggler.js';
     if (submitClickHandler) {
       submitAnswerBtn.removeEventListener('click', submitClickHandler);
     }
-    if (submitKeyHandler) {
-      answerInput.removeEventListener('keydown', submitKeyHandler);
-    }
 
 
     rightCircle = document.querySelector('#right.circle');
     wiggleCircle(rightCircle);
 
       submitClickHandler = handleSubmitPart2Click;
-      submitKeyHandler = handleSubmitKey;
 
       // Attach new handlers
       submitAnswerBtn.addEventListener('click', submitClickHandler);
-      answerInput.addEventListener('keydown', submitKeyHandler);
  }
 
 
@@ -205,20 +199,15 @@ import { stopWiggle } from './circle_wiggler.js';
   if (submitClickHandler) {
     submitAnswerBtn.removeEventListener('click', submitClickHandler);
   }
-  if (submitKeyHandler) {
-    answerInput.removeEventListener('keydown', submitKeyHandler);
-  }
 
   leftCircle = document.querySelector('#left.circle');
   wiggleCircle(leftCircle);
 
   // Attach new handlers
   submitClickHandler = handleSubmitPart3Click;
-  submitKeyHandler = handleSubmitKey;
 
   // Attach new handlers
   submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 // in 9 with part 2 this part is 9 -2 = ____
@@ -237,16 +226,11 @@ function generateFourthPart() {
   if (submitClickHandler) {
     submitAnswerBtn.removeEventListener('click', submitClickHandler);
   }
-  if (submitKeyHandler) {
-    answerInput.removeEventListener('keydown', submitKeyHandler);
-  }
     // Attach new handlers
   submitClickHandler = handleSubmitPart4Click;
-  submitKeyHandler = handleSubmitKey;
 
   // Attach new handlers
   submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 // in sample 9 with part 2, this part does 9 - 7 = ____
@@ -264,17 +248,12 @@ function generateFifthPart() {
     if (submitClickHandler) {
         submitAnswerBtn.removeEventListener('click', submitClickHandler);
     }
-    if (submitKeyHandler) {
-        answerInput.removeEventListener('keydown', submitKeyHandler);
-    }
 
         // Attach new handlers
   submitClickHandler = handleSubmitPart5Click;
-  submitKeyHandler = handleSubmitKey;
 
   // Attach new handlers
   submitAnswerBtn.addEventListener('click', submitClickHandler);
-  answerInput.addEventListener('keydown', submitKeyHandler);
 } 
 
     answerInput.addEventListener('keydown', (event) => {
@@ -292,7 +271,7 @@ function generateFifthPart() {
 
         confetti({ particleCount: 80, spread: 110, origin: { y: 0.6 } });
 
-        const tada = new Audio('https://...tada.mp3');
+        tada.currentTime = 0;
         tada.play();
 
         stopWiggle();
@@ -329,7 +308,7 @@ function generateFifthPart() {
           origin: { y: 0.6 }
         });
 
-        const tada = new Audio('https://...tada.mp3');
+        tada.currentTime = 0;
         tada.play();
 
         document.getElementById('add-1').textContent = `${leftCircleNumber} + ${rightCircleNumber} = ${wholeNumber}`;
@@ -337,7 +316,6 @@ function generateFifthPart() {
         stopWiggle();
 
         submitAnswerBtn.removeEventListener('click', submitClickHandler);
-      answerInput.removeEventListener('keydown', submitKeyHandler);
 
         generateQuestionPart3();
       } else {
@@ -358,7 +336,7 @@ function generateFifthPart() {
           origin: { y: 0.6 }
         });
 
-        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+        tada.currentTime = 0;
         tada.play();
 
         document.getElementById('add-2').textContent = `${rightCircleNumber} + ${leftCircleNumber} = ${wholeNumber}`;
@@ -384,7 +362,7 @@ function generateFifthPart() {
           origin: { y: 0.6 }
         });
 
-        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+        tada.currentTime = 0;
         tada.play();
 
         document.getElementById('minus-1').textContent = `${wholeNumber} - ${leftCircleNumber} = ${rightCircleNumber}`;
@@ -408,7 +386,7 @@ function generateFifthPart() {
         origin: { y: 0.6 }
         });
 
-        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+        tada.currentTime = 0;
         tada.play();
 
         document.getElementById('minus-2').textContent = `${wholeNumber} - ${rightCircleNumber} = ${leftCircleNumber}`;

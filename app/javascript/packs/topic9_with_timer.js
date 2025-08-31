@@ -5,6 +5,7 @@
     let correctAnswers = 0;
     let tenFrameValue = 0;
     let currentQuestionCounted = false;
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -87,7 +88,7 @@
           origin: { y: 0.6 }
         });
 
-        const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+        tada.currentTime = 0;
         tada.play();
         
         // Hide image after 2 seconds, then load next question
@@ -106,11 +107,9 @@
         currentQuestionCounted = false;
     };
 
-    answerInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        submitAnswerBtn.click();
-      }
-    });
+    answerInput.onkeydown = (event) => {
+      if (event.key === 'Enter') submitAnswerBtn.click();
+    };
 
     function displayTenFrameAndReturnValue(index) {
         // images to use
