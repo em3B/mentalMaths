@@ -10,6 +10,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     let nextMultipleOfTen = 0;
     let questionStep = "";
     let controller;
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -103,7 +104,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
       origin: { y: 0.6 }
     });
 
-    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.currentTime = 0;
     tada.play();
     
     if (questionStep == "1") {
@@ -116,11 +117,9 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     }
   }
 
-  answerInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
-    }
-  });  
+  answerInput.onkeydown = (event) => {
+    if (event.key === 'Enter') submitAnswerBtn.click();
+  };
 
           returnToTopicIndexBtn.onclick = () => {
       window.location.href = '/topics/38';

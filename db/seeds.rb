@@ -8,9 +8,6 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-Topic.where("id >= ?", 38).destroy_all
-ActiveRecord::Base.connection.reset_pk_sequence!('topics')
-
 topics = [
   # 1
   {
@@ -239,7 +236,7 @@ topics = [
   # 29
   {
     title: "Two-Digit Multiplication",
-    intro: "Use a number bont to help you solve two-digit multiplication.",
+    intro: "Use a number bond to help you solve two-digit multiplication.",
     public: false,
     requires_auth: true,
     category: "Multiplication"

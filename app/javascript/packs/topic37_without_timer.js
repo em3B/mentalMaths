@@ -14,6 +14,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
     let templateQuestion = "";
     let templateIndex = 0;
     let type = "";
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -153,7 +154,7 @@ import { BarModelHelper } from "./bar_model_helper.js";
       origin: { y: 0.6 }
     });
 
-    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.currentTime = 0;
     tada.play();
     
     if (type == "multiplication1") {
@@ -166,13 +167,10 @@ import { BarModelHelper } from "./bar_model_helper.js";
     }
   }
 
+  answerInput.onkeydown = (event) => {
+    if (event.key === 'Enter') submitAnswerBtn.click();
+  };
 
-  answerInput.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      submitAnswerBtn.click();
-    }
-  });
-  
         returnToTopicIndexBtn.onclick = () => {
       window.location.href = '/topics/37';
     }

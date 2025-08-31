@@ -15,7 +15,6 @@ import { stopWiggle } from './circle_wiggler.js';
     let leftCircleNumber = 0;
     let rightCircleNumber = 0;
     let submitClickHandler;
-    let submitKeyHandler;
     let tickLeft;
     let tickRight;
     let leftCircle;
@@ -24,6 +23,7 @@ import { stopWiggle } from './circle_wiggler.js';
     let secondPart;
     let replacement1;
     let replacement2;
+    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
       console.error("Game container not found");
@@ -60,6 +60,10 @@ import { stopWiggle } from './circle_wiggler.js';
     const submitAnswerBtn = document.getElementById("submit-answer-btn");
     const feedback = document.getElementById("feedback");
     const endGameBtn = document.getElementById("go-to-topic-index");
+
+    answerInput.onkeydown = (event) => {
+      if (event.key === 'Enter') submitAnswerBtn.click();
+    };
 
     // Hide setup, show game
     questionSection.style.display = "block";
@@ -148,20 +152,15 @@ import { stopWiggle } from './circle_wiggler.js';
         if (submitClickHandler) {
           submitAnswerBtn.removeEventListener('click', submitClickHandler);
         }
-        if (submitKeyHandler) {
-          answerInput.removeEventListener('keydown', submitKeyHandler);
-        }
 
         rightCircle = document.querySelector('#right.circle');
         wiggleCircle(rightCircle);
 
         // Attach new handlers
         submitClickHandler = handleSubmitPart1Click;
-        submitKeyHandler = handleSubmitKey;
 
         // Attach new handlers
         submitAnswerBtn.addEventListener('click', submitClickHandler);
-        answerInput.addEventListener('keydown', submitKeyHandler);
   };  
 
 
@@ -194,21 +193,15 @@ import { stopWiggle } from './circle_wiggler.js';
     if (submitClickHandler) {
       submitAnswerBtn.removeEventListener('click', submitClickHandler);
     }
-    if (submitKeyHandler) {
-      answerInput.removeEventListener('keydown', submitKeyHandler);
-    }
-
 
     leftCircle = document.querySelector('#left.circle');
     wiggleCircle(leftCircle);
 
       // Attach new handlers
     submitClickHandler = handleSubmitPart2Click;
-    submitKeyHandler = handleSubmitKey;
 
     // Attach new handlers
     submitAnswerBtn.addEventListener('click', submitClickHandler);
-    answerInput.addEventListener('keydown', submitKeyHandler);
  }
 
 
@@ -237,20 +230,15 @@ import { stopWiggle } from './circle_wiggler.js';
   if (submitClickHandler) {
     submitAnswerBtn.removeEventListener('click', submitClickHandler);
   }
-  if (submitKeyHandler) {
-    answerInput.removeEventListener('keydown', submitKeyHandler);
-  }
 
   rightCircle = document.querySelector('#right.circle');
   wiggleCircle(rightCircle);
 
     // Attach new handlers
     submitClickHandler = handleSubmitPart3Click;
-    submitKeyHandler = handleSubmitKey;
 
     // Attach new handlers
     submitAnswerBtn.addEventListener('click', submitClickHandler);
-    answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 // in 28 x 4, this does 32 + 80
@@ -275,17 +263,12 @@ function generateFinalPart() {
   if (submitClickHandler) {
     submitAnswerBtn.removeEventListener('click', submitClickHandler);
   }
-  if (submitKeyHandler) {
-    answerInput.removeEventListener('keydown', submitKeyHandler);
-  }
 
     // Attach new handlers
     submitClickHandler = handleSubmitPart4Click;
-    submitKeyHandler = handleSubmitKey;
 
     // Attach new handlers
     submitAnswerBtn.addEventListener('click', submitClickHandler);
-    answerInput.addEventListener('keydown', submitKeyHandler);
 }
 
 function handleSubmitPart1Click() {
@@ -304,7 +287,7 @@ function handleSubmitPart1Click() {
       origin: { y: 0.6 }
     });
 
-    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.currentTime = 0;
     tada.play();
 
     stopWiggle();
@@ -330,7 +313,7 @@ function handleSubmitPart2Click() {
       origin: { y: 0.6 }
     });
 
-    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.currentTime = 0;
     tada.play();
 
     tickLeft = document.getElementById("tick-left");
@@ -357,7 +340,7 @@ function handleSubmitPart3Click() {
       origin: { y: 0.6 }
     });
 
-    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.currentTime = 0;
     tada.play();
 
     stopWiggle();
@@ -382,7 +365,7 @@ function handleSubmitPart4Click() {
       origin: { y: 0.6 }
     });
 
-    const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
+    tada.currentTime = 0;
     tada.play();
     
     generateQuestion();
