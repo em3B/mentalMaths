@@ -1,27 +1,23 @@
 import { NumberBlocksHelper } from "./number_blocks_helper.js";
 
-(function runGame() {
+export function runTopic38WithoutTimer() {
     const gameContainer = document.getElementById('game-container');
     const userSignedIn = gameContainer.dataset.userSignedIn == "true";
     let answer = 0;
     let userAnswer = 0;
     let firstPart = 0;
     let secondPart = 0;
-    let nextMultipleOfTen = 0;
-    let questionStep = "";
-    let controller;
+    let controller = null; 
     const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
-      console.error("Game container not found");
-      return;
+        console.error("Game container not found");
+        return;
     }
-  
-    // Clear any existing content
+
     gameContainer.innerHTML = '';
     gameContainer.style.display = "block";
-  
-    // Create form for inputs
+
     const gameContent = document.createElement('div');
     gameContent.innerHTML = `
     <div class="devise-form form-table">
@@ -38,8 +34,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     </div>
     `;
     gameContainer.appendChild(gameContent);
-  
-    // Possible Inputs from innerHtml
+
     const questionSection = document.getElementById("question-section");
     const questionText = document.getElementById("question-text");
     const answerInput = document.getElementById("answer-input");
@@ -48,82 +43,64 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     const returnToTopicIndexBtn = document.getElementById("go-to-topic-index");
     const modelContainer = document.getElementById("bar-model-container");
 
-    // Hide setup, show game
     questionSection.style.display = "block";
+    answerInput.style.display = "block"; 
+    submitAnswerBtn.style.display = "block";
+
+    // attach global event listeners once
+    submitAnswerBtn.addEventListener("click", submitAnswer);
+    answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            submitAnswer();
+        }
+    });
+    returnToTopicIndexBtn.addEventListener("click", () => {
+        window.location.href = "/topics/38";
+    });
+
+    // start game
     generateQuestion();
 
     function generateQuestion() {
-        do {
-            firstPart = Math.floor(Math.random() * (99 - 11 + 1)) + 11;
-        } while (firstPart == 0);
-        nextMultipleOfTen = Math.ceil(firstPart / 10) * 10;
-        do {
-            secondPart = Math.floor(Math.random() * 11);
-        } while (secondPart == 0 || (firstPart + secondPart >= nextMultipleOfTen));
+        // destroy previous controller if any
+        if (controller) {
+            controller.destroy();
+            controller = null;
+        }
+
+        // generate random numbers safely
+        firstPart = Math.floor(Math.random() * 89) + 11; // 11–99
+        const nextMultipleOfTen = Math.ceil(firstPart / 10) * 10;
+
+        // ensure secondPart always valid: at least 1, and keeps sum < nextMultipleOfTen
+        const maxSecondPart = nextMultipleOfTen - firstPart - 1;
+        secondPart = Math.floor(Math.random() * maxSecondPart) + 1;
+
         answer = firstPart + secondPart;
-        questionText.innerHTML =`${firstPart} + ${secondPart} = `;
-        answerInput.style.display = "none"; 
-        submitAnswerBtn.style.display = "none";
+        questionText.innerHTML = `${firstPart} + ${secondPart} = `;
+        answerInput.value = '';
+        answerInput.focus();
 
-        generateNumberBlockActivity();
+        // create new controller
+        controller = new NumberBlocksHelper("addition", firstPart, secondPart, modelContainer, handleComplete);
     }
 
-    function generateNumberBlockActivity() {
-        questionStep = "1";
-        controller = new NumberBlocksHelper("addition", firstPart, secondPart, modelContainer, (isCorrect) => {
-            if (isCorrect == true) {
-                userAnswer = answer;
-            }
-            submitAnswer();
-        })
+    function handleComplete(isCorrect) {
+        if (isCorrect) userAnswer = answer;
     }
 
-    submitAnswerBtn.onclick = () => {
-      submitAnswer();
-  };
+    function submitAnswer() {
+        userAnswer = parseInt(answerInput.value, 10);
 
-  function generateFinalPart() {
-    questionStep = "2";
-    controller.controlsDiv.style.display = "none";
-    answerInput.style.display = "block"; 
-    submitAnswerBtn.style.display = "block";
-    answerInput.value = '';
-    answerInput.focus();
-  }
+        if (userAnswer === answer) {
+            feedback.textContent = "Correct!";
+            tada.currentTime = 0;
+            tada.play();
 
-  function submitAnswer() {
-    if (questionStep == "2") {
-      userAnswer = parseInt(answerInput.value, 10);
+            generateQuestion();
+        } else {
+            feedback.textContent = "Try again!";
+        }
     }
-    if (userAnswer === answer) {
-    feedback.textContent = "Correct!";
-    
-    confetti({
-      particleCount: 80,
-      spread: 110,
-      origin: { y: 0.6 }
-    });
-
-    tada.currentTime = 0;
-    tada.play();
-    
-    if (questionStep == "1") {
-      generateFinalPart();
-    } else {
-      generateQuestion();
-    }
-    } else {
-    feedback.textContent = "Try again!";
-    }
-  }
-
-  answerInput.onkeydown = (event) => {
-    if (event.key === 'Enter') submitAnswerBtn.click();
-  };
-
-          returnToTopicIndexBtn.onclick = () => {
-      window.location.href = '/topics/38';
-    }
-  
-  })();
-  
+}

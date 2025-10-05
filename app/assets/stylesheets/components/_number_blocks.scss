@@ -21,20 +21,72 @@ $pink: #F0688C;
   cursor: url("https://freesvg.org/img/cursor-hand-icon.png") 8 2, pointer;
 }
 
-/* Sizes */
-.block.hundred {
-  width: 60px;
-  height: 60px;
+/* --- Palette styles --- */
+.block.ten.palette-block,
+.block.ten.pallete-block,
+.block.one.palette-block,
+.block.one.pallete-block {
+  box-sizing: border-box;
+  display: inline-flex;                /* center contents */
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;             /* prevent image drag on webkit */
+  touch-action: none;                  /* pointer events on touch (avoid scrolling) */
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 6px;
+  background: #f6f7fb;                 /* subtle background so it's visible */
+  color: #111;
+  font-weight: 700;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  /* allow the palette blocks to overflow their container if needed */
+  position: relative;
+  z-index: 1;
 }
 
-.block.ten {
-  width: 15px;
-  height: 60px;
+/* Palette item sizes — adjust as needed */
+.block.ten.palette-block,
+.block.ten.pallete-block {
+  width: 56px;
+  height: 140px;    /* tall ten-rod friendly hit area */
+  padding: 6px;
 }
 
-.block.one {
-  width: 15px;
-  height: 15px;
+.block.one.palette-block,
+.block.one.pallete-block {
+  width: 56px;
+  height: 56px;     /* square unit block hit area */
+  padding: 6px;
+}
+
+/* Ensure normal model blocks remain visually small (if you want) */
+.block.ten { width: 15px; height: 60px; }  /* model visuals — keep or adjust */
+.block.one { width: 15px; height: 15px; }  /* model visuals — keep or adjust */
+
+/* Ghost shown during drag */
+.drag-ghost {
+  position: fixed !important;
+  pointer-events: none !important;
+  z-index: 10000 !important;
+  transform: translate(-50%, -50%) !important;
+  opacity: 0.95 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18) !important;
+}
+
+/* Optional: stronger specificity if other rules override your palette size.
+   Use only if necessary (try without !important first). */
+.block.ten.palette-block, .block.one.palette-block {
+  width: 56px !important;
+  height: auto !important;
+}
+
+.block.ten.palette-block:active,
+.block.one.palette-block:active {
+  cursor: grabbing;
+  transform: scale(0.98);
 }
 
 /* Subtraction Sizes */
@@ -61,8 +113,8 @@ $pink: #F0688C;
 
 /* Addend 2 colors (contrast) */
 .block.addend2.hundred { background: $orange; }
-.block.addend2.ten     { background: $orange; }
-.block.addend2.one     { background: $orange; }
+.block.addend2.tens     { background: $orange; }
+.block.addend2.ones     { background: $orange; }
 
 /* Subtraction colour */
 .block.subtraction.hundred { background: $turquoise; }
@@ -84,4 +136,13 @@ $pink: #F0688C;
   color: red;
   font-weight: bold;
   pointer-events: none;
+}
+
+.block.ten.regroup-ten {
+  background-color: $orange; /* distinct from normal tens */
+  cursor: pointer;
+}
+
+.block.one.subtraction.regrouped-one {
+  background-color: $orange;
 }

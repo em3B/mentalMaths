@@ -8,21 +8,21 @@ class TopicsController < ApplicationController
       @topics = Topic.all
       @categories = Topic.distinct.pluck(:category)
     end
-    if current_user&.role&.downcase == "student"
+    if current_user != nil && current_user&.role&.downcase == "student"
       @assignments = current_user.assigned_topics.includes(:topic)
     end
   end
 
   def show
     @topic = Topic.find(params[:id])
-    if current_user.teacher?
+    if current_user != nil && current_user.teacher?
       @classrooms = current_user.classrooms
       if params[:classroom_id].present?
       @selected_classroom = @classrooms.find_by(id: params[:classroom_id])
       else
         @selected_classroom = @classrooms.first
       end
-    elsif current_user.role.downcase == "family"
+    elsif current_user != nil && current_user.role.downcase == "family"
       @students = current_user.children
       @selected_student = @students.find_by(id: params[:student_id]) || @students.first
     end

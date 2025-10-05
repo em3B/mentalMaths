@@ -1,6 +1,6 @@
 import { NumberBlocksHelper } from "./number_blocks_helper.js";
 
-(function runGame() {
+export function runTopic39WithTimer() {
     const gameContainer = document.getElementById('game-container');
     const userSignedIn = gameContainer.dataset.userSignedIn == "true";
     let totalQuestions = 0; 
@@ -12,7 +12,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     let secondPart = 0;
     let nextMultipleOfTen = 0;
     let questionStep = "";
-    let controller;
+    let controller = null; 
     const tada = new Audio('https://res.cloudinary.com/dm37aktki/video/upload/v1746467653/MentalMaths/tada-234709_oi9b9z.mp3');
   
     if (!gameContainer) {
@@ -60,6 +60,14 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     questionSection.style.display = "block";
     generateQuestion();
     startTimer();
+
+    submitAnswerBtn.addEventListener("click", submitAnswer);
+    answerInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        submitAnswer();
+      }
+    });
   
     function startTimer() {
       timeLeft = 60;
@@ -74,70 +82,72 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
       }, 1000);
     }
 
-    function generateQuestion() {
-        do {
-            firstPart = Math.floor(Math.random() * (99 - 11 + 1)) + 11;
-        } while (firstPart%10 == 0);
-        nextMultipleOfTen = Math.ceil(firstPart / 10) * 10;
-        do {
-            secondPart = Math.floor(Math.random() * 9) + 1;
-        } while (secondPart == 0 || (firstPart + secondPart <= nextMultipleOfTen));
-        answer = firstPart + secondPart;
-        questionText.innerHTML =`${firstPart} + ${secondPart} = `;
-        answerInput.style.display = "none"; 
-        submitAnswerBtn.style.display = "none";
-
-        generateNumberBlockActivity();
+  function generateQuestion() {
+    // Destroy previous controller
+    if (controller) {
+      controller.destroy();
+      controller = null;
     }
 
-    function generateNumberBlockActivity() {
-        if (controller) controller.clearRegroupingCircles();
-        modelContainer.innerHTML = '';
-        questionStep = "1";
-        controller = new NumberBlocksHelper("addition", firstPart, secondPart, modelContainer, (isCorrect) => {
-            if (isCorrect == true) {
-                userAnswer = answer;
-            }
-            submitAnswer();
-        }, true)
+    // firstPart: 11–99, not a multiple of 10
+    do {
+      firstPart = Math.floor(Math.random() * 89) + 11;
+    } while (firstPart % 10 === 0);
+
+    // next multiple of 10 above firstPart
+    const nextMultipleOfTen = Math.ceil(firstPart / 10) * 10;
+
+    // secondPart: force result to cross next multiple of ten
+    const minSecondPart = nextMultipleOfTen - firstPart + 1; // ensure crossing
+    const maxSecondPart = 9;
+
+    if (minSecondPart > maxSecondPart) {
+      // edge case, regenerate firstPart
+      return generateQuestion(); // restart safely
     }
 
-    submitAnswerBtn.onclick = () => {
-      submitAnswer();
-  };
+    secondPart = Math.floor(Math.random() * (maxSecondPart - minSecondPart + 1)) + minSecondPart;
 
-  function generateFinalPart() {
-    questionStep = "2";
-    controller.controlsDiv.style.display = "none";
-    answerInput.style.display = "block"; 
-    submitAnswerBtn.style.display = "block";
-    answerInput.value = '';
-    answerInput.focus();
+    answer = firstPart + secondPart;
+    questionText.innerHTML = `${firstPart} + ${secondPart} = `;
+
+    generateNumberBlockActivity();
+  }
+
+  function generateNumberBlockActivity() {
+    if (controller) controller.destroy();
+
+    controller = new NumberBlocksHelper(
+      "addition",
+      firstPart,
+      secondPart,
+      modelContainer,
+      handleComplete, // regrouping callback
+      true            // regrouping involved
+    );
+  }
+
+  function handleComplete(isCorrect) {
+    if (isCorrect) {
+      // regrouping done properly, now show input
+      answerInput.style.display = "block";
+      submitAnswerBtn.style.display = "block";
+      answerInput.value = "";
+      answerInput.focus();
+    }
   }
 
   function submitAnswer() {
-    if (questionStep == "2") {
-      userAnswer = parseInt(answerInput.value, 10);
-    }
+    userAnswer = parseInt(answerInput.value, 10);
     if (userAnswer === answer) {
     feedback.textContent = "Correct!";
     correctAnswers += 1;
     totalQuestions += 1;
-    
-    confetti({
-      particleCount: 80,
-      spread: 110,
-      origin: { y: 0.6 }
-    });
 
     tada.currentTime = 0;
     tada.play();
-    
-    if (questionStep == "1") {
-      generateFinalPart();
-    } else {
-      generateQuestion();
-    }
+
+    generateQuestion();
     } else {
     if (!currentQuestionCounted) {
           totalQuestions += 1;
@@ -148,10 +158,6 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
 
     currentQuestionCounted = false;
   }
-
-  answerInput.onkeydown = (event) => {
-  if (event.key === 'Enter') submitAnswerBtn.click();
-};
   
     function endGame() {
       questionText.textContent = '';
@@ -168,7 +174,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
       }
     
       returnToTopicIndexBtn.onclick = () => {
-        window.location.href = '/topics/40';
+        window.location.href = '/topics/39';
       }
     }    
   
@@ -183,7 +189,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
           score: {
             correct: correct,
             total: totalQuestions,
-            topic_id: 40
+            topic_id: 39
           }
         })
       })
@@ -200,5 +206,5 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
         console.error('Error saving score:', error);
       });
     }
-  })();
+  }
   
