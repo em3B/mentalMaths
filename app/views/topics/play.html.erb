@@ -38,19 +38,25 @@
       const existingScript = document.getElementById("dynamic-game-script");
       if (existingScript) existingScript.remove();
 
-      const mode = useTimerCheckbox.checked ? 'with_timer' : 'without_timer';
-      const logicalName = `topic${gameIndex}_${mode}.js`;
-      const manifest = window.WEBPACK_MANIFEST;
-      const hashedPath = manifest[logicalName];
+      const modeKey = useTimerCheckbox.checked ? 'withTimer' : 'withoutTimer';
+      const fileMode = useTimerCheckbox.checked ? 'with_timer' : 'without_timer';
 
-      if (hashedPath) {
-        const script = document.createElement("script");
-        script.id = "dynamic-game-script";
-        script.type = "text/javascript";
-        script.src = hashedPath;
-        document.body.appendChild(script);
+      if (PRELOADED_GAMES[gameIndex] && PRELOADED_GAMES[gameIndex][modeKey]) {
+        PRELOADED_GAMES[gameIndex][modeKey](gameContainer);
       } else {
-        console.error(`Topic script not found in manifest: ${logicalName}`);
+        const logicalName = `topic${gameIndex}_${fileMode}.js`;
+        const manifest = window.WEBPACK_MANIFEST;
+        const hashedPath = manifest[logicalName];
+
+        if (hashedPath) {
+          const script = document.createElement("script");
+          script.id = "dynamic-game-script";
+          script.type = "text/javascript";
+          script.src = hashedPath;
+          document.body.appendChild(script);
+        } else {
+          console.error(`Topic script not found in manifest: ${logicalName}`);
+        }
       }
     });
   });

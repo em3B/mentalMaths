@@ -1,6 +1,6 @@
 import { NumberBlocksHelper } from "./number_blocks_helper.js";
 
-export function runTopic40WithTimer() {
+ export function runTopic41WithTimer() {
     const gameContainer = document.getElementById('game-container');
     const userSignedIn = gameContainer.dataset.userSignedIn == "true";
     let totalQuestions = 0; 
@@ -59,7 +59,6 @@ export function runTopic40WithTimer() {
     // Hide setup, show game
     returnToTopicIndexBtn.style.display = "none";
     questionSection.style.display = "block";
-    submitAnswerBtn.style.display = "block";
     generateQuestion();
     startTimer();
 
@@ -84,64 +83,41 @@ export function runTopic40WithTimer() {
       }, 1000);
     }
 
-  generateQuestion();
+    function generateQuestion() {
+        do {
+          firstPart = Math.floor(Math.random() * (99 - 11 + 1)) + 11; // 11–99
+        } while (firstPart % 10 === 0); // avoid multiples of 10
 
-  function generateQuestion() {
-    questionStep = "1";
-    regroupingDone = false;
-    feedback.textContent = "";
+        previousMultipleOfTen = Math.floor(firstPart / 10) * 10;
 
-    // Destroy previous controller
-    if (controller) {
-      controller.destroy();
-      controller = null;
+        do {
+          secondPart = Math.floor(Math.random() * 9) + 1; // 1–9 only
+        } while (firstPart - secondPart >= previousMultipleOfTen);
+
+        answer = firstPart - secondPart;
+        questionText.innerHTML = `${firstPart} - ${secondPart} = `;
+        answerInput.style.display = "none";
+        submitAnswerBtn.style.display = "block";
+
+        generateNumberBlockActivity();
     }
 
-    // Generate firstPart and secondPart to avoid regrouping
-    firstPart = Math.floor(Math.random() * (99 - 11 + 1)) + 11;
-    previousMultipleOfTen = Math.floor(firstPart / 10) * 10;
-
-    const maxSecondPart = firstPart - previousMultipleOfTen - 1; // largest allowed to avoid regroup
-    if (maxSecondPart < 1) {
-      return generateQuestion(); // retry if impossible
+    function generateNumberBlockActivity() {
+        questionStep = "1";
+        if (controller) controller.destroy();
+        controller = new NumberBlocksHelper("subtraction", firstPart, secondPart, modelContainer, handleComplete, true);
     }
 
-    secondPart = Math.floor(Math.random() * maxSecondPart) + 1;
-    answer = firstPart - secondPart;
+    function handleComplete(isCorrect) {
+        regroupingDone = true;
+        generateFinalPart();
+    }
 
-    questionText.innerHTML = `${firstPart} - ${secondPart} = `;
-
-    // Hide input until Step 1 is complete
-    answerInput.style.display = "none";
-
-    // Generate number blocks for Step 1
-    generateNumberBlockActivity();
-  }
-
-  function generateNumberBlockActivity() {
-    if (controller) controller.destroy();
-
-    controller = new NumberBlocksHelper(
-      "subtraction",
-      firstPart,
-      secondPart,
-      modelContainer,
-      handleComplete
-    );
-  }
-
-  function handleComplete(isCorrect) {
-    // Step 1 (crossing out units) done
-    regroupingDone = true;
-    generateFinalPart();
-  }
-    
   function generateFinalPart() {
     questionStep = "2";
-    if (controller && controller.controlsDiv) {
-      controller.controlsDiv.style.display = "none";
-    }
-    answerInput.style.display = "block";
+    controller.controlsDiv.style.display = "none";
+    answerInput.style.display = "block"; 
+    submitAnswerBtn.style.display = "block";
     answerInput.value = '';
     answerInput.focus();
   }
@@ -195,7 +171,7 @@ export function runTopic40WithTimer() {
       }
     
       returnToTopicIndexBtn.onclick = () => {
-        window.location.href = '/topics/40';
+        window.location.href = '/topics/41';
       }
     }    
   
@@ -210,7 +186,7 @@ export function runTopic40WithTimer() {
           score: {
             correct: correct,
             total: totalQuestions,
-            topic_id: 40
+            topic_id: 41
           }
         })
       })
