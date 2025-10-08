@@ -33,6 +33,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
         <div id="question-section">
             <p>You have <span id="timer">60</span> seconds.</p>
             <h2 id="question-text"></h2>
+            <h4 id="step-instruction" style="color: #d17b00; font-weight: 600; margin-top: 8px;"></h4>
             <div id="bar-model-container"></div>
             <input type="number" id="answer-input" style="display: none;" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
@@ -55,6 +56,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     const timerDisplay = document.getElementById("timer");
     const returnToTopicIndexBtn = document.getElementById("go-to-topic-index");
     const modelContainer = document.getElementById("bar-model-container");
+    const stepInstruction = document.getElementById("step-instruction");
 
     // Hide setup, show game
     returnToTopicIndexBtn.style.display = "none";
@@ -83,39 +85,55 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
       }, 1000);
     }
 
-    function generateQuestion() {
-        do {
-          firstPart = Math.floor(Math.random() * (99 - 11 + 1)) + 11; // 11–99
-        } while (firstPart % 10 === 0); // avoid multiples of 10
+  function generateQuestion() {
+    // Pick a random 2-digit number that’s not a multiple of 10
+    do {
+      firstPart = Math.floor(Math.random() * (99 - 11 + 1)) + 11; // 11–99
+    } while (firstPart % 10 === 0); // avoid multiples of 10 (like 20, 30...)
 
-        previousMultipleOfTen = Math.floor(firstPart / 10) * 10;
+    previousMultipleOfTen = Math.floor(firstPart / 10) * 10;
 
-        do {
-          secondPart = Math.floor(Math.random() * 9) + 1; // 1–9 only
-        } while (firstPart - secondPart >= previousMultipleOfTen);
-
-        answer = firstPart - secondPart;
-        questionText.innerHTML = `${firstPart} - ${secondPart} = `;
-        answerInput.style.display = "none";
-        submitAnswerBtn.style.display = "block";
-
-        generateNumberBlockActivity();
+    // Build a list of valid "secondPart" options that force regrouping
+    const possibleSeconds = [];
+    for (let i = 1; i <= 9; i++) {
+      if (firstPart - i < previousMultipleOfTen) {
+        possibleSeconds.push(i);
+      }
     }
+
+    // If no regrouping possible, regenerate
+    if (possibleSeconds.length === 0) {
+      generateQuestion(); // try again with a new firstPart
+      return;
+    }
+
+    // Pick one valid "secondPart" from the list
+    secondPart = possibleSeconds[Math.floor(Math.random() * possibleSeconds.length)];
+
+    // Compute answer and render the question
+    answer = firstPart - secondPart;
+    questionText.innerHTML = `${firstPart} - ${secondPart} = `;
+    answerInput.style.display = "none";
+    submitAnswerBtn.style.display = "block";
+
+    generateNumberBlockActivity();
+  }
 
     function generateNumberBlockActivity() {
         questionStep = "1";
         if (controller) controller.destroy();
         controller = new NumberBlocksHelper("subtraction", firstPart, secondPart, modelContainer, handleComplete, true);
+        stepInstruction.textContent = "Click the orange ten rod";
     }
 
     function handleComplete(isCorrect) {
         regroupingDone = true;
+        stepInstruction.textContent = ""; 
         generateFinalPart();
     }
 
   function generateFinalPart() {
     questionStep = "2";
-    controller.controlsDiv.style.display = "none";
     answerInput.style.display = "block"; 
     submitAnswerBtn.style.display = "block";
     answerInput.value = '';
@@ -126,7 +144,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
     if (questionStep === "1") {
       const onesStruckCount = controller.struck.ones.filter(v => v === true).length;
       if (onesStruckCount < secondPart) {
-          feedback.textContent = "Please cross out all unit blocks first!";
+          feedback.textContent = "Please regroup first by clicking the last ten rod!";
           return;
       }
 

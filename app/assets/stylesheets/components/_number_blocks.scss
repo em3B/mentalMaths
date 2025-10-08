@@ -11,6 +11,7 @@ $pink: #F0688C;
   gap: 6px;
   flex-wrap: nowrap;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .block {
@@ -132,9 +133,10 @@ $pink: #F0688C;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.5em;
-  color: red;
-  font-weight: bold;
+  font-size: 2em;        /* larger */
+  color: #d60000;        /* vivid red */
+  font-weight: 900;      /* boldest possible */
+  text-shadow: 0 0 4px rgba(0,0,0,0.3); /* subtle contrast */
   pointer-events: none;
 }
 
