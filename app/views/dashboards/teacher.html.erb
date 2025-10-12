@@ -1,10 +1,20 @@
+<div class="devise-form">
+  <h3>Add a Classroom</h3>
 
-  <div class="devise-form">
-    <h3>Add a Classroom</h3>
-    <%= simple_form_for @new_classroom, url: create_classroom_path do |f| %>
-      <%= f.text_field :name, placeholder: "Classroom Name" %>
-      <div class="form-inputs">
+  <%= simple_form_for @new_classroom, url: create_classroom_path do |f| %>
+    <%= f.text_field :name, placeholder: "Classroom Name" %>
+
+    <div class="form-inputs">
+      <% if current_user.classrooms.count >= Classroom::SOFT_LIMIT_CLASSROOMS %>
+        <%= f.button :submit, "Add", class: "devise-btn", disabled: true %>
+        <div class="alert alert-warning mt-2">
+          <p>You have reached the recommended limit of <%= Classroom::SOFT_LIMIT_CLASSROOMS %> classrooms.</p>
+          <%= link_to "Submit a request for more classrooms", new_capacity_request_path(request_type: :classroom, quantity: 1), class: "btn btn-primary mt-1" %>
+        </div>
+      <% else %>
         <%= f.button :submit, "Add", class: "devise-btn" %>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
+
+  <% end %>
+</div>

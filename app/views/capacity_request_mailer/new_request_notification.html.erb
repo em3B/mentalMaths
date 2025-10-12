@@ -1,0 +1,10 @@
+<h2>New Capacity Request</h2>
+
+<p><strong>From:</strong> <%= @capacity_request.user.name || @capacity_request.user.email %></p>
+<p><strong>Request Type:</strong> <%= @capacity_request.request_type.to_s.titleize %></p>
+<p><strong>Quantity Requested:</strong> <%= @capacity_request.quantity %></p>
+<p><strong>Reason:</strong> <%= @capacity_request.reason %></p>
+
+<% if @capacity_request.additional_info.present? %>
+  <p><strong>Additional Info:</strong> <%= @capacity_request.additional_info %></p>
+<% end %>
