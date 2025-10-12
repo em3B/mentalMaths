@@ -1,0 +1,31 @@
+<h2>Request Extra Capacity</h2>
+
+<div class="devise-form">
+    <%= form_with model: @capacity_request, local: true do |f| %>
+    <div>
+        <%= f.label :request_type, "Request Type" %>
+        <%= f.select :request_type,
+        CapacityRequest::REQUEST_TYPES.keys.map { |k| [k.to_s.titleize, k.to_s] },
+        include_blank: "Select type" %>
+    </div>
+
+    <div>
+        <%= f.label :quantity, "Number of additional items" %>
+        <%= f.number_field :quantity, min: 1 %>
+    </div>
+
+    <div>
+        <%= f.label :reason %>
+        <%= f.select :reason, ["Private tutor", "Large family", "School requirement", "Other"], include_blank: "Select reason" %>
+    </div>
+
+    <div>
+        <%= f.label :additional_info, "Additional details (optional)" %>
+        <%= f.text_area :additional_info %>
+    </div>
+
+    <div>
+        <%= f.submit "Submit Request", class: "btn btn-primary mt-2" %>
+    </div>
+    <% end %>
+</div>

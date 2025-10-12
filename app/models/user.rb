@@ -6,6 +6,10 @@ class User < ApplicationRecord
 
   ROLES = %w[student teacher family].freeze
 
+  SOFT_LIMIT_CHILDREN = 10
+
+  validate :soft_limit_children, if: :family?, on: :create
+
   attr_accessor :plain_password
 
   def teacher?
@@ -41,6 +45,9 @@ class User < ApplicationRecord
   has_many :assigned_topics_as_assigner, class_name: "AssignedTopic", foreign_key: "assigned_by_id"
   has_many :topics_assigned, through: :assigned_topics, source: :topic
 
+  # Limits for classroom, children, and students
+  has_many :capacity_requests, dependent: :destroy
+
   validates :username, presence: true, uniqueness: { conditions: -> { where.not(classroom_id: nil) } }
   validates :email, presence: true, unless: :student_or_child?
   validates :email, uniqueness: true, allow_blank: true
@@ -66,5 +73,12 @@ class User < ApplicationRecord
 
   def student_or_child?
     student? || parent.present?
+  end
+
+  private
+
+  def soft_limit_children
+    return unless parent && parent.children.count >= SOFT_LIMIT_CHILDREN
+    errors.add(:base, "You have reached the recommended limit of #{SOFT_LIMIT_CHILDREN} children. You can submit a request for more.")
   end
 end

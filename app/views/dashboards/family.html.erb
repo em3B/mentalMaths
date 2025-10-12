@@ -12,7 +12,15 @@
       </div>
 
       <div class="form-actions">
-        <%= f.button :submit, "Create Child", class: "devise-btn" %>
+        <% if current_user.children.count >= User::SOFT_LIMIT_CHILDREN %>
+          <%= f.button :submit, "Create Child", class: "devise-btn", disabled: true %>
+          <div class="alert alert-warning">
+            <p>You have reached the recommended limit of <%= User::SOFT_LIMIT_CHILDREN %> children.</p>
+            <%= link_to "Submit a request for more children", new_capacity_request_path(request_type: :child, quantity: 1), class: "btn btn-primary" %>
+          </div>
+        <% else %>
+          <%= f.button :submit, "Create Child", class: "devise-btn" %>
+        <% end %>
       </div>
     <% end %>
   </div>

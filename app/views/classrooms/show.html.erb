@@ -2,12 +2,22 @@
 <div class="form-container">
   <div class="devise-form">
     <h2>Add a Student</h2>
+
     <%= simple_form_for @new_student, url: classroom_students_path(@classroom) do |f| %>
       <div class="form-inputs">
         <%= f.input :username, label: "Student’s Username", required: true %>
       </div>
+
       <div class="form-inputs">
-        <%= f.button :submit, "Add", class: "devise-btn" %>
+        <% if @classroom.students.count >= Classroom::SOFT_LIMIT_STUDENTS %>
+          <%= f.button :submit, "Add", class: "devise-btn", disabled: true %>
+          <div class="alert alert-warning mt-2">
+            <p>This classroom has reached the recommended limit of <%= Classroom::SOFT_LIMIT_STUDENTS %> students.</p>
+            <%= link_to "Submit a request for more students", new_capacity_request_path(request_type: :student, quantity: 1), class: "btn btn-primary mt-1" %>
+          </div>
+        <% else %>
+          <%= f.button :submit, "Add", class: "devise-btn" %>
+        <% end %>
       </div>
     <% end %>
   </div>

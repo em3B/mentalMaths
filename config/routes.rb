@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "capacity_requests/new"
+  get "capacity_requests/create"
   get "errors/not_found"
   get "errors/internal_server_error"
   get "errors/unprocessable_entity"
@@ -10,6 +12,7 @@ Rails.application.routes.draw do
     get "/test_404", to: "errors#not_found"
     get "/test_422", to: "errors#unprocessable_entity"
     get "/test_500", to: "errors#internal_server_error"
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -41,6 +44,9 @@ Rails.application.routes.draw do
     get "topics/:id/intro", to: "topics#intro", as: "topic_intro"
 
     get "students/:id/scores", to: "scores#show", as: :student_scores
+
+    # Routes for capacity requests for limits (number of students, children, or classroom)
+    resources :capacity_requests, only: [ :new, :create ]
 
     # Routes for topics
     resources :topics, only: [ :index, :show ] do
