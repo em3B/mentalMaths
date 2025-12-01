@@ -1,5 +1,6 @@
 class CapacityRequest < ApplicationRecord
   belongs_to :user
+  after_initialize { self.status ||= "pending" }
 
   # Define allowed request types manually
   REQUEST_TYPES = {
@@ -22,6 +23,12 @@ class CapacityRequest < ApplicationRecord
   end
 
   def request_type_name
-    REQUEST_TYPES.key(request_type).to_s
+    case request_type
+    when 0, "classroom" then "classroom"
+    when 1, "student" then "student"
+    when 2, "child" then "child"
+    else
+      "unknown"
+    end
   end
 end

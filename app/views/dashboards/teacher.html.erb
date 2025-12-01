@@ -5,16 +5,17 @@
     <%= f.text_field :name, placeholder: "Classroom Name" %>
 
     <div class="form-inputs">
-      <% if current_user.classrooms.count >= Classroom::SOFT_LIMIT_CLASSROOMS %>
+      <% classroom_limit = current_user.capacity_limits&.dig("classroom") || 10 %>
+
+      <% if current_user.classrooms.count >= classroom_limit %>
         <%= f.button :submit, "Add", class: "devise-btn", disabled: true %>
         <div class="alert alert-warning mt-2">
-          <p>You have reached the recommended limit of <%= Classroom::SOFT_LIMIT_CLASSROOMS %> classrooms.</p>
+          <p>You have reached your classroom limit of <%= classroom_limit %>.</p>
           <%= link_to "Submit a request for more classrooms", new_capacity_request_path(request_type: :classroom, quantity: 1), class: "btn btn-primary mt-1" %>
         </div>
       <% else %>
         <%= f.button :submit, "Add", class: "devise-btn" %>
       <% end %>
     </div>
-
   <% end %>
 </div>

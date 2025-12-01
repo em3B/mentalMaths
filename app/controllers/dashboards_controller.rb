@@ -38,7 +38,7 @@ class DashboardsController < ApplicationController
     end
   end
 
-  def create_classroom
+    def create_classroom
     redirect_to root_path unless current_user.teacher?
     @new_classroom = current_user.classrooms.new(classroom_params)
 

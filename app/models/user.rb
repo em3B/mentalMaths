@@ -4,7 +4,9 @@ class User < ApplicationRecord
        :recoverable, :rememberable,
        authentication_keys: [ :login, :role ]
 
-  ROLES = %w[student teacher family].freeze
+  after_initialize :set_default_capacity_limits
+
+  ROLES = %w[student teacher family admin].freeze
 
   SOFT_LIMIT_CHILDREN = 10
 
@@ -22,6 +24,10 @@ class User < ApplicationRecord
 
   def student?
     role == "student"
+  end
+
+  def admin?
+    admin
   end
 
   # =================
@@ -52,12 +58,45 @@ class User < ApplicationRecord
   validates :email, presence: true, unless: :student_or_child?
   validates :email, uniqueness: true, allow_blank: true
 
+  # =================
+  # === Capacity Limits ===
+  # =================
+
+  # Ensure capacity_limits is always a hash
+  after_initialize do
+    self.capacity_limits ||= { "classroom" => 10, "student" => 40, "child" => 10 }
+  end
+
+  # Increment capacity for a given type
+  def increment_capacity!(type, quantity)
+    self.capacity_limits ||= { "classroom" => 10, "student" => 40, "child" => 10 }
+
+    # Ensure key exists
+    self.capacity_limits[type.to_s] ||= 0
+
+    # Increment and persist
+    self.capacity_limits[type.to_s] = self.capacity_limits[type.to_s].to_i + quantity.to_i
+    save!
+  end
+
+  # Optional helper to fetch current limit
+  def capacity_for(type_name)
+    (capacity_limits || {})[type_name] || 0
+  end
+
   def learner?
     student? && (created_by_family? || classroom.present?)
   end
 
   def login
     @login || (username.presence if student? && created_by_family?) || email
+  end
+
+  def set_default_capacity_limits
+    self.capacity_limits ||= {}
+    self.capacity_limits["classroom"] ||= 10
+    self.capacity_limits["student"]   ||= 40
+    self.capacity_limits["child"]     ||= 10
   end
 
   # Override Devise to allow login by email or username

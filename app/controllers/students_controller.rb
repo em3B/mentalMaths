@@ -25,6 +25,7 @@ class StudentsController < ApplicationController
     else
       @students = @classroom.students
       @new_student = @student
+      @assignments = @classroom.assigned_topics.includes(:topic) || []
       render "classrooms/show", status: :unprocessable_entity
     end
   end

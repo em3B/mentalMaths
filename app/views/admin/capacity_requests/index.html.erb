@@ -1,0 +1,44 @@
+<h1>Admin Dashboard</h1>
+
+<h2>Capacity Requests</h2>
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Type</th>
+      <th>Quantity</th>
+      <th>Reason</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @capacity_requests.each do |r| %>
+      <tr id="<%= dom_id(r) %>">
+        <td><%= r.user.email %></td>
+        <td>
+            Classrooms: <%= r.user.capacity_for("classroom") %>,
+            Students: <%= r.user.capacity_for("student") %>,
+            Children: <%= r.user.capacity_for("child") %>
+        </td>
+        <td><%= r.request_type_name %></td>
+        <td><%= r.quantity %></td>
+        <td><%= r.reason %></td>
+        <td><%= r.status %></td>
+        <td>
+          <% if r.status != "approved" %>
+            <%= button_to "Approve",
+                approve_admin_capacity_request_path(r),
+                method: :patch,
+                data: { turbo_stream: true, turbo_confirm: "Approve this request?" } %>
+
+            <%= button_to "Decline",
+                decline_admin_capacity_request_path(r),
+                method: :patch,
+                data: { turbo_stream: true, turbo_confirm: "Decline this request?" } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

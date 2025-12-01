@@ -10,6 +10,22 @@ class CapacityRequestMailer < ApplicationMailer
     )
   end
 
+  def approval_notification(capacity_request)
+    @capacity_request = capacity_request
+    mail(
+      to: capacity_request.user.email,
+      subject: "Your Capacity Request has been approved"
+    )
+  end
+
+  def decline_notification(capacity_request)
+    @capacity_request = capacity_request
+    mail(
+      to: capacity_request.user.email,
+      subject: "Your Capacity Request has been declined"
+    )
+  end
+
   private
 
   def recipient_email

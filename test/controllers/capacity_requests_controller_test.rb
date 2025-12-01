@@ -4,8 +4,12 @@ class CapacityRequestsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers  # make Devise helpers available
   fixtures :users
 
-  def setup
-    @user = users(:one)
+  setup do
+    @user = User.create!(
+      email: "test@example.com",
+      password: "password",
+      username: "testuser"
+    )
     sign_in @user
   end
 

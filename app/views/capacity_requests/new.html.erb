@@ -5,7 +5,7 @@
     <div>
         <%= f.label :request_type, "Request Type" %>
         <%= f.select :request_type,
-        CapacityRequest::REQUEST_TYPES.keys.map { |k| [k.to_s.titleize, k.to_s] },
+        CapacityRequest::REQUEST_TYPES.map { |k, v| [k.to_s.titleize, v] },
         include_blank: "Select type" %>
     </div>
 
