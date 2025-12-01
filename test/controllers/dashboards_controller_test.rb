@@ -2,20 +2,31 @@ require "test_helper"
 
 class DashboardsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = User.create!(
-      email: "test@example.com",
+    # Create a teacher user
+    @teacher = User.create!(
+      email: "teacher@example.com",
       password: "password",
-      username: "testuser"
+      username: "teacheruser",
+      role: "teacher"
     )
-    sign_in @user
+
+    # Create a family user
+    @family = User.create!(
+      email: "family@example.com",
+      password: "password",
+      username: "familyuser",
+      role: "family"
+    )
   end
 
   test "should get teacher dashboard" do
+    sign_in @teacher
     get teacher_dashboard_url
     assert_response :success
   end
 
   test "should get family dashboard" do
+    sign_in @family
     get family_dashboard_url
     assert_response :success
   end
