@@ -2,7 +2,7 @@ require "test_helper"
 
 class DashboardsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users(:one)  # or create a user with FactoryBot if you prefer
+    @user = User.create!(email: "test@example.com", password: "password")
     sign_in @user
   end
 
