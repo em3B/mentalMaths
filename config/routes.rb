@@ -106,6 +106,10 @@ delete "/assigned_topics/:id/for_user/:user_id", to: "assigned_topics#destroy_fo
     get  "dashboard/family",           to: "dashboards#family",         as: :family_dashboard
     post "dashboard/family/create",    to: "dashboards#create_child",   as: :create_child
 
+    namespace :admin do
+      get "dashboard", to: "dashboard#index", as: :dashboard
+    end
+
     resources :scores, only: [ :index, :create ]
 
     # Score route (this could be shown after completing a session or at the end)

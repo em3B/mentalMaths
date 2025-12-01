@@ -2,7 +2,11 @@ require "test_helper"
 
 class DashboardsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = User.create!(email: "test@example.com", password: "password")
+    @user = User.create!(
+      email: "test@example.com",
+      password: "password",
+      username: "testuser"
+    )
     sign_in @user
   end
 
