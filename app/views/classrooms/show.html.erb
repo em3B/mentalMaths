@@ -9,15 +9,18 @@
       </div>
 
       <div class="form-inputs">
-        <% if @classroom.students.count >= Classroom::SOFT_LIMIT_STUDENTS %>
+        <% student_limit = current_user.capacity_limits&.dig("student") || 50 %>
+
+        <% if @classroom.students.count >= student_limit %>
           <%= f.button :submit, "Add", class: "devise-btn", disabled: true %>
           <div class="alert alert-warning mt-2">
-            <p>This classroom has reached the recommended limit of <%= Classroom::SOFT_LIMIT_STUDENTS %> students.</p>
+            <p>This classroom has reached your student limit of <%= student_limit %> students.</p>
             <%= link_to "Submit a request for more students", new_capacity_request_path(request_type: :student, quantity: 1), class: "btn btn-primary mt-1" %>
           </div>
         <% else %>
           <%= f.button :submit, "Add", class: "devise-btn" %>
         <% end %>
+
       </div>
     <% end %>
   </div>

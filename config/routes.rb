@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get "dashboard", to: "dashboard#index"
+
+    resources :capacity_requests, only: [ :index ] do
+      member do
+        patch :approve
+        patch :decline
+      end
+    end
+  end
+
   get "capacity_requests/new"
   get "capacity_requests/create"
   get "errors/not_found"
