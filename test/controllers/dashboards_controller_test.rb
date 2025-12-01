@@ -1,7 +1,13 @@
 require "test_helper"
 
-class DashboardsControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
+  test "should get teacher dashboard" do
+    get teacher_dashboard_url
+    assert_response :success
+  end
+
+  test "should get family dashboard" do
+    get family_dashboard_url
+    assert_response :success
+  end
 end
