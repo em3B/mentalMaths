@@ -37,8 +37,10 @@
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
 
-    <%= render 'shared/navbar' unless is_play_page %>
-    <%= render "shared/footer" unless is_play_page %>
+    <% unless devise_controller? %>
+      <p class="alert"><%= alert %></p>
+      <p class="notice"><%= notice %></p>
+    <% end %>
 
     <% unless controller_name == 'home' && action_name == 'index' %>
       <div class="wrapper">
