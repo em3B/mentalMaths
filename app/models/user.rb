@@ -92,6 +92,10 @@ class User < ApplicationRecord
     @login || (username.presence if student? && created_by_family?) || email
   end
 
+  def login=(value)
+    @login = value
+  end
+
   def set_default_capacity_limits
     self.capacity_limits ||= {}
     self.capacity_limits["classroom"] ||= 10
