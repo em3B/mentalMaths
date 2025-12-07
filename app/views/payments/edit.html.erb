@@ -1,0 +1,22 @@
+<div class="devise-form">
+  <h1>Update Payment Method</h1>
+
+  <%= form_with url: payment_method_path, method: :patch, local: true do |f| %>
+    <p>
+      <%= f.label :card_number, "Card Number" %><br>
+      <%= f.text_field :card_number %>
+    </p>
+
+    <p>
+      <%= f.label :expiry_date, "Expiry Date" %><br>
+      <%= f.text_field :expiry_date %>
+    </p>
+
+    <p>
+      <%= f.label :cvc, "CVC" %><br>
+      <%= f.text_field :cvc %>
+    </p>
+
+    <%= f.submit "Update Payment" %>
+  <% end %>
+</div>
