@@ -1,0 +1,28 @@
+<div class="devise-form">
+  <h1>Edit Profile</h1>
+
+  <%= form_with model: @user, url: profile_path, method: :patch, local: true do |f| %>
+    <p>
+      <%= f.label :name %><br>
+      <%= f.text_field :name %>
+    </p>
+
+    <p>
+      <%= f.label :email %><br>
+      <%= f.email_field :email %>
+    </p>
+
+    <p>
+      <%= f.label :password %> (leave blank if you don't want to change it)<br>
+      <%= f.password_field :password %>
+    </p>
+
+    <p>
+      <%= f.label :password_confirmation %><br>
+      <%= f.password_field :password_confirmation %>
+    </p>
+
+    <%= f.submit "Update Profile" %>
+  <% end %>
+  <br><br><br><br>
+</div>

@@ -17,23 +17,29 @@
   <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
     <ul class="navbar-nav nav-item">
       <% if user_signed_in? %>
-        <% if current_user.role.downcase === "student" %>
+        <% if current_user.role.downcase == "student" %>
           <li class="active fancy-link m-3">
             <%= link_to "Scores", scores_path %>
           </li>
-        <% elsif current_user.role.downcase === "family" %>
+        <% elsif current_user.role.downcase == "family" %>
           <li class="active fancy-link m-3">
             <%= link_to "My Family", family_dashboard_path %>
           </li>
-        <% elsif current_user.role.downcase === "teacher" %>
+          <li class="active fancy-link m-3">
+            <%= link_to "Profile", profile_path %>
+          </li>
+        <% elsif current_user.role.downcase == "teacher" %>
           <li class="active fancy-link m-3">
             <%= link_to "My Classrooms", classrooms_path %>
+          </li>
+          <li class="active fancy-link m-3">
+            <%= link_to "Profile", profile_path %>
           </li>
         <% end %>
         <li class="active fancy-link m-3">
           <%= link_to "Topics", topics_path%>
         </li>
-        <% if current_user.role.downcase === "student" %>
+        <% if current_user.role.downcase == "student" %>
           <li class="active fancy-link m-3">
             <%= link_to "Home", :root %>
           </li>
