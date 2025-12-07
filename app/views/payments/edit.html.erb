@@ -21,10 +21,12 @@
 <style>
   .card-input {
     background: white;
-    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     margin-bottom: 15px;
+    height: 45px;
+    display: flex;
+    align-items: center; /* centers iframe */
   }
 
   .card-errors {
@@ -35,7 +37,6 @@
 
   #submit-button {
     display: block;
-    padding: 10px 20px;
     font-size: 1.1rem;
     font-weight: bold;
     margin-top: 10px;
@@ -51,8 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
     base: {
       fontSize: '16px',
       color: '#32325d',
-      '::placeholder': { color: '#aab7c4' },
-      padding: '12px 14px'
+      '::placeholder': { color: '#aab7c4' }
     },
     invalid: { color: '#fa755a' }
   };

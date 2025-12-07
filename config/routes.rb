@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     # Root path (Landing page)
     root "home#index"
 
-    devise_for :users
+    devise_for :users, controllers: { registrations: "users/registrations" }
 
     # Custom topic routes (intro and play)
     get "topics/:id/intro", to: "topics#intro", as: "topic_intro"
