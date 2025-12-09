@@ -63,6 +63,7 @@ group :development, :test do
   gem "rubocop"
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
+  gem "mocha", require: false
 end
 
 group :development do

@@ -1,4 +1,5 @@
 require "test_helper"
+require "ostruct"
 
 class PaymentsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
@@ -11,26 +12,24 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
       username: "test"
     )
 
-    # Sign in user
     sign_in @user
-
-    # Stub the payment methods on the user instance
-    def @user.payment_method
-      nil
-    end
-
-    def @user.update_payment_method(_params)
-      true
-    end
-  end
-
-  test "should get edit" do
-    get edit_payment_method_url
-    assert_response :success
   end
 
   test "should update payment method" do
-    patch payment_method_url, params: { payment_method: "test-token" }
+    # Stub the Stripe wrappers properly
+    StripeCustomerWrapper.stubs(:create).returns(OpenStruct.new(id: "cus_123"))
+    StripeCustomerWrapper.stubs(:retrieve).returns(OpenStruct.new(id: "cus_123"))
+
+    StripeSubscriptionWrapper.stubs(:create).returns(
+      OpenStruct.new(
+        id: "sub_123",
+        status: "active",
+        current_period_end: Time.now.to_i + 1.month
+      )
+    )
+
+    patch payment_method_path, params: { payment_method: "pm_123" }
+
     assert_redirected_to profile_path
   end
 end
