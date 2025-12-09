@@ -48,6 +48,7 @@ gem "autoprefixer-rails"
 gem "font-awesome-sass", "~> 6.1"
 gem "simple_form", github: "heartcombo/simple_form"
 gem "sassc-rails"
+gem "stripe"
 
 group :development, :test do
   gem "dotenv-rails"
@@ -62,6 +63,7 @@ group :development, :test do
   gem "rubocop"
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
+  gem "mocha", require: false
 end
 
 group :development do
