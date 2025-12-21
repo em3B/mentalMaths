@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "school_invitations/show"
+  get "stripe_webhooks/create"
+  post "/stripe/webhook", to: "stripe_webhooks#create"
   namespace :admin do
     get "dashboard", to: "dashboard#index"
 
@@ -98,6 +101,27 @@ resources :classrooms do
   delete "assigned_topics/:id", to: "assigned_topics#destroy_for_class", as: :assigned_topic
   get :scores, on: :member
 end
+
+resources :schools, only: [ :new, :create, :show ] do
+  member do
+    get :billing
+    get :members
+    post :invite_teacher
+    delete "members/:user_id", to: "schools#remove_member", as: :remove_member
+  end
+end
+
+# School Invites for Teachers
+get  "/school_invitations/:token", to: "school_invitations#show", as: :school_invitation
+post "/school_invitations/:token/accept", to: "school_invitations#accept", as: :accept_school_invitation
+
+# Stripe checkout for schools
+post "schools/:id/checkout", to: "school_checkouts#create", as: :school_checkout
+get  "schools/checkout/success", to: "school_checkouts#success"
+get  "schools/checkout/cancel",  to: "school_checkouts#cancel"
+
+# Session flag for schools
+get "/school_subscriptions", to: "schools#start", as: :school_subscriptions
 
 post "/assign_topic_to_user/:user_id", to: "assigned_topics#create_for_user", as: :assign_topic_to_user
 delete "/assigned_topics/:id/for_user/:user_id", to: "assigned_topics#destroy_for_user", as: :destroy_user_assigned_topic

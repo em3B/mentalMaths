@@ -1,0 +1,16 @@
+<div class="devise-form">
+  <h1><%= @school.name %> members</h1>
+
+  <p>Seats: <%= @school.seats_used %> / <%= @school.seat_limit %></p>
+
+  <%= form_with url: invite_teacher_school_path(@school), method: :post do %>
+    <%= email_field_tag :email, nil, placeholder: "teacher@school.org", required: true %>
+    <%= submit_tag "Invite teacher" %>
+  <% end %>
+
+  <% if @invitation.present? %>
+    <hr>
+    <p><strong>Invite link (copy & send to teacher):</strong></p>
+    <code><%= school_invitation_url(@invitation.token) %></code>
+  <% end %>
+</div>

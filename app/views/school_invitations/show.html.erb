@@ -1,0 +1,16 @@
+<div class="devise-form">
+  <h1>You’ve been invited to join <%= @invitation.school.name %></h1>
+
+  <% if !user_signed_in? %>
+    <p>Please sign in or sign up to accept this invitation.</p>
+    <%= link_to "Sign in", new_user_session_path, class: "button" %>
+    <%= link_to "Sign up", new_user_registration_path, class: "button" %>
+
+  <% else %>
+    <p>You are signed in as <strong><%= current_user.email %></strong></p>
+
+    <%= form_with url: accept_school_invitation_path(@invitation.token), method: :post do %>
+      <%= submit_tag "Accept invitation" %>
+    <% end %>
+  <% end %>
+</div>

@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  belongs_to :school, optional: true
   # Devise modules
   devise :database_authenticatable, :registerable,
        :recoverable, :rememberable,
@@ -28,6 +29,13 @@ class User < ApplicationRecord
 
   def admin?
     admin
+  end
+
+  def premium_teacher?
+    teacher? && (
+      (billing_status.in?(%w[active trialing]) && (subscription_ends_at.nil? || subscription_ends_at > Time.current)) ||
+      (school.present? && school.active_subscription?)
+    )
   end
 
   # =================
