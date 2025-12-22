@@ -8,22 +8,24 @@
   <%# <h1 class="ml16 text-dark">Add, Subtract, Smile!</h1><br> %>
   <%# <h3 class="text-dark">Where young math learners practice mental math skills</h3><br> %>
   <% unless user_signed_in? %>
-    <%= link_to topics_path do %>
-      <button class="main-btn" id="free-trial">
-        <div class="main-img">
-          <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1645639917/Depositphotos_57293061_S_mnbcls.jpg") %>
-        </div>
-      </button>
-    <% end %>
+    <div class="main-btn-group">
+      <%= link_to topics_path do %>
+        <button class="main-btn" id="free-trial">
+          <div class="main-img">
+            <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1645639917/Depositphotos_57293061_S_mnbcls.jpg") %>
+          </div>
+        </button>
+      <% end %>
 
-    <%= link_to school_subscriptions_path do %>
-      <button class="main-btn" id="school-plan">
-        <div class="main-img">
-          <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1766148175/Vector_illustration_of_High_school_building._Vector_School_Building_rfc57q.jpg") %>
-        </div>
-        <span>School subscriptions</span>
-      </button>
-    <% end %>
+      <%= link_to school_subscriptions_path do %>
+        <button class="main-btn" id="free-trial">
+          <div class="main-img">
+            <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1766148175/Vector_illustration_of_High_school_building._Vector_School_Building_rfc57q.jpg") %>
+          </div>
+          <span>School subscriptions</span>
+        </button>
+      <% end %>
+    </div>
 
   <% end %>
 </div>
