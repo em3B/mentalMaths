@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_07_193707) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_18_200539) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,6 +74,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_193707) do
     t.index ["question_id"], name: "index_responses_on_question_id"
   end
 
+  create_table "school_invitations", force: :cascade do |t|
+    t.bigint "school_id", null: false
+    t.string "email"
+    t.string "token"
+    t.datetime "accepted_at"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_school_invitations_on_school_id"
+  end
+
   create_table "schools", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -82,6 +93,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_193707) do
     t.string "contact_email"
     t.string "subscription_status"
     t.datetime "subscription_expires_at"
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "plan_name"
+    t.string "billing_status"
+    t.datetime "subscription_ends_at"
+    t.integer "seat_limit", default: 0, null: false
+    t.integer "seats_used", default: 0, null: false
+    t.index ["stripe_customer_id"], name: "index_schools_on_stripe_customer_id"
+    t.index ["stripe_subscription_id"], name: "index_schools_on_stripe_subscription_id"
   end
 
   create_table "scores", force: :cascade do |t|
@@ -128,6 +148,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_193707) do
     t.string "billing_status"
     t.datetime "subscription_ends_at"
     t.boolean "pending_payment", default: true
+    t.boolean "school_admin", default: false, null: false
     t.index ["classroom_id"], name: "index_users_on_classroom_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["school_id"], name: "index_users_on_school_id"
@@ -144,6 +165,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_193707) do
   add_foreign_key "memberships", "users"
   add_foreign_key "questions", "topics"
   add_foreign_key "responses", "questions"
+  add_foreign_key "school_invitations", "schools"
   add_foreign_key "scores", "topics"
   add_foreign_key "scores", "users"
   add_foreign_key "users", "classrooms"

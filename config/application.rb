@@ -35,6 +35,8 @@ module MentalMaths
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Cloudinary
-    Dotenv::Rails.load
+    if Rails.env.development? || Rails.env.test?
+      require "dotenv/rails-now" if Gem.loaded_specs["dotenv-rails"]
+    end
   end
 end

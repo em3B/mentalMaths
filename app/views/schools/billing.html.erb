@@ -1,0 +1,13 @@
+<div class="devise-form">
+  <h1>School billing</h1>
+
+  <%= form_with url: school_checkout_path(@school), method: :post, data: { turbo: false } do %>
+    <div>
+      <label>Number of teachers</label>
+      <%= number_field_tag :seats, (@school.seat_limit.presence || 5), min: 1 %>
+    </div>
+
+    <%= submit_tag "Continue to payment" %>
+  <% end %>
+</div>
+

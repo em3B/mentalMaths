@@ -1,0 +1,22 @@
+<div class="devise-form">
+  <h1>Create a school</h1>
+
+  <%= form_with model: @school do |f| %>
+    <div>
+      <%= f.label :name %>
+      <%= f.text_field :name, required: true %>
+    </div>
+
+    <div>
+      <%= f.label :contact_email %>
+      <%= f.email_field :contact_email, required: true %>
+    </div>
+
+    <div>
+      <%= f.label :address %>
+      <%= f.text_field :address %>
+    </div>
+
+    <%= f.submit "Continue" %>
+  <% end %>
+</div>

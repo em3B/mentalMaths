@@ -5,6 +5,14 @@
   <%= f.error_notification %>
 
   <div class="form-inputs ">
+    <% if session[:school_onboarding] %>
+      <p class="hint-text">
+        <strong>School subscriptions:</strong>
+        Please select <strong>Teacher</strong> as your role to manage your school
+        and invite other teachers.
+      </p>
+    <% end %>
+
     <%= f.input :role,
             as: :select,
             collection: [["Teacher", "teacher"], ["Family", "family"]],
