@@ -12,11 +12,15 @@
 </div>
 
 <%# this is where the game will go %>
-<div id="game-container" style="display: none !important;" data-user-signed-in="<%= user_signed_in? %>" data-topic-id="<%= @topic.id %>">></div>
+<div id="game-container" style="display: none !important;" data-user-signed-in="<%= user_signed_in? %>" data-topic-id="<%= @topic.id %>"></div>
 
 <script>
   document.addEventListener("turbo:load", function () {
-    window.WEBPACK_MANIFEST = <%= raw File.read(Rails.root.join("public/packs/manifest.json")) %>;
+    <%
+      manifest_path = Rails.root.join("public/packs/manifest.json")
+      manifest_json = File.exist?(manifest_path) ? File.read(manifest_path) : "{}"
+    %>
+    window.WEBPACK_MANIFEST = <%= raw manifest_json %>;
 
     const formWrapper = document.querySelector(".devise-form");
     const playButton = document.getElementById("play-button");
