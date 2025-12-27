@@ -56,12 +56,9 @@ class TopicsController < ApplicationController
 
   def submit_score
     @topic = Topic.find(params[:id])
-
-    # Assume params[:score] contains the user's final score from the quiz form
     final_score = params[:score].to_i
 
-    # Save the score record for current_user and this topic
-    @topic.scores.create(user: current_user, value: final_score)
+    @topic.scores.create!(user: current_user, total: final_score)
 
     redirect_to score_topic_path(@topic), notice: "Your score has been saved!"
   end

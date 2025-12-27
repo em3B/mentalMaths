@@ -17,6 +17,10 @@ class SchoolCheckoutsController < ApplicationController
 
     session = Stripe::Checkout::Session.create(
       mode: "subscription",
+      metadata: {
+        school_id: @school.id,
+        initiated_by_user_id: current_user.id
+      },
       customer: customer.id,
       line_items: [ {
         price: Rails.application.credentials.dig(:stripe, :school_price_id),
@@ -44,6 +48,13 @@ class SchoolCheckoutsController < ApplicationController
   end
 
   def require_school_admin!
-    redirect_to(root_path, alert: "Access denied.") unless current_user.school_admin? && current_user.school_id == @school.id
+    return redirect_to(root_path, alert: "Access denied.") unless current_user.school_id == @school.id
+
+    has_admin = User.exists?(school_id: @school.id, school_admin: true)
+
+    return if current_user.school_admin?
+    return if !has_admin && current_user.teacher? # bootstrap
+
+    redirect_to root_path, alert: "Access denied."
   end
 end

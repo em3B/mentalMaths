@@ -15,7 +15,7 @@ class AssignedTopicsController < ApplicationController
   end
 
   def create_for_user
-    authorize_assignment(@classroom, @student)
+    return unless authorize_assignment(@classroom, @student)
 
     AssignedTopic.create!(
       user: @student,
@@ -64,11 +64,17 @@ end
 
   def authorize_assignment(classroom, student = nil)
     if current_user.teacher?
-      redirect_to(root_path, alert: "Unauthorized") unless classroom.teacher == current_user
+      unless classroom.teacher == current_user
+        redirect_to(root_path, alert: "Unauthorized") and return false
+      end
     elsif current_user.family?
-      redirect_to(root_path, alert: "Unauthorized") unless student&.parent == current_user
+      unless student&.parent == current_user
+        redirect_to(root_path, alert: "Unauthorized") and return false
+      end
     else
-      redirect_to(root_path, alert: "Unauthorized")
+      redirect_to(root_path, alert: "Unauthorized") and return false
     end
+
+    true
   end
 end
