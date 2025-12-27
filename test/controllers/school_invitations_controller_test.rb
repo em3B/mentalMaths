@@ -6,6 +6,7 @@ class SchoolInvitationsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @school = School.create!(
       name: "Test School",
+      contact_email: "contact@email.com",
       stripe_customer_id: "cus_test_123",
       billing_status: "active",
       subscription_ends_at: 1.month.from_now,
