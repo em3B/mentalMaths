@@ -4,7 +4,7 @@ class AssignedTopic < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :classroom, optional: true
 
-  # Ensure exactly one of :user or :classroom is present
+  # An assignment must be linked to a user, a classroom, or both
   validates :user_id, presence: true, unless: -> { classroom_id.present? }
   validates :classroom_id, presence: true, unless: -> { user_id.present? }
 
