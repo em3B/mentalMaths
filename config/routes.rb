@@ -14,8 +14,11 @@ Rails.application.routes.draw do
   end
 
   resource :profile, only: [ :show, :edit, :update ]
-  get "payment_method/edit", to: "payments#edit", as: :edit_payment_method
-  patch "payment_method", to: "payments#update"
+  resource :payments, only: [ :edit, :create ] do
+    get :success
+    get :cancel
+    post :portal
+  end
 
   get "capacity_requests/new"
   get "capacity_requests/create"

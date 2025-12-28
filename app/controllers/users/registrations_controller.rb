@@ -40,7 +40,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         return redirect_to new_school_path
       end
 
-      redirect_to edit_payment_method_path
+      redirect_to edit_payments_path
     else
       clean_up_passwords resource
       set_minimum_password_length

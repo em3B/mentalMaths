@@ -1,21 +1,23 @@
 <div class="devise-form">
-  <h1>Update Payment Method</h1>
+  <h1>Billing</h1>
 
-  <%= form_with url: payment_method_path, method: :patch, id: "payment-form", local: false do |f| %>
-    
-    <label>Card Number</label>
-    <div id="card-number" class="card-input"></div>
+  <% if current_user.billing_status == "active" %>
+    <p>Your subscription is active.</p>
+    <p>Plan: <%= current_user.plan_name %></p>
 
-    <label>Expiry Date</label>
-    <div id="card-expiry" class="card-input"></div>
+    <% if current_user.subscription_ends_at.present? %>
+      <p>Renews on: <%= current_user.subscription_ends_at.to_date %></p>
+    <% end %>
 
-    <label>CVC</label>
-    <div id="card-cvc" class="card-input"></div>
-
-    <div id="card-errors" role="alert" class="card-errors"></div>
-
-    <%= f.submit "Update Payment", id: "submit-button", class: "btn btn-primary" %>
+    <%= button_to "Manage billing (update card / cancel)",
+          portal_payments_path,
+          method: :post,
+          data: {turbo: false} %>
+  <% else %>
+    <p>You don’t have an active subscription yet.</p>
+    <%= button_to "Start subscription", payments_path, method: :post, data: {turbo: false} %>
   <% end %>
+
 </div>
 
 <style>
