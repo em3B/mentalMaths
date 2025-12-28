@@ -8,16 +8,32 @@ class PaymentsController < ApplicationController
 
   # POST /payments
   def create
+    unless params[:legal_acceptance] == "1"
+      redirect_back(
+        fallback_location: edit_payments_path,
+        alert: "Please agree to the Terms of Service and Privacy Policy to continue."
+      ) and return
+    end
+
+    # Record acceptance BEFORE creating the Stripe checkout session
+    current_user.update!(
+      terms_accepted_at: Time.current,
+      privacy_accepted_at: Time.current,
+      terms_version: TERMS_VERSION,
+      privacy_version: PRIVACY_VERSION
+    )
+
     price_id = price_id_for(current_user)
 
-    customer = if current_user.stripe_customer_id.present?
-                 StripeCustomerWrapper.retrieve(current_user.stripe_customer_id)
-    else
-                 StripeCustomerWrapper.create(
-                   email: current_user.email,
-                   name: current_user.username
-                 )
-    end
+    customer =
+      if current_user.stripe_customer_id.present?
+        StripeCustomerWrapper.retrieve(current_user.stripe_customer_id)
+      else
+        StripeCustomerWrapper.create(
+          email: current_user.email,
+          name: current_user.username
+        )
+      end
 
     current_user.update!(stripe_customer_id: customer.id)
 

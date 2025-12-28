@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     get :privacy
     get :disclosure
     get :disclaimer
+    get :terms
   end
 
     # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
