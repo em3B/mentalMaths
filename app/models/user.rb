@@ -126,6 +126,13 @@ class User < ApplicationRecord
     student? || parent.present?
   end
 
+  def accepted_current_legal_terms?
+    terms_accepted_at.present? &&
+      privacy_accepted_at.present? &&
+      terms_version == TERMS_VERSION &&
+      privacy_version == PRIVACY_VERSION
+  end
+
   private
 
   def soft_limit_children

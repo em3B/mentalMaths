@@ -15,7 +15,24 @@
           data: {turbo: false} %>
   <% else %>
     <p>You don’t have an active subscription yet.</p>
-    <%= button_to "Start subscription", payments_path, method: :post, data: {turbo: false} %>
+
+    <%= form_with url: payments_path, method: :post, data: { turbo: false } do %>
+      <div class="mt-4">
+        <label class="inline-flex items-start gap-2">
+          <%= check_box_tag :legal_acceptance, "1", false, required: true, class: "mt-1" %>
+          <span>
+            I agree to the
+            <%= link_to "Terms of Service", terms_path, target: "_blank", class: "underline hover:text-blue-600" %>
+            and
+            <%= link_to "Privacy Policy", privacy_path, target: "_blank", class: "underline hover:text-blue-600" %>.
+          </span>
+        </label>
+      </div>
+
+      <div class="mt-4">
+        <%= submit_tag "Start subscription", class: "rounded-lg px-4 py-2 font-semibold bg-black text-white hover:opacity-90" %>
+      </div>
+    <% end %>
   <% end %>
 
 </div>

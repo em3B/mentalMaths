@@ -61,7 +61,7 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
     checkout_session = OpenStruct.new(url: "https://checkout.stripe.com/c/pay/cs_test_123")
     Stripe::Checkout::Session.stubs(:create).returns(checkout_session)
 
-    post payments_path
+    post payments_path, params: { legal_acceptance: "1" }
 
     assert_redirected_to "https://checkout.stripe.com/c/pay/cs_test_123"
     @teacher.reload
@@ -79,7 +79,7 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
       OpenStruct.new(url: "https://checkout.stripe.com/c/pay/cs_test_456")
     )
 
-    post payments_path
+    post payments_path, params: { legal_acceptance: "1" }
 
     assert_redirected_to "https://checkout.stripe.com/c/pay/cs_test_456"
     @teacher.reload
@@ -147,7 +147,7 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
   test "student is blocked from create" do
     sign_in @student
 
-    post payments_path
+    post payments_path, params: { legal_acceptance: "1" }
 
     assert_redirected_to root_path
     assert_equal "Access denied.", flash[:alert]
@@ -160,5 +160,22 @@ class PaymentsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to root_path
     assert_equal "Access denied.", flash[:alert]
+  end
+
+  test "create requires legal acceptance" do
+    sign_in @teacher
+
+    StripeCustomerWrapper.stubs(:create).raises("should not be called")
+    StripeCustomerWrapper.stubs(:retrieve).raises("should not be called")
+    Stripe::Checkout::Session.stubs(:create).raises("should not be called")
+
+    post payments_path # no legal_acceptance
+
+    assert_redirected_to edit_payments_path
+    assert_equal "Please agree to the Terms of Service and Privacy Policy to continue.", flash[:alert]
+
+    @teacher.reload
+    assert_nil @teacher.terms_accepted_at
+    assert_nil @teacher.privacy_accepted_at
   end
 end
