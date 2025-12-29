@@ -3,22 +3,33 @@ require "test_helper"
 class DashboardsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42" # >= 12 chars, unlikely pwned
+
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacheruser_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
 
-    @family = User.create!(
+    @family = confirm_for_devise!(User.create!(
       email: "family-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "familyuser_#{SecureRandom.hex(4)}",
       role: "family"
-    )
+    ))
 
     @classroom = Classroom.create!(name: "Class A", teacher: @teacher)
+  end
+
+  # Confirm/unlock helpers for confirmable/lockable setups
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- DASHBOARD VIEWS ------------------------------------------------------
@@ -94,8 +105,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "",
           username: "child_#{SecureRandom.hex(3)}",
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end
@@ -119,8 +130,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "",
           username: "", # invalid (username required)
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end
@@ -136,8 +147,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "",
           username: "child_#{SecureRandom.hex(3)}",
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end
@@ -156,8 +167,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "student-#{SecureRandom.hex(4)}@example.com",
           username: "student_#{SecureRandom.hex(4)}",
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end
@@ -180,8 +191,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "",     # allowed for students, but username is required
           username: "",  # invalid
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end
@@ -198,8 +209,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "student-#{SecureRandom.hex(4)}@example.com",
           username: "student_#{SecureRandom.hex(4)}",
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end
@@ -208,12 +219,13 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "teacher cannot create student into someone else's classroom (404)" do
-    other_teacher = User.create!(
+    other_teacher = confirm_for_devise!(User.create!(
       email: "teacher2-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher2_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
     other_classroom = Classroom.create!(name: "Other", teacher: other_teacher)
 
     sign_in @teacher
@@ -224,8 +236,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
         user: {
           email: "student-#{SecureRandom.hex(4)}@example.com",
           username: "student_#{SecureRandom.hex(4)}",
-          password: "Password123!",
-          password_confirmation: "Password123!"
+          password: TEST_PASSWORD,
+          password_confirmation: TEST_PASSWORD
         }
       }
     end

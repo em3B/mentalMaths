@@ -2,6 +2,7 @@ require "test_helper"
 
 class StripeWebhooksControllerTest < ActionDispatch::IntegrationTest
   WEBHOOK_PATH = "/stripe/webhook"
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
 
   setup do
     @original_secret = ENV["STRIPE_WEBHOOK_SECRET"]
@@ -14,19 +15,26 @@ class StripeWebhooksControllerTest < ActionDispatch::IntegrationTest
       stripe_customer_id: nil
     )
 
-    @user = User.create!(
+    @user = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: nil,
       school_admin: false,
       stripe_customer_id: nil
-    )
+    ))
   end
 
   teardown do
     ENV["STRIPE_WEBHOOK_SECRET"] = @original_secret
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- checkout.session.completed ------------------------------------------
@@ -63,7 +71,6 @@ class StripeWebhooksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "checkout.session.completed is idempotent for stripe_customer_id and does not unset admin" do
-    # pre-set school customer and mark user already admin
     @school.update!(stripe_customer_id: "cus_existing")
     @user.update!(school: @school, school_admin: true)
 
@@ -241,7 +248,6 @@ class StripeWebhooksControllerTest < ActionDispatch::IntegrationTest
   # ---- error handling -------------------------------------------------------
 
   test "returns bad_request when Stripe signature verification fails" do
-    # Force construct_event to raise signature error
     with_stripe_construct_event_raising(Stripe::SignatureVerificationError.new("bad", "sig")) do
       post_webhook({ hello: "world" }.to_json)
     end
@@ -250,8 +256,6 @@ class StripeWebhooksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "returns bad_request when JSON is invalid" do
-    # Invalid JSON triggers JSON::ParserError before Stripe verification in your rescue chain
-    # (depending on Stripe internals, but this is safe: our stub will raise JSON::ParserError)
     with_stripe_construct_event_raising(JSON::ParserError.new("bad json")) do
       post_webhook("not-json")
     end

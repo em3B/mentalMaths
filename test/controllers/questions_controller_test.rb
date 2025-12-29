@@ -3,20 +3,29 @@ require "test_helper"
 class QuestionsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
 
-    @topic_open = Topic.create!(title: "Open Topic", category: "Multiplication", requires_auth: false)
+    @topic_open   = Topic.create!(title: "Open Topic",   category: "Multiplication", requires_auth: false)
     @topic_locked = Topic.create!(title: "Locked Topic", category: "Multiplication", requires_auth: true)
 
-    @q1 = @topic_open.questions.create!(question_text: "2+2", correct_answer: 4)
-    @q2 = @topic_open.questions.create!(question_text: "3+3", correct_answer: 6)
+    @q1       = @topic_open.questions.create!(question_text: "2+2", correct_answer: 4)
+    @q2       = @topic_open.questions.create!(question_text: "3+3", correct_answer: 6)
     @locked_q = @topic_locked.questions.create!(question_text: "5+5", correct_answer: 10)
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- SHOW -----------------------------------------------------------------
@@ -24,8 +33,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   test "show allows guest when topic does not require auth (not redirected)" do
     get topic_question_url(@topic_open, @q1)
 
-    # In your app this endpoint currently returns 406 (no acceptable format/template),
-    # so don't assert :success. The important part is: it should NOT redirect to login.
+    # Not asserting :success because your app may respond 406 depending on format/templates.
     assert_not_equal 302, response.status
     assert_not_equal new_user_session_path, response.location
   end

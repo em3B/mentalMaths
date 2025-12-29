@@ -4,11 +4,11 @@ class AssignedTopicsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    @teacher = create_user!(role: "teacher")
-    @family  = create_user!(role: "family")
+    @teacher = create_user!(role: "teacher", confirmed_at: Time.current)
+    @family  = create_user!(role: "family", confirmed_at: Time.current)
 
     @classroom = create_classroom!(teacher: @teacher)
-    @student   = create_student!(username: unique("student"), classroom: @classroom, parent: @family)
+    @student   = create_student!(username: unique("student"), classroom: @classroom, parent: @family, confirmed_at: Time.current)
 
     @topic = create_topic!
   end
@@ -222,30 +222,39 @@ class AssignedTopicsControllerTest < ActionDispatch::IntegrationTest
     "#{prefix}_#{SecureRandom.hex(4)}"
   end
 
-  def create_user!(role:)
-    User.create!(
+  def create_user!(role:, confirmed_at: nil)
+    attrs = {
       email: "#{unique(role)}@example.com",
-      password: "Password123!",
+      password: "correct-horse-battery-staple-42",
       role: role,
       username: unique(role)
-    )
+    }
+
+    # only apply if confirmable columns exist
+    attrs[:confirmed_at] = confirmed_at if confirmed_at && User.column_names.include?("confirmed_at")
+
+    User.create!(**attrs)
+  end
+
+  def create_student!(username:, classroom:, parent:, confirmed_at: nil)
+    attrs = {
+      email: "#{unique("student")}@example.com",
+      password: "correct-horse-battery-staple-42",
+      role: "student",
+      username: username,
+      classroom: classroom,
+      parent: parent
+    }
+
+    attrs[:confirmed_at] = confirmed_at if confirmed_at && User.column_names.include?("confirmed_at")
+
+    User.create!(**attrs)
   end
 
   def create_classroom!(teacher:)
     Classroom.create!(
       name: unique("class"),
       teacher: teacher
-    )
-  end
-
-  def create_student!(username:, classroom:, parent:)
-    User.create!(
-      email: "#{unique("student")}@example.com",
-      password: "Password123!",
-      role: "student",
-      username: username,
-      classroom: classroom,
-      parent: parent
     )
   end
 

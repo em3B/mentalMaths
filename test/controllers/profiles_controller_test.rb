@@ -3,27 +3,38 @@ require "test_helper"
 class ProfilesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "teacher",
       username: "teacher_#{SecureRandom.hex(4)}"
-    )
+    ))
 
-    @family = User.create!(
+    @family = confirm_for_devise!(User.create!(
       email: "family-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "family",
       username: "family_#{SecureRandom.hex(4)}"
-    )
+    ))
 
-    @student = User.create!(
+    @student = confirm_for_devise!(User.create!(
       email: "student-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "student",
       username: "student_#{SecureRandom.hex(4)}"
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- AUTH / AUTHZ ---------------------------------------------------------
@@ -82,10 +93,13 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   test "teacher can update profile (name + email)" do
     sign_in @teacher
 
+    old_email = @teacher.email
+    new_email = "new-#{SecureRandom.hex(4)}@example.com"
+
     patch profile_path, params: {
       user: {
         name: "New Name",
-        email: "new-#{SecureRandom.hex(4)}@example.com"
+        email: new_email
       }
     }
 
@@ -94,16 +108,25 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
 
     @teacher.reload
     assert_equal "New Name", @teacher.name
-    assert_match(/\Anew-.*@example\.com\z/, @teacher.email)
+
+    if @teacher.class.column_names.include?("unconfirmed_email")
+      # reconfirmable behavior: email doesn't change immediately
+      assert_equal old_email, @teacher.email
+      assert_equal new_email, @teacher.unconfirmed_email
+    else
+      # non-confirmable behavior: email changes immediately
+      assert_equal new_email, @teacher.email
+    end
   end
 
   test "update failure re-renders edit when email is already taken" do
-    taken = User.create!(
+    taken = confirm_for_devise!(User.create!(
       email: "taken-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "teacher",
       username: "taken_#{SecureRandom.hex(4)}"
-    )
+    ))
 
     sign_in @teacher
 

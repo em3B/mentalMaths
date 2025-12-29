@@ -4,27 +4,38 @@ require "ostruct"
 class PaymentsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "teacher",
       username: "teacher_#{SecureRandom.hex(4)}"
-    )
+    ))
 
-    @family = User.create!(
+    @family = confirm_for_devise!(User.create!(
       email: "family-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "family",
       username: "family_#{SecureRandom.hex(4)}"
-    )
+    ))
 
-    @student = User.create!(
+    @student = confirm_for_devise!(User.create!(
       email: "student-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "student",
       username: "student_#{SecureRandom.hex(4)}"
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   test "redirects to sign in when logged out" do

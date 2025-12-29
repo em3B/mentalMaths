@@ -3,22 +3,26 @@ require "test_helper"
 class SchoolsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher",
       school_admin: false
-    )
+    ))
 
-    @other_teacher = User.create!(
+    @other_teacher = confirm_for_devise!(User.create!(
       email: "teacher2-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher2_#{SecureRandom.hex(4)}",
       role: "teacher",
       school_admin: false
-    )
+    ))
 
     @school = School.create!(
       name: "Test School",
@@ -30,23 +34,31 @@ class SchoolsControllerTest < ActionDispatch::IntegrationTest
       seat_limit: 10
     )
 
-    @school_admin = User.create!(
+    @school_admin = confirm_for_devise!(User.create!(
       email: "admin-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "admin_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: @school,
       school_admin: true
-    )
+    ))
 
-    @school_member_not_admin = User.create!(
+    @school_member_not_admin = confirm_for_devise!(User.create!(
       email: "member-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "member_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: @school,
       school_admin: false
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- NEW ------------------------------------------------------------------
@@ -134,14 +146,15 @@ class SchoolsControllerTest < ActionDispatch::IntegrationTest
 
   test "billing denies admin from another school" do
     other_school = School.create!(name: "Other", address: "Z", contact_email: "o@o.example")
-    other_admin = User.create!(
+    other_admin = confirm_for_devise!(User.create!(
       email: "other-admin-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "other_admin_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: other_school,
       school_admin: true
-    )
+    ))
 
     sign_in other_admin
     get billing_school_path(@school)

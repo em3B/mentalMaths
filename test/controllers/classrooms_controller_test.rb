@@ -4,19 +4,19 @@ class ClassroomsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: "correct-horse-battery-staple-42",
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
 
-    @family = User.create!(
+    @family = confirm_for_devise!(User.create!(
       email: "family-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: "correct-horse-battery-staple-42",
       username: "family_#{SecureRandom.hex(4)}",
       role: "family"
-    )
+    ))
 
     @classroom = Classroom.create!(
       name: "Class A",
@@ -63,7 +63,7 @@ class ClassroomsControllerTest < ActionDispatch::IntegrationTest
   test "teacher cannot view someone else's classroom (404)" do
     other_teacher = User.create!(
       email: "teacher2-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: "correct-horse-battery-staple-42",
       username: "teacher2_#{SecureRandom.hex(4)}",
       role: "teacher"
     )
@@ -108,7 +108,7 @@ class ClassroomsControllerTest < ActionDispatch::IntegrationTest
   test "teacher cannot destroy someone else's classroom (404)" do
     other_teacher = User.create!(
       email: "teacher3-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: "correct-horse-battery-staple-42",
       username: "teacher3_#{SecureRandom.hex(4)}",
       role: "teacher"
     )
@@ -121,5 +121,19 @@ class ClassroomsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :not_found
+  end
+
+  def confirm_for_devise!(user)
+    # confirmable
+    if user.class.column_names.include?("confirmed_at")
+      user.update!(confirmed_at: Time.current)
+    end
+
+    # lockable
+    if user.class.column_names.include?("locked_at")
+      user.update!(locked_at: nil)
+    end
+
+    user
   end
 end

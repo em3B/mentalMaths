@@ -3,58 +3,70 @@ require "test_helper"
 class TopicsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
     @topic_mul = Topic.create!(title: "Times Tables", category: "Multiplication", requires_auth: false)
     @topic_add = Topic.create!(title: "Add Up", category: "Addition and Subtraction", requires_auth: false)
 
-    @student = User.create!(
+    @student = confirm_for_devise!(User.create!(
       email: "student-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "student_#{SecureRandom.hex(4)}",
       role: "student"
-    )
+    ))
 
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
 
-    @family = User.create!(
+    @family = confirm_for_devise!(User.create!(
       email: "family-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "family_#{SecureRandom.hex(4)}",
       role: "family"
-    )
+    ))
 
     @classroom = Classroom.create!(name: "Class #{SecureRandom.hex(3)}", teacher: @teacher)
-    @child = User.create!(
+
+    @child = confirm_for_devise!(User.create!(
       email: "child-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "child_#{SecureRandom.hex(4)}",
       role: "student",
       parent: @family
-    )
+    ))
 
-    # Student assignment seed (used by topics#index for student users)
-    AssignedTopic.create!(user: @student, topic: @topic_mul, assigned_by: @teacher, due_date: 1.week.from_now.to_date)
+    AssignedTopic.create!(
+      user: @student,
+      topic: @topic_mul,
+      assigned_by: @teacher,
+      due_date: 1.week.from_now.to_date
+    )
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- INDEX ----------------------------------------------------------------
 
   test "index without category returns ok (or 406) and does not redirect guests" do
     get topics_path
-
-    # Your app sometimes returns 406 in tests for HTML templates.
-    # The important assertion: it isn't redirecting away (auth is not required).
     assert_not_equal 302, response.status
   end
 
   test "index with category filter returns ok (or 406) and does not redirect" do
-    # route helper is topics_category_path(category: "multiplication") from routes
     get category_topics_path(category: "multiplication")
-
     assert_not_equal 302, response.status
   end
 
@@ -62,14 +74,12 @@ class TopicsControllerTest < ActionDispatch::IntegrationTest
     Topic.create!(title: "Speed Round", category: "Addition and Subtraction", requires_auth: false)
 
     get category_topics_path(category: "addition and subtraction")
-
     assert_not_equal 302, response.status
   end
 
   test "index as student sets assignments (smoke test: still renders/not redirected)" do
     sign_in @student
     get topics_path
-
     assert_not_equal 302, response.status
   end
 
@@ -83,14 +93,12 @@ class TopicsControllerTest < ActionDispatch::IntegrationTest
   test "show as teacher does not redirect and accepts optional classroom_id param" do
     sign_in @teacher
     get topic_path(@topic_mul), params: { classroom_id: @classroom.id }
-
     assert_not_equal 302, response.status
   end
 
   test "show as family does not redirect and accepts optional student_id param" do
     sign_in @family
     get topic_path(@topic_mul), params: { student_id: @child.id }
-
     assert_not_equal 302, response.status
   end
 
@@ -118,13 +126,10 @@ class TopicsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ---- SCORE ----------------------------------------------------------------
-  # NOTE: score action uses current_user and pagination; your controller doesn't enforce auth,
-  # so calling it as a guest may error. We'll test as a signed-in user.
 
   test "score as signed-in user does not redirect" do
     sign_in @student
     get score_topic_path(@topic_mul)
-
     assert_not_equal 302, response.status
   end
 

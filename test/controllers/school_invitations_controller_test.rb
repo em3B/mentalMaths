@@ -3,6 +3,8 @@ require "test_helper"
 class SchoolInvitationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers if defined?(Devise::Test::IntegrationHelpers)
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
     @school = School.create!(
       name: "Test School",
@@ -20,6 +22,12 @@ class SchoolInvitationsControllerTest < ActionDispatch::IntegrationTest
       accepted_at: nil,
       expires_at: 1.week.from_now
     )
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- SHOW -----------------------------------------------------------------
@@ -56,7 +64,6 @@ class SchoolInvitationsControllerTest < ActionDispatch::IntegrationTest
 
     get school_invitation_path(@invitation.token)
 
-    # Assumes show renders a page. If you don't have a template, this will fail with MissingTemplate.
     assert_response :success
   end
 
@@ -86,7 +93,6 @@ class SchoolInvitationsControllerTest < ActionDispatch::IntegrationTest
     teacher = create_teacher_user!
     sign_in teacher
 
-    # Fill the seats (assumes seats_available? depends on seat_limit vs members count)
     @school.update!(seat_limit: 0)
 
     post accept_school_invitation_path(@invitation.token)
@@ -123,25 +129,23 @@ class SchoolInvitationsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  # These helpers avoid factories. If you already use factories/fixtures, replace with those.
-  #
-  # If your User model validates extra fields (first_name/last_name/username),
-  # add them here to satisfy validations.
   def create_teacher_user!
-    User.create!(
+    confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "teacher",
       username: "teacher_#{SecureRandom.hex(4)}"
-    )
+    ))
   end
 
   def create_family_user!
-    User.create!(
+    confirm_for_devise!(User.create!(
       email: "family-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "family",
       username: "family_#{SecureRandom.hex(4)}"
-    )
+    ))
   end
 end
