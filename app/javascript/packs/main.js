@@ -19,4 +19,14 @@ window.PRELOADED_GAMES = {
   41: { withTimer: runTopic41WithTimer, withoutTimer: runTopic41WithoutTimer}
 };
 
+document.addEventListener("click", (e) => {
+  const clickedTryAgain = e.target.closest("#close-modal-btn");
+  const clickedX = e.target.closest("#close-modal");
+
+  if (!clickedTryAgain && !clickedX) return;
+
+  const modal = document.getElementById("login-error-modal");
+  modal?.classList.add("hidden");
+});
+
 Rails.start();
