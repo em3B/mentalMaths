@@ -2,7 +2,8 @@ class User < ApplicationRecord
   belongs_to :school, optional: true
   # Devise modules
   devise :database_authenticatable, :registerable,
-       :recoverable, :rememberable,
+       :recoverable, :rememberable, :validatable,
+       :lockable, :timeoutable, :confirmable, :pwned_password,
        authentication_keys: [ :login, :role ]
 
   after_initialize :set_default_capacity_limits
@@ -36,6 +37,14 @@ class User < ApplicationRecord
       (billing_status.in?(%w[active trialing]) && (subscription_ends_at.nil? || subscription_ends_at > Time.current)) ||
       (school.present? && school.active_subscription?)
     )
+  end
+
+  def email_required?
+    !student_or_child?
+  end
+
+  def will_save_change_to_email?
+    !student_or_child? && super
   end
 
   # =================
@@ -131,6 +140,10 @@ class User < ApplicationRecord
       privacy_accepted_at.present? &&
       terms_version == TERMS_VERSION &&
       privacy_version == PRIVACY_VERSION
+  end
+
+  def pwned_password?
+    teacher? || family? || admin?
   end
 
   private
