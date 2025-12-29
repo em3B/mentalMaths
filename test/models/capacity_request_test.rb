@@ -1,13 +1,22 @@
 require "test_helper"
 
 class CapacityRequestTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
-    @user = User.create!(
-      email: "ex@example.com",
-      password: "password",
-      username: "teacher_user",
+    @user = confirm_for_devise!(User.create!(
+      email: "ex-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_user_#{SecureRandom.hex(3)}",
       role: "teacher"
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   test "belongs_to user" do

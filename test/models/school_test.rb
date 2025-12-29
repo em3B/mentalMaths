@@ -1,12 +1,20 @@
 require "test_helper"
 
 class SchoolTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
     @school = School.new(
       name: "Test School",
       contact_email: "admin@testschool.com",
       seat_limit: 2
     )
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # -------------------------
@@ -127,9 +135,32 @@ class SchoolTest < ActiveSupport::TestCase
   test "seats_used counts only teacher users" do
     school = School.create!(name: "Seat School", contact_email: "seats@school.com", seat_limit: 5)
 
-    User.create!(email: "t1@school.com", password: "password", username: "t1", role: "teacher", school: school)
-    User.create!(email: "t2@school.com", password: "password", username: "t2", role: "teacher", school: school)
-    User.create!(email: "s1@school.com", password: "password", username: "s1", role: "student", school: school)
+    confirm_for_devise!(User.create!(
+      email: "t1-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t1_#{SecureRandom.hex(3)}",
+      role: "teacher",
+      school: school
+    ))
+
+    confirm_for_devise!(User.create!(
+      email: "t2-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t2_#{SecureRandom.hex(3)}",
+      role: "teacher",
+      school: school
+    ))
+
+    confirm_for_devise!(User.create!(
+      email: "s1-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "s1_#{SecureRandom.hex(3)}",
+      role: "student",
+      school: school
+    ))
 
     assert_equal 2, school.seats_used
   end
@@ -137,7 +168,14 @@ class SchoolTest < ActiveSupport::TestCase
   test "seats_available? is true when seat_limit is greater than teacher count" do
     school = School.create!(name: "Seat School", contact_email: "seats2@school.com", seat_limit: 2)
 
-    User.create!(email: "t1b@school.com", password: "password", username: "t1b", role: "teacher", school: school)
+    confirm_for_devise!(User.create!(
+      email: "t1b-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t1b_#{SecureRandom.hex(3)}",
+      role: "teacher",
+      school: school
+    ))
 
     assert school.seats_available?
   end
@@ -145,7 +183,14 @@ class SchoolTest < ActiveSupport::TestCase
   test "seats_available? is false when seat_limit equals teacher count" do
     school = School.create!(name: "Seat School", contact_email: "seats3@school.com", seat_limit: 1)
 
-    User.create!(email: "t1c@school.com", password: "password", username: "t1c", role: "teacher", school: school)
+    confirm_for_devise!(User.create!(
+      email: "t1c-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t1c_#{SecureRandom.hex(3)}",
+      role: "teacher",
+      school: school
+    ))
 
     assert_not school.seats_available?
   end
@@ -153,8 +198,23 @@ class SchoolTest < ActiveSupport::TestCase
   test "seats_available? is false when seat_limit is less than teacher count" do
     school = School.create!(name: "Seat School", contact_email: "seats4@school.com", seat_limit: 1)
 
-    User.create!(email: "t1d@school.com", password: "password", username: "t1d", role: "teacher", school: school)
-    User.create!(email: "t2d@school.com", password: "password", username: "t2d", role: "teacher", school: school)
+    confirm_for_devise!(User.create!(
+      email: "t1d-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t1d_#{SecureRandom.hex(3)}",
+      role: "teacher",
+      school: school
+    ))
+
+    confirm_for_devise!(User.create!(
+      email: "t2d-#{SecureRandom.hex(3)}@school.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t2d_#{SecureRandom.hex(3)}",
+      role: "teacher",
+      school: school
+    ))
 
     assert_not school.seats_available?
   end
