@@ -1,15 +1,19 @@
 <div class="devise-form">
-<h2>Log in</h2>
+  <h2>Log in</h2>
 
-<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: "form-table"}) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :role,
-            as: :select,
-            collection: User::ROLES.map { |r| [r.titleize, r] },
-            prompt: "Select your role",
-            required: true %>
-    
-    <%= f.input :login,
+  <%= simple_form_for(resource,
+                      as: resource_name,
+                      url: session_path(resource_name),
+                      html: { class: "form-table" }) do |f| %>
+
+    <div class="form-inputs">
+      <%= f.input :role,
+                  as: :select,
+                  collection: User::ROLES.map { |r| [r.titleize, r] },
+                  prompt: "Select your role",
+                  required: true %>
+
+      <%= f.input :login,
                   label: "Username or Email",
                   required: true,
                   input_html: { autofocus: true, autocomplete: "login" } %>
@@ -17,43 +21,38 @@
       <%= f.input :password,
                   required: true,
                   input_html: { autocomplete: "current-password" } %>
-                  
-    <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
-  </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Log in", class: "devise-btn" %>
-  </div>
-<% end %>
+      <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+    </div>
 
-<%= render "devise/shared/links" %>
+    <div class="form-actions">
+      <%= f.button :submit, "Log in", class: "devise-btn" %>
+    </div>
+  <% end %>
 
-<% if flash[:alert].present? %>
-  <div id="login-error-modal" class="modal">
-    <div class="modal-content">
-      <span id="close-modal" class="close">&times;</span>
-      <h3>Login Error</h3>
-      <p><%= flash[:alert] %></p>
-      <div class="modal-actions">
-        <button id="close-modal-btn" class="devise-btn">Try Again</button>
-        <%= link_to "Forgot your password?", new_password_path(resource_name), class: "devise-btn secondary" %>
+  <%= render "devise/shared/links" %>
+
+  <%# Modal only renders when there is an alert %>
+  <% if flash[:alert].present? %>
+    <div id="login-error-modal" class="modal">
+      <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+
+        <h3>Login Error</h3>
+        <p><%= flash[:alert] %></p>
+
+        <div class="modal-actions">
+          <%# IMPORTANT: type="button" prevents accidental form submission %>
+          <%= button_tag "Try Again",
+                         type: "button",
+                         id: "close-modal-btn",
+                         class: "devise-btn" %>
+
+          <%= link_to "Forgot your password?",
+                      new_password_path(resource_name),
+                      class: "devise-btn secondary" %>
+        </div>
       </div>
     </div>
-  </div>
-
-  <script>
-    document.addEventListener("turbo:load", () => {
-      const modal = document.getElementById("login-error-modal");
-      modal?.classList.remove("hidden");
-
-      document.getElementById("close-modal-btn").addEventListener("click", () => {
-        modal.classList.add("hidden");
-      });
-      document.getElementById("close-modal").addEventListener("click", () => {
-        modal.classList.add("hidden");
-      });
-    });
-  </script>
-<% end %>
-
+  <% end %>
 </div>
