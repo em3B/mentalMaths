@@ -33,13 +33,14 @@ class StudentsController < ApplicationController
   end
 
   def destroy
-    @classroom = Classroom.find(params[:classroom_id])
-    @student = @classroom.students.find(params[:id])
-    @student.update(classroom: nil)  # Remove student from classroom but don’t delete user
+    classroom = Classroom.find(params[:classroom_id])
+    student   = classroom.students.find(params[:id])
+
+    student.update!(classroom_id: nil)
 
     respond_to do |format|
       format.turbo_stream if turbo_frame_request?
-      format.html { redirect_to classroom_path(@classroom), notice: "Student removed." }
+      format.html { redirect_to classroom_path(classroom), notice: "Student removed." }
     end
   end
 
