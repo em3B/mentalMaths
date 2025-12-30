@@ -1,7 +1,12 @@
 require "test_helper"
 
 class ApplicationControllerTest < ActiveSupport::TestCase
-  UserStub       = Struct.new(:role)
+  UserStub       = Struct.new(:role, :school_admin, :school) do
+    def school_admin?
+      !!school_admin
+    end
+  end
+
   InvitationStub = Struct.new(:accepted?, :expired?)
 
   class UnitController < ApplicationController
@@ -22,24 +27,49 @@ class ApplicationControllerTest < ActiveSupport::TestCase
 
   # --- after_sign_in_path_for -------------------------------------------------
 
-  test "after_sign_in_path_for routes teacher to teacher dashboard" do
-    assert_equal "/dashboard/teacher", @controller.after_sign_in_path_for(UserStub.new("teacher"))
+  test "after_sign_in_path_for routes school admin teacher to school members when school present" do
+    school = Struct.new(:id).new(123)
+    def school.to_param
+      id.to_s
+    end
+
+    user = UserStub.new("teacher", true, school)
+
+    assert_equal "/schools/123/members", @controller.after_sign_in_path_for(user)
+  end
+
+  test "after_sign_in_path_for routes school admin teacher to teacher dashboard when school missing" do
+    user = UserStub.new("teacher", true, nil)
+
+    assert_equal "/dashboard/teacher", @controller.after_sign_in_path_for(user)
+  end
+
+  test "after_sign_in_path_for routes regular teacher to teacher dashboard" do
+    user = UserStub.new("teacher", false, nil)
+
+    assert_equal "/dashboard/teacher", @controller.after_sign_in_path_for(user)
   end
 
   test "after_sign_in_path_for routes family to family dashboard" do
-    assert_equal "/dashboard/family", @controller.after_sign_in_path_for(UserStub.new("family"))
+    assert_equal "/dashboard/family", @controller.after_sign_in_path_for(UserStub.new("family", false, nil))
   end
 
   test "after_sign_in_path_for routes student to topics path" do
-    assert_equal "/topics", @controller.after_sign_in_path_for(UserStub.new("student"))
+    assert_equal "/topics", @controller.after_sign_in_path_for(UserStub.new("student", false, nil))
   end
 
   test "after_sign_in_path_for falls back to root for unknown role" do
-    assert_equal "/", @controller.after_sign_in_path_for(UserStub.new("admin"))
+    assert_equal "/", @controller.after_sign_in_path_for(UserStub.new("admin", false, nil))
   end
 
   test "after_sign_in_path_for falls back to root when role is nil" do
-    assert_equal "/", @controller.after_sign_in_path_for(UserStub.new(nil))
+    assert_equal "/", @controller.after_sign_in_path_for(UserStub.new(nil, false, nil))
+  end
+
+  test "after_sign_in_path_for routes to new_school_path when session school_onboarding set" do
+    @controller.session[:school_onboarding] = true
+
+    assert_equal "/schools/new", @controller.after_sign_in_path_for(UserStub.new("teacher", false, nil))
   end
 
   # --- consume_school_invite_token -------------------------------------------

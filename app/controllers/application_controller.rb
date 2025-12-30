@@ -16,7 +16,12 @@ class ApplicationController < ActionController::Base
     Rails.logger.debug "ROLE IS: #{resource.role.inspect}"
     case resource.role
     when "teacher"
-      teacher_dashboard_path
+      # School admins should land on Members; regular teachers land on Classrooms/Dashboard
+      if resource.school_admin? && resource.school.present?
+        members_school_path(resource.school)
+      else
+        teacher_dashboard_path
+      end
     when "family"
       family_dashboard_path
     when "student"
@@ -41,6 +46,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     keys = [ :login, :role, :username ]
+
     devise_parameter_sanitizer.permit(:sign_in, keys: keys)
     devise_parameter_sanitizer.permit(
       :sign_up,
