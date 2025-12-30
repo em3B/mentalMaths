@@ -35,6 +35,10 @@
           <li class="active fancy-link m-3">
             <%= link_to "Profile", profile_path %>
           </li>
+        <% elsif current_user.role.downcase == "admin" %>
+          <li class="active fancy-link m-3">
+            <%= link_to "Admin Dashboard", admin_dashboard_path %>
+          </li>
         <% end %>
         <li class="active fancy-link m-3">
           <%= link_to "Topics", topics_path%>
