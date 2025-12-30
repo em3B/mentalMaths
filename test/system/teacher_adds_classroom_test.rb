@@ -1,13 +1,20 @@
 require "application_system_test_case"
 
 class TeacherAddsClassroomTest < ApplicationSystemTestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
     @teacher = User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher"
     )
+
+    # If you enabled Devise confirmable/lockable, make the test user sign-in ready.
+    @teacher.update!(confirmed_at: Time.current) if @teacher.class.column_names.include?("confirmed_at")
+    @teacher.update!(locked_at: nil)            if @teacher.class.column_names.include?("locked_at")
   end
 
   test "teacher can add a classroom from the teacher dashboard" do
@@ -16,7 +23,7 @@ class TeacherAddsClassroomTest < ApplicationSystemTestCase
     # ---- Login ---------------------------------------------------------------
     select "Teacher", from: "Role"
     fill_in "Username or Email", with: @teacher.email
-    find('input[name="user[password]"]').set("Password123!")
+    find('input[name="user[password]"]').set(TEST_PASSWORD)
     click_button "Log in"
 
     assert_current_path teacher_dashboard_path
@@ -30,10 +37,7 @@ class TeacherAddsClassroomTest < ApplicationSystemTestCase
     assert_text "Classroom created successfully."
 
     # ---- Verify via classrooms index ----------------------------------------
-    # Your dashboard doesn't list classroom names, but it has a "My Classrooms" link.
     click_link "My Classrooms"
-
-    # This page should list classrooms the teacher owns.
     assert_text classroom_name
   end
 end
