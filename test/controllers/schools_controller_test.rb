@@ -76,10 +76,10 @@ class SchoolsControllerTest < ActionDispatch::IntegrationTest
 
   # ---- START (no auth required) --------------------------------------------
 
-  test "start sets session flag and redirects to sign in when logged out" do
+  test "start sets session flag and redirects to sign up when logged out" do
     get school_subscriptions_path
     assert_equal true, session[:school_onboarding]
-    assert_redirected_to new_user_session_path
+    assert_redirected_to new_user_registration_path
   end
 
   test "start sets session flag and redirects to new school when logged in" do

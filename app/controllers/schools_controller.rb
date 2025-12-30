@@ -4,12 +4,13 @@ class SchoolsController < ApplicationController
   before_action :require_school_admin!, only: [ :billing, :members, :invite_teacher ]
 
   def new
+    session.delete(:school_onboarding)
     @school = School.new
   end
 
   def start
     session[:school_onboarding] = true
-    redirect_to(user_signed_in? ? new_school_path : new_user_session_path)
+    redirect_to(user_signed_in? ? new_school_path : new_user_registration_path)
   end
 
   def create
