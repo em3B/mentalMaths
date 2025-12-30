@@ -13,4 +13,31 @@
     <p><strong>Invite link (copy & send to teacher):</strong></p>
     <code><%= school_invitation_url(@invitation.token) %></code>
   <% end %>
+
+  <hr>
+
+  <h2>Existing Members</h2>
+
+  <% if @members.present? %>
+    <div class="main-btn-group">
+      <% @members.each do |member| %>
+        <div class="main-btn" style="position: relative;">
+          <h4><%= member.email %></h4>
+          <p class="mb-0"><%= member.role %></p>
+
+          <%# Optional: prevent removing yourself %>
+          <% if member != current_user %>
+            <%= button_to remove_member_school_path(@school, user_id: member.id),
+                          method: :delete,
+                          data: { confirm: "Remove #{member.email} from #{@school.name}?" },
+                          class: "remove-btn" do %>
+              X
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No members yet.</p>
+  <% end %>
 </div>

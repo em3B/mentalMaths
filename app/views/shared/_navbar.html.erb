@@ -28,6 +28,14 @@
           <li class="active fancy-link m-3">
             <%= link_to "Profile", profile_path %>
           </li>
+        <% elsif current_user.role.downcase == "teacher" && current_user.school_admin? %>
+          <li class="active fancy-link m-3">
+            <%= link_to "Add/Remove Teachers", members_school_path(current_user.school) %>
+          </li>
+          <li class="active fancy-link m-3">
+            <%= link_to "Profile", profile_path %>
+          </li>
+
         <% elsif current_user.role.downcase == "teacher" %>
           <li class="active fancy-link m-3">
             <%= link_to "My Classrooms", classrooms_path %>
