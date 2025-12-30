@@ -1,16 +1,25 @@
 require "test_helper"
 
 class ResponseTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
     @topic = Topic.create!(title: "Fake", category: "Addition and Subtraction")
     @question = Question.create!(topic: @topic, question_text: "2 + 2?", correct_answer: 4)
 
-    @user = User.create!(
-      email: "student@example.com",
-      password: "password",
-      username: "student_1",
+    @user = confirm_for_devise!(User.create!(
+      email: "student-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "student_#{SecureRandom.hex(3)}",
       role: "student"
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # -------------------------

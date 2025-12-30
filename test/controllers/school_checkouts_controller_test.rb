@@ -4,6 +4,8 @@ require "ostruct"
 class SchoolCheckoutsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
     @school = School.create!(
       name: "Test School",
@@ -11,32 +13,35 @@ class SchoolCheckoutsControllerTest < ActionDispatch::IntegrationTest
       stripe_customer_id: nil
     )
 
-    @teacher_bootstrap = User.create!(
+    @teacher_bootstrap = confirm_for_devise!(User.create!(
       email: "teacher-bootstrap-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_bootstrap_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: @school,
       school_admin: false
-    )
+    ))
 
-    @school_admin = User.create!(
+    @school_admin = confirm_for_devise!(User.create!(
       email: "school-admin-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "school_admin_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: @school,
       school_admin: true
-    )
+    ))
 
-    @teacher_not_admin_same_school = User.create!(
+    @teacher_not_admin_same_school = confirm_for_devise!(User.create!(
       email: "teacher-nonadmin-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_nonadmin_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: @school,
       school_admin: false
-    )
+    ))
 
     @other_school = School.create!(
       name: "Other School",
@@ -44,14 +49,21 @@ class SchoolCheckoutsControllerTest < ActionDispatch::IntegrationTest
       stripe_customer_id: nil
     )
 
-    @other_school_admin = User.create!(
+    @other_school_admin = confirm_for_devise!(User.create!(
       email: "other-admin-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "other_admin_#{SecureRandom.hex(4)}",
       role: "teacher",
       school: @other_school,
       school_admin: true
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- AUTH -----------------------------------------------------------------
@@ -150,11 +162,9 @@ class SchoolCheckoutsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "subscription", captured[:mode]
     assert_equal "cus_123", captured[:customer]
 
-    # metadata is exactly what you set in controller (symbol keys)
     assert_equal @school.id, captured.dig(:metadata, :school_id)
     assert_equal @school_admin.id, captured.dig(:metadata, :initiated_by_user_id)
 
-    # seats floor to 1
     assert_equal 1, captured[:line_items].first[:quantity]
   end
 

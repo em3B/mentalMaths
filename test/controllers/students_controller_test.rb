@@ -3,31 +3,42 @@ require "test_helper"
 class StudentsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
-    @teacher = User.create!(
+    @teacher = confirm_for_devise!(User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
 
-    @other_teacher = User.create!(
+    @other_teacher = confirm_for_devise!(User.create!(
       email: "teacher2-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher2_#{SecureRandom.hex(4)}",
       role: "teacher"
-    )
+    ))
 
-    @classroom = Classroom.create!(name: "Class #{SecureRandom.hex(3)}", teacher: @teacher)
+    @classroom       = Classroom.create!(name: "Class #{SecureRandom.hex(3)}", teacher: @teacher)
     @other_classroom = Classroom.create!(name: "Other #{SecureRandom.hex(3)}", teacher: @other_teacher)
 
-    @student = User.create!(
+    @student = confirm_for_devise!(User.create!(
       email: "student-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "student_#{SecureRandom.hex(4)}",
       role: "student",
       classroom: @classroom
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # ---- AUTH -----------------------------------------------------------------
@@ -91,14 +102,18 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ---- CREATE ---------------------------------------------------------------
-
   test "create creates a student, assigns role student, assigns classroom, and renders show_password (html)" do
     sign_in @teacher
 
     assert_difference("User.count", +1) do
       post classroom_students_path(@classroom),
-           params: { user: { username: "new_student_#{SecureRandom.hex(3)}", email: "ns-#{SecureRandom.hex(3)}@example.com" } },
-           headers: { "ACCEPT" => "text/html" }
+          params: {
+            user: {
+              username: "new_student_#{SecureRandom.hex(3)}",
+              email: "ns-#{SecureRandom.hex(3)}@example.com"
+            }
+          },
+          headers: { "ACCEPT" => "text/html" }
     end
 
     assert_response :success
@@ -106,13 +121,12 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
     created = User.order(:id).last
     assert_equal "student", created.role
     assert_equal @classroom.id, created.classroom_id
-    assert created.encrypted_password.present?, "expected generated password to be set"
+    assert created.encrypted_password.present?
   end
 
   test "create renders classrooms/show with 422 when invalid" do
     sign_in @teacher
 
-    # Most apps validate username presence; ensure invalid by omitting username
     assert_no_difference("User.count") do
       post classroom_students_path(@classroom),
            params: { user: { username: "", email: "bad@example.com" } },
@@ -137,13 +151,14 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy returns 404 when student is not in the given classroom" do
-    other_student = User.create!(
+    other_student = confirm_for_devise!(User.create!(
       email: "student2-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "student2_#{SecureRandom.hex(4)}",
       role: "student",
       classroom: @other_classroom
-    )
+    ))
 
     sign_in @teacher
 

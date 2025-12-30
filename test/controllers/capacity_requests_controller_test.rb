@@ -7,10 +7,20 @@ class CapacityRequestsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = User.create!(
       email: "test@example.com",
-      password: "Password123!",
+      password: "correct-horse-battery-staple-42",
       username: "testuser",
-      role: "teacher" # remove if your User doesn't have role
+      role: "teacher"
     )
+
+    # confirmable: allow sign-in in tests
+    if @user.respond_to?(:confirmed_at=) && @user.class.column_names.include?("confirmed_at")
+      @user.update!(confirmed_at: Time.current)
+    end
+
+    # lockable: make sure it's not locked
+    if @user.respond_to?(:locked_at=) && @user.class.column_names.include?("locked_at")
+      @user.update!(locked_at: nil)
+    end
   end
 
   # ---- AUTH -----------------------------------------------------------------

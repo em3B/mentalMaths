@@ -13,7 +13,9 @@ class StudentsController < ApplicationController
   def create
     @student = User.new(student_params)
     @student.role = "student"
-    generated_password = Devise.friendly_token.first(8)
+    generated_password = "#{Devise.friendly_token.first(16)}-#{SecureRandom.hex(4)}"
+    @student.password = @student.password_confirmation = generated_password
+
     @student.password = @student.password_confirmation = generated_password
 
     if @student.save

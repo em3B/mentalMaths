@@ -1,14 +1,23 @@
 require "test_helper"
 
 class ClassroomTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
-    @teacher = User.create!(
-      email: "teacher@example.com",
-      password: "password",
-      username: "teacher_1",
+    @teacher = confirm_for_devise!(User.create!(
+      email: "teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 10, "student" => 40 } # override per test when needed
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # -------------------------
@@ -44,14 +53,14 @@ class ClassroomTest < ActiveSupport::TestCase
   # -------------------------
 
   test "prevents creating a classroom when teacher is at classroom limit" do
-    # limit = 1, already has 1 classroom, so second should fail
-    teacher = User.create!(
-      email: "limited_teacher@example.com",
-      password: "password",
-      username: "teacher_limited",
+    teacher = confirm_for_devise!(User.create!(
+      email: "limited_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_limited_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 1, "student" => 40 }
-    )
+    ))
 
     Classroom.create!(name: "Already there", teacher: teacher)
 
@@ -65,13 +74,14 @@ class ClassroomTest < ActiveSupport::TestCase
   end
 
   test "allows creating a classroom when teacher is under classroom limit" do
-    teacher = User.create!(
-      email: "ok_teacher@example.com",
-      password: "password",
-      username: "teacher_ok",
+    teacher = confirm_for_devise!(User.create!(
+      email: "ok_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_ok_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 2, "student" => 40 }
-    )
+    ))
 
     Classroom.create!(name: "First", teacher: teacher)
 
@@ -80,13 +90,14 @@ class ClassroomTest < ActiveSupport::TestCase
   end
 
   test "uses default classroom limit of 10 when teacher capacity_limits is nil" do
-    teacher = User.create!(
-      email: "default_teacher@example.com",
-      password: "password",
-      username: "teacher_default",
+    teacher = confirm_for_devise!(User.create!(
+      email: "default_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_default_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: nil
-    )
+    ))
 
     10.times { |i| Classroom.create!(name: "C#{i}", teacher: teacher) }
 
@@ -100,17 +111,17 @@ class ClassroomTest < ActiveSupport::TestCase
   end
 
   test "does not run teacher classroom limit validation on update" do
-    teacher = User.create!(
-      email: "update_teacher@example.com",
-      password: "password",
-      username: "teacher_update",
+    teacher = confirm_for_devise!(User.create!(
+      email: "update_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_update_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 1, "student" => 40 }
-    )
+    ))
 
     classroom = Classroom.create!(name: "Only", teacher: teacher)
 
-    # Teacher is at limit, but updating an existing classroom should not be blocked by the create-only validation.
     classroom.name = "Renamed"
     assert classroom.valid?, "Expected update to be allowed (create-only validation should not run)"
   end
@@ -120,25 +131,26 @@ class ClassroomTest < ActiveSupport::TestCase
   # -------------------------
 
   test "prevents update when classroom student count exceeds teacher student limit" do
-    teacher = User.create!(
-      email: "student_limit_teacher@example.com",
-      password: "password",
-      username: "teacher_student_limit",
+    teacher = confirm_for_devise!(User.create!(
+      email: "student_limit_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_student_limit_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 10, "student" => 2 }
-    )
+    ))
 
     classroom = Classroom.create!(name: "Tiny class", teacher: teacher)
 
-    # Add 3 students (limit is 2)
     3.times do |i|
-      User.create!(
-        email: "student#{i}@example.com",
-        password: "password",
-        username: "student_#{i}",
+      confirm_for_devise!(User.create!(
+        email: "student#{i}-#{SecureRandom.hex(3)}@example.com",
+        password: TEST_PASSWORD,
+        password_confirmation: TEST_PASSWORD,
+        username: "student_#{i}_#{SecureRandom.hex(3)}",
         role: "student",
         classroom_id: classroom.id
-      )
+      ))
     end
 
     classroom.reload
@@ -152,24 +164,26 @@ class ClassroomTest < ActiveSupport::TestCase
   end
 
   test "allows update when classroom student count is within teacher student limit" do
-    teacher = User.create!(
-      email: "student_ok_teacher@example.com",
-      password: "password",
-      username: "teacher_student_ok",
+    teacher = confirm_for_devise!(User.create!(
+      email: "student_ok_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_student_ok_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 10, "student" => 2 }
-    )
+    ))
 
     classroom = Classroom.create!(name: "Small class", teacher: teacher)
 
     2.times do |i|
-      User.create!(
-        email: "okstudent#{i}@example.com",
-        password: "password",
-        username: "ok_student_#{i}",
+      confirm_for_devise!(User.create!(
+        email: "okstudent#{i}-#{SecureRandom.hex(3)}@example.com",
+        password: TEST_PASSWORD,
+        password_confirmation: TEST_PASSWORD,
+        username: "ok_student_#{i}_#{SecureRandom.hex(3)}",
         role: "student",
         classroom_id: classroom.id
-      )
+      ))
     end
 
     classroom.reload
@@ -178,24 +192,26 @@ class ClassroomTest < ActiveSupport::TestCase
   end
 
   test "uses default student limit of 40 when teacher capacity_limits is nil" do
-    teacher = User.create!(
-      email: "default_student_teacher@example.com",
-      password: "password",
-      username: "teacher_default_student",
+    teacher = confirm_for_devise!(User.create!(
+      email: "default_student_teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_default_student_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: nil
-    )
+    ))
 
     classroom = Classroom.create!(name: "Big class", teacher: teacher)
 
     41.times do |i|
-      User.create!(
-        email: "bigstudent#{i}@example.com",
-        password: "password",
-        username: "big_student_#{i}",
+      confirm_for_devise!(User.create!(
+        email: "bigstudent#{i}-#{SecureRandom.hex(3)}@example.com",
+        password: TEST_PASSWORD,
+        password_confirmation: TEST_PASSWORD,
+        username: "big_student_#{i}_#{SecureRandom.hex(3)}",
         role: "student",
         classroom_id: classroom.id
-      )
+      ))
     end
 
     classroom.reload

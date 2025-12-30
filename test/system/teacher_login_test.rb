@@ -1,13 +1,20 @@
 require "application_system_test_case"
 
 class TeacherLoginTest < ApplicationSystemTestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   setup do
     @teacher = User.create!(
       email: "teacher-#{SecureRandom.hex(4)}@example.com",
-      password: "Password123!",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "teacher_#{SecureRandom.hex(4)}",
       role: "teacher"
     )
+
+    # Ensure the user can actually sign in when confirmable / lockable are enabled
+    @teacher.update!(confirmed_at: Time.current) if @teacher.class.column_names.include?("confirmed_at")
+    @teacher.update!(locked_at: nil)            if @teacher.class.column_names.include?("locked_at")
   end
 
   test "teacher can log in and reach teacher dashboard" do
@@ -16,12 +23,16 @@ class TeacherLoginTest < ApplicationSystemTestCase
     # Devise login form fields from your view:
     select "Teacher", from: "Role"
     fill_in "Username or Email", with: @teacher.email
-    fill_in "Password", with: "Password123!"
+
+    # Disambiguate password field if necessary
+    find('input[name="user[password]"]').set(TEST_PASSWORD)
+
     click_button "Log in"
 
-    # After sign in you route teachers to teacher_dashboard_path in ApplicationController
+    # After sign in you route teachers to teacher_dashboard_path
     assert_current_path teacher_dashboard_path
-    # If your page has a heading or text, assert it here (optional):
-    # assert_text "Dashboard"
+
+    # Optional smoke assertion:
+    # assert_text "Teacher Dashboard"
   end
 end

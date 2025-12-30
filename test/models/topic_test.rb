@@ -1,8 +1,16 @@
 require "test_helper"
 
 class TopicTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
     @valid_category = Topic::CATEGORIES.first
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # -------------------------
@@ -38,7 +46,6 @@ class TopicTest < ActiveSupport::TestCase
 
   test "is valid with title and allowed category" do
     topic = Topic.new(title: "Addition Basics", category: @valid_category)
-
     assert topic.valid?, "Expected topic to be valid, got errors: #{topic.errors.full_messages}"
   end
 
@@ -96,8 +103,21 @@ class TopicTest < ActiveSupport::TestCase
   # -------------------------
 
   test "students returns users linked via assigned_topics" do
-    teacher = User.create!(email: "t@example.com", password: "password", username: "t1", role: "teacher")
-    student = User.create!(email: "s@example.com", password: "password", username: "s1", role: "student")
+    teacher = confirm_for_devise!(User.create!(
+      email: "t-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "t1_#{SecureRandom.hex(3)}",
+      role: "teacher"
+    ))
+
+    student = confirm_for_devise!(User.create!(
+      email: "s-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "s1_#{SecureRandom.hex(3)}",
+      role: "student"
+    ))
 
     topic = Topic.create!(title: "Topic For Students", category: @valid_category)
 

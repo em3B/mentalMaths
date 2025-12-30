@@ -1,14 +1,23 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
     @school = School.create!(name: "Test School", contact_email: "admin@testschool.com")
-    @teacher = User.create!(
-      email: "teacher@example.com",
-      password: "password",
-      username: "teacher_1",
+    @teacher = confirm_for_devise!(User.create!(
+      email: "teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "teacher_#{SecureRandom.hex(3)}",
       role: "teacher"
-    )
+    ))
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   # -------------------------
@@ -92,13 +101,14 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "increment_capacity! increases and persists capacity_limits for the given type" do
-    u = User.create!(
-      email: "cap@example.com",
-      password: "password",
-      username: "cap_user",
+    u = confirm_for_devise!(User.create!(
+      email: "cap-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "cap_user_#{SecureRandom.hex(3)}",
       role: "teacher",
       capacity_limits: { "classroom" => 10, "student" => 40, "child" => 10 }
-    )
+    ))
 
     u.increment_capacity!(:student, 5)
     u.reload
@@ -111,18 +121,20 @@ class UserTest < ActiveSupport::TestCase
   # -------------------------
 
   test "allows duplicate usernames when classroom_id is nil (per conditional uniqueness + partial index)" do
-    a = User.create!(
-      email: "u1@example.com",
-      password: "password",
+    a = confirm_for_devise!(User.create!(
+      email: "u1-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "duplicate_name",
       role: "student",
       classroom_id: nil,
       created_by_family: true
-    )
+    ))
 
     b = User.new(
-      email: "u2@example.com",
-      password: "password",
+      email: "u2-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "duplicate_name",
       role: "student",
       classroom_id: nil,
@@ -136,17 +148,19 @@ class UserTest < ActiveSupport::TestCase
   test "rejects duplicate usernames when classroom_id is present" do
     classroom = Classroom.create!(name: "Year 5", teacher: @teacher)
 
-    User.create!(
-      email: "s1@example.com",
-      password: "password",
+    confirm_for_devise!(User.create!(
+      email: "s1-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "unique_in_classroom",
       role: "student",
       classroom: classroom
-    )
+    ))
 
     dup = User.new(
-      email: "s2@example.com",
-      password: "password",
+      email: "s2-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "unique_in_classroom",
       role: "student",
       classroom: classroom
@@ -161,23 +175,29 @@ class UserTest < ActiveSupport::TestCase
   # -------------------------
 
   test "requires email for teacher" do
-    u = User.new(username: "t_no_email", role: "teacher", password: "password", email: nil)
+    u = User.new(username: "t_no_email", role: "teacher", password: TEST_PASSWORD, email: nil)
     assert_not u.valid?
     assert_includes u.errors[:email], "can't be blank"
   end
 
   test "does not require email for student created_by_family" do
-    u = User.new(username: "kid_1", role: "student", password: "password", email: nil, created_by_family: true)
+    u = User.new(username: "kid_1", role: "student", password: TEST_PASSWORD, email: nil, created_by_family: true)
     assert u.valid?, "Expected student created_by_family to be valid without email, got errors: #{u.errors.full_messages}"
   end
 
   test "does not require email for child user (has a parent)" do
-    parent = User.create!(email: "parent@example.com", password: "password", username: "parent_1", role: "family")
+    parent = confirm_for_devise!(User.create!(
+      email: "parent-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "parent_1_#{SecureRandom.hex(3)}",
+      role: "family"
+    ))
 
     child = User.new(
       username: "child_1",
       role: "student",
-      password: "password",
+      password: TEST_PASSWORD,
       email: nil,
       parent: parent
     )
@@ -190,24 +210,32 @@ class UserTest < ActiveSupport::TestCase
   # -------------------------
 
   test "soft_limit_children blocks creating a family user who is the (extra) child of a parent with 10 children" do
-    parent = User.create!(email: "p@example.com", password: "password", username: "p1", role: "family")
+    parent = confirm_for_devise!(User.create!(
+      email: "p-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "p1_#{SecureRandom.hex(3)}",
+      role: "family"
+    ))
 
     10.times do |i|
-      User.create!(
-        email: "child#{i}@example.com",
-        password: "password",
-        username: "child#{i}",
+      confirm_for_devise!(User.create!(
+        email: "child#{i}-#{SecureRandom.hex(3)}@example.com",
+        password: TEST_PASSWORD,
+        password_confirmation: TEST_PASSWORD,
+        username: "child#{i}_#{SecureRandom.hex(3)}",
         role: "student",
         parent: parent
-      )
+      ))
     end
 
-    # This matches your current implementation:
+    # NOTE: This matches your current implementation:
     # validation runs if the NEW user is family? and has a parent with >= 10 children
     extra = User.new(
-      email: "extra@example.com",
-      password: "password",
-      username: "extra_child",
+      email: "extra-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
+      username: "extra_child_#{SecureRandom.hex(3)}",
       role: "family",
       parent: parent
     )
@@ -301,12 +329,13 @@ class UserTest < ActiveSupport::TestCase
   # -------------------------
 
   test "find_for_database_authentication finds by email or username case-insensitively within role" do
-    user = User.create!(
+    user = confirm_for_devise!(User.create!(
       email: "Case@Test.com",
-      password: "password",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       username: "CaseUser",
       role: "teacher"
-    )
+    ))
 
     found_by_email = User.find_for_database_authentication(login: "case@test.com", role: "teacher")
     assert_equal user.id, found_by_email&.id
@@ -314,7 +343,6 @@ class UserTest < ActiveSupport::TestCase
     found_by_username = User.find_for_database_authentication(login: "caseuser", role: "teacher")
     assert_equal user.id, found_by_username&.id
 
-    # should not return if role doesn't match
     found_wrong_role = User.find_for_database_authentication(login: "caseuser", role: "student")
     assert_nil found_wrong_role
   end

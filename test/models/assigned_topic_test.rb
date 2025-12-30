@@ -1,31 +1,42 @@
 require "test_helper"
 
 class AssignedTopicTest < ActiveSupport::TestCase
+  TEST_PASSWORD = "correct-horse-battery-staple-42"
+
   def setup
     @topic = Topic.create!(title: "Fake", category: "Addition and Subtraction")
 
-    @teacher = User.create!(
-      username: "teacher",
-      email: "teacher@example.com",
-      password: "password",
+    @teacher = confirm_for_devise!(User.create!(
+      username: "teacher_#{SecureRandom.hex(3)}",
+      email: "teacher-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "teacher"
-    )
+    ))
 
-    @family = User.create!(
-      username: "family",
-      email: "family@example.com",
-      password: "password",
+    @family = confirm_for_devise!(User.create!(
+      username: "family_#{SecureRandom.hex(3)}",
+      email: "family-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "family"
-    )
+    ))
 
-    @student = User.create!(
-      username: "student",
-      email: "student@example.com",
-      password: "password",
+    @student = confirm_for_devise!(User.create!(
+      username: "student_#{SecureRandom.hex(3)}",
+      email: "student-#{SecureRandom.hex(3)}@example.com",
+      password: TEST_PASSWORD,
+      password_confirmation: TEST_PASSWORD,
       role: "student"
-    )
+    ))
 
-    @classroom = Classroom.create!(name: "Year 5", teacher_id: @teacher.id)
+    @classroom = Classroom.create!(name: "Year 5", teacher: @teacher)
+  end
+
+  def confirm_for_devise!(user)
+    user.update!(confirmed_at: Time.current) if user.class.column_names.include?("confirmed_at")
+    user.update!(locked_at: nil)            if user.class.column_names.include?("locked_at")
+    user
   end
 
   test "is valid when assigning to a user with authorized assigned_by" do
