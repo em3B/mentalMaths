@@ -9,33 +9,7 @@ class QuestionsController < ApplicationController
   def answer
     @question = @topic.questions.find(params[:id])
     user_answer = params[:value].to_i
-
-    # Save response only if user is signed in
-    if user_signed_in?
-      Response.create!(
-        question: @question,
-        value: user_answer,
-        user_id: current_user.id
-      )
-    end
-
-    # Track score for everyone (signed in or guest)
-    session[:score] ||= 0
-    session[:score] += 1 if user_answer == @question.correct_answer
-
-    # Redirect or render as needed
-    # redirect_to next_question_path
-  end
-
-  def score
-    @score = session[:score]
-
-    # Clear only guest data (keep signed-in user's responses)
-    unless user_signed_in?
-      session.delete(:score)
-    end
-
-    session.delete(:questions)
+    render json: { correct: (user_answer == @question.correct_answer) }
   end
 
   private

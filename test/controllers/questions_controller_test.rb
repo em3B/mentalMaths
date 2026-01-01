@@ -33,7 +33,6 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   test "show allows guest when topic does not require auth (not redirected)" do
     get topic_question_url(@topic_open, @q1)
 
-    # Not asserting :success because your app may respond 406 depending on format/templates.
     assert_not_equal 302, response.status
     assert_not_equal new_user_session_path, response.location
   end
@@ -52,49 +51,64 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
     assert_not_equal new_user_session_path, response.location
   end
 
-  # ---- ANSWER ---------------------------------------------------------------
+  # ---- ANSWER (OPTION 1) ----------------------------------------------------
+  # Option 1 behaviour:
+  # - Do not create Response records
+  # - Do not mutate session[:score]
+  # - Return JSON telling the client whether the answer is correct
 
-  test "answer as guest does not create Response but updates session score on correct answer" do
+  test "answer as guest does not create Response and returns correct: true on correct answer" do
     assert_no_difference("Response.count") do
       post answer_topic_question_url(@topic_open, @q1), params: { value: @q1.correct_answer }
     end
 
-    assert_equal 1, session[:score]
+    assert_response :success
+    assert_nil session[:score]
+
+    json = JSON.parse(response.body)
+    assert_equal true, json["correct"]
   end
 
-  test "answer as guest does not increment session score when incorrect" do
-    post answer_topic_question_url(@topic_open, @q1), params: { value: @q1.correct_answer + 123 }
-    assert_equal 0, session[:score]
+  test "answer as guest does not create Response and returns correct: false on incorrect answer" do
+    assert_no_difference("Response.count") do
+      post answer_topic_question_url(@topic_open, @q1), params: { value: @q1.correct_answer + 123 }
+    end
+
+    assert_response :success
+    assert_nil session[:score]
+
+    json = JSON.parse(response.body)
+    assert_equal false, json["correct"]
   end
 
-  test "answer as signed-in user creates Response and updates score when correct" do
+  test "answer as signed-in user does not create Response and returns correct: true on correct answer" do
     sign_in @teacher
 
-    assert_difference("Response.count", +1) do
+    assert_no_difference("Response.count") do
       post answer_topic_question_url(@topic_open, @q1), params: { value: @q1.correct_answer }
     end
 
-    response_record = Response.order(:id).last
-    assert_equal @q1.id, response_record.question_id
-    assert_equal @q1.correct_answer, response_record.value
+    assert_response :success
+    assert_nil session[:score]
 
-    assert_equal 1, session[:score]
+    json = JSON.parse(response.body)
+    assert_equal true, json["correct"]
   end
 
-  test "answer as signed-in user creates Response but does not increment score when incorrect" do
+  test "answer as signed-in user does not create Response and returns correct: false on incorrect answer" do
     sign_in @teacher
 
     wrong = @q1.correct_answer + 999
 
-    assert_difference("Response.count", +1) do
+    assert_no_difference("Response.count") do
       post answer_topic_question_url(@topic_open, @q1), params: { value: wrong }
     end
 
-    response_record = Response.order(:id).last
-    assert_equal @q1.id, response_record.question_id
-    assert_equal wrong, response_record.value
+    assert_response :success
+    assert_nil session[:score]
 
-    assert_equal 0, session[:score]
+    json = JSON.parse(response.body)
+    assert_equal false, json["correct"]
   end
 
   test "answer redirects guest to sign in when topic requires auth" do

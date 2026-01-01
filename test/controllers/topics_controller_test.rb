@@ -104,18 +104,20 @@ class TopicsControllerTest < ActionDispatch::IntegrationTest
 
   # ---- PLAY -----------------------------------------------------------------
 
-  test "play resets session score and sets time_limit when provided" do
+  test "play does not use session score and does not store time_limit in session (option 1)" do
     get play_topic_path(@topic_mul), params: { time_limit: 60 }
 
-    assert_equal 0, session[:score]
-    assert_equal 60, session[:time_limit]
+    assert_nil session[:score]
+    assert_nil session[:time_limit]
+    assert_not_equal 302, response.status
   end
 
-  test "play resets session score and does not set time_limit when not provided" do
+  test "play does not use session score when time_limit not provided (option 1)" do
     get play_topic_path(@topic_mul)
 
-    assert_equal 0, session[:score]
+    assert_nil session[:score]
     assert_nil session[:time_limit]
+    assert_not_equal 302, response.status
   end
 
   # ---- INTRO ----------------------------------------------------------------
@@ -133,21 +135,27 @@ class TopicsControllerTest < ActionDispatch::IntegrationTest
     assert_not_equal 302, response.status
   end
 
-  # ---- SUBMIT SCORE ---------------------------------------------------------
+  # ---- OPTION 1 PERSISTENCE (POST /scores) ----------------------------------
 
-  test "submit_score creates score for current_user and redirects to score page" do
+  test "posting to /scores creates a score for current_user (option 1)" do
     sign_in @student
 
     assert_difference("Score.count", +1) do
-      post submit_score_topic_path(@topic_mul), params: { score: 7 }
+      post scores_path, params: {
+        score: {
+          correct: 7,
+          total: 10,
+          topic_id: @topic_mul.id
+        }
+      }, as: :json
     end
 
-    assert_redirected_to score_topic_path(@topic_mul)
-    assert_equal "Your score has been saved!", flash[:notice]
+    assert_response :created
 
     score = Score.order(:id).last
     assert_equal @student.id, score.user_id
     assert_equal @topic_mul.id, score.topic_id
-    assert_equal 7, score.total
+    assert_equal 7, score.correct
+    assert_equal 10, score.total
   end
 end

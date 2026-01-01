@@ -18,7 +18,7 @@ class TopicsController < ApplicationController
     if current_user != nil && current_user.teacher?
       @classrooms = current_user.classrooms
       if params[:classroom_id].present?
-      @selected_classroom = @classrooms.find_by(id: params[:classroom_id])
+        @selected_classroom = @classrooms.find_by(id: params[:classroom_id])
       else
         @selected_classroom = @classrooms.first
       end
@@ -28,38 +28,34 @@ class TopicsController < ApplicationController
     end
   end
 
-  def play
-    @topic = Topic.find(params[:id])
-
-    # You can also configure a time limit for certain activities here
-    time_limit = params[:time_limit].present? ? params[:time_limit].to_i : nil
-
-    session[:score] = 0 # Reset score
-
-    if time_limit
-      session[:time_limit] = time_limit # Store time limit for the session
-    end
-  end
-
   def intro
     @topic = Topic.find(params[:id])
   end
 
+  def play
+    @topic = Topic.find(params[:id])
+
+    if @topic.requires_auth && !user_signed_in?
+      redirect_to new_user_session_path, alert: "Please sign in to access this topic."
+      return
+    end
+
+    # Optional: pass a time limit to the frontend
+    @time_limit = params[:time_limit].present? ? params[:time_limit].to_i : nil
+  end
+
   def score
     @topic = Topic.find(params[:id])
+
+    unless user_signed_in?
+      redirect_to new_user_session_path, alert: "Please sign in to view your scores."
+      return
+    end
+
     @scores = @topic.scores
       .where(user: current_user)
       .order(created_at: :desc)
       .page(params[:page])
       .per(10)
-  end
-
-  def submit_score
-    @topic = Topic.find(params[:id])
-    final_score = params[:score].to_i
-
-    @topic.scores.create!(user: current_user, total: final_score)
-
-    redirect_to score_topic_path(@topic), notice: "Your score has been saved!"
   end
 end

@@ -1,55 +1,69 @@
 class ScoresController < ApplicationController
   before_action :authenticate_user!
 
-def index
-  if current_user.student?
-    # Students see their own scores
-    @scores = current_user.scores.includes(:topic).order(created_at: :desc).page(params[:page])
+  def index
+    if current_user.student?
+      @scores = current_user.scores
+      .includes(:topic)
+      .order(created_at: :desc)
+      .page(params[:page])
+      .per(10)
 
-  elsif current_user.family?
-    # Families must pass a child_id param
-    if params[:child_id].present?
-      @child = current_user.children.find_by(id: params[:child_id])
+    elsif current_user.family?
+      if params[:child_id].present?
+        @student = current_user.children.find_by(id: params[:child_id])
 
-      if @child
-        @scores = @child.scores.includes(:topic).order(created_at: :desc).page(params[:page])
+        if @student
+          @scores = @student.scores.includes(:topic).order(created_at: :desc).page(params[:page])
+        else
+          redirect_to family_dashboard_path, alert: "Child not found or not authorized."
+        end
       else
-        redirect_to family_dashboard_path, alert: "Child not found or not authorized."
+        redirect_to family_dashboard_path, alert: "Please select a child to view scores."
       end
-    else
-      redirect_to family_dashboard_path, alert: "Please select a child to view scores."
-    end
 
-  elsif current_user.teacher?
-    # Teachers must pass a student_id param
-    if params[:student_id].present?
-      # Only allow students enrolled in the teacher's classrooms
-      student = User.find_by(id: params[:student_id])
+    elsif current_user.teacher?
+      if params[:student_id].present?
+        @student = authorized_teacher_student(params[:student_id])
 
-      if student&.student? && (student.enrolled_classrooms & current_user.classrooms).any?
-        @scores = student.scores.includes(:topic).order(created_at: :desc).page(params[:page])
+        if @student
+          @scores = @student.scores.includes(:topic).order(created_at: :desc).page(params[:page])
+        else
+          redirect_to teacher_dashboard_path, alert: "Student not found or not authorized."
+        end
       else
-        redirect_to teacher_dashboard_path, alert: "Student not found or not authorized."
+        redirect_to teacher_dashboard_path, alert: "Please select a student to view scores."
       end
-    else
-      redirect_to teacher_dashboard_path, alert: "Please select a student to view scores."
-    end
 
-  else
-    redirect_to root_path, alert: "You are not authorized to view scores."
+    else
+      redirect_to root_path, alert: "You are not authorized to view scores."
+    end
   end
-end
 
-def show
-  @student = User.find(params[:id])
-  @scores = @student.scores.order(created_at: :desc).page(params[:page])
-end
+  # GET /students/:id/scores
+  def show
+    if current_user.student?
+      @student = current_user
 
+    elsif current_user.family?
+      @student = current_user.children.find_by(id: params[:id])
+      return redirect_to family_dashboard_path, alert: "Student not found or not authorized." unless @student
+
+    elsif current_user.teacher?
+      @student = authorized_teacher_student(params[:id])
+      return redirect_to teacher_dashboard_path, alert: "Student not found or not authorized." unless @student
+
+    else
+      return redirect_to root_path, alert: "You are not authorized to view scores."
+    end
+
+    @scores = @student.scores.includes(:topic).order(created_at: :desc).page(params[:page])
+  end
+
+  # POST /scores (from JS)
   def create
-    # Safely permit params with strong params
     score_params = params.require(:score).permit(:correct, :total, :topic_id)
 
-    # Find the topic - must exist to associate the score
     topic = Topic.find(score_params[:topic_id])
 
     @score = current_user.scores.build(
@@ -59,9 +73,18 @@ end
     )
 
     if @score.save
-      render json: { message: "Score updated!" }, status: :created
+      render json: { message: "Score saved!" }, status: :created
     else
       render json: { errors: @score.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  private
+
+  def authorized_teacher_student(id)
+    student = User.find_by(id: id)
+    return nil unless student&.student?
+
+    (student.enrolled_classrooms & current_user.classrooms).any? ? student : nil
   end
 end
