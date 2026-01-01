@@ -24,6 +24,7 @@
         <div class="form-table">
           <div id="question-section" style="display: none;">
             <p id="question-text"></p>
+            <label for="answer-input" class="visually-hidden">Answer to the maths question</label>
             <input type="number" id="answer-input" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
             <h4 id="feedback"></h4>

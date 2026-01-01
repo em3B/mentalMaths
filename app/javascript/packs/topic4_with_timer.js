@@ -25,6 +25,7 @@
             <p>You have <span id="timer">60</span> seconds.</p>
             <h2>Find the multiple of 10 ABOVE:</h2>
             <p id="question-text"></p>
+            <label for="answer-input" class="visually-hidden">Answer to the maths question</label>
             <input type="number" id="answer-input" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
             <h4 id="feedback"></h4>

@@ -23,21 +23,21 @@
             <div class="main-btn-group">
                 <button class="main-btn">
                     <% if category.downcase.include?("addition") || category.downcase.include?("subtraction") %>
-                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", alt: "Addition and Subtraction", class: "main-btn-icon") %>
                     <% elsif category.downcase.include?("multiplication") %>
-                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253579/MentalMaths/frogses-production-FlvBhEwEOng-unsplash_uiybkh.jpg", class: "main-btn-icon") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253579/MentalMaths/frogses-production-FlvBhEwEOng-unsplash_uiybkh.jpg", alt: "Multiplication", class: "main-btn-icon") %>
                     <% elsif category.downcase.include?("number bond") %>
-                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253609/MentalMaths/Screenshot_2025-04-21_at_17.39.05_kaqu1y.png", class: "main-btn-icon") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253609/MentalMaths/Screenshot_2025-04-21_at_17.39.05_kaqu1y.png", alt: "Number Bond", class: "main-btn-icon") %>
                     <% elsif category.downcase.include?("ten frame") %>
-                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253598/MentalMaths/Screenshot_2025-04-21_at_17.36.02_z8dbr4.png", class: "main-btn-icon") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253598/MentalMaths/Screenshot_2025-04-21_at_17.36.02_z8dbr4.png", alt: "Ten Frame", class: "main-btn-icon") %>
                     <% elsif category.downcase.include?("rainbow") %>
-                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", class: "main-btn-icon")%>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", alt: "Rainbow", class: "main-btn-icon")%>
                     <% elsif category.downcase.include?("bar model") %>
-                      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1753209747/Math_App_Images_5_pa18i2.png", class: "main-btn-icon") %>
+                      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1753209747/Math_App_Images_5_pa18i2.png", alt: "Bar MOdel", class: "main-btn-icon") %>
                     <% elsif category.downcase.include?("blocks") %>
-                      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1755931551/MentalMaths/shubham-dhage-xvWdG34_uQY-unsplash_r4qtjp.jpg", class: "main-btn-icon") %>
+                      <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1755931551/MentalMaths/shubham-dhage-xvWdG34_uQY-unsplash_r4qtjp.jpg", alt: "Number Blocks", class: "main-btn-icon") %>
                     <% else %>
-                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
+                        <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", alt: "Mental Maths", class: "main-btn-icon") %>
                     <% end %>
                     <h4><%= category.titleize %></h4>
                 </button>
@@ -55,21 +55,21 @@
           <div class="main-btn-group">
             <button class="main-btn">
                 <% if topic.category.downcase.include?("addition") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", alt: "Addition and Subtraction", class: "main-btn-icon") %>
                 <% elsif topic.category.downcase.include?("multiplication") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253579/MentalMaths/frogses-production-FlvBhEwEOng-unsplash_uiybkh.jpg", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253579/MentalMaths/frogses-production-FlvBhEwEOng-unsplash_uiybkh.jpg", alt: "Multiplication", class: "main-btn-icon") %>
                 <% elsif topic.category.downcase.include?("number bond") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253609/MentalMaths/Screenshot_2025-04-21_at_17.39.05_kaqu1y.png", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253609/MentalMaths/Screenshot_2025-04-21_at_17.39.05_kaqu1y.png", alt: "Number Bond", class: "main-btn-icon") %>
                 <% elsif topic.category.downcase.include?("ten frame") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253598/MentalMaths/Screenshot_2025-04-21_at_17.36.02_z8dbr4.png", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745253598/MentalMaths/Screenshot_2025-04-21_at_17.36.02_z8dbr4.png", alt: "Ten Frame", class: "main-btn-icon") %>
                 <% elsif topic.category.downcase.include?("rainbow") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", class: "main-btn-icon")%>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745229391/alex-jackman-_Bk2NVFx7q4-unsplash_kj7up7.jpg", alt: "Rainbow Pairs", class: "main-btn-icon")%>
                 <% elsif topic.category.downcase.include?("bar model") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1753209747/Math_App_Images_5_pa18i2.png", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1753209747/Math_App_Images_5_pa18i2.png", alt: "Bar Model", class: "main-btn-icon") %>
                 <% elsif topic.category.downcase.include?("blocks") %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1755931551/MentalMaths/shubham-dhage-xvWdG34_uQY-unsplash_r4qtjp.jpg", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1755931551/MentalMaths/shubham-dhage-xvWdG34_uQY-unsplash_r4qtjp.jpg", alt: "Number Blocks", class: "main-btn-icon") %>
                 <% else %>
-                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", class: "main-btn-icon") %>
+                    <%= image_tag("https://res.cloudinary.com/dm37aktki/image/upload/v1745252577/MentalMaths/behnam-norouzi-wBKWM-DLhzg-unsplash_qyw75q.jpg", alt: "Mental Maths", class: "main-btn-icon") %>
                 <% end %>
               <h4><%= topic.title %></h4>
             </button>

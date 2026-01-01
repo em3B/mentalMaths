@@ -48,6 +48,7 @@ import { stopWiggle } from './circle_wiggler.js';
         <div class="form-table">
           <div id="question-section" style="display: none;">
             <div id="question-text"></div>
+            <label for="answer-input" class="visually-hidden">Answer to the maths question</label>
             <input type="number" id="answer-input" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
             <button class="devise-btn" id="go-to-topic-index">End Game</button>
