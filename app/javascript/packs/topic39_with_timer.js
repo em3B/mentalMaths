@@ -33,6 +33,7 @@ export function runTopic39WithTimer() {
             <p>You have <span id="timer">60</span> seconds.</p>
             <h2 id="question-text"></h2>
             <div id="bar-model-container"></div>
+            <label for="answer-input" class="visually-hidden">Answer to the maths question</label>
             <input type="number" id="answer-input" style="display: none;" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
             <h4 id="feedback"></h4>

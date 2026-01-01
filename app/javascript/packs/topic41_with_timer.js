@@ -35,6 +35,7 @@ import { NumberBlocksHelper } from "./number_blocks_helper.js";
             <h2 id="question-text"></h2>
             <h4 id="step-instruction" style="color: #d17b00; font-weight: 600; margin-top: 8px;"></h4>
             <div id="bar-model-container"></div>
+            <label for="answer-input" class="visually-hidden">Answer to the maths question</label>
             <input type="number" id="answer-input" style="display: none;" />
             <button class="devise-btn" id="submit-answer-btn">Next</button>
             <h4 id="feedback"></h4>
